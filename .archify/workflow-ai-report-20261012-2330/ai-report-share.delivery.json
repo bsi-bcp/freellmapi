@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "1ceda310-1d0e-406a-8707-6ae6282ac8c5",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/Users/paul/Documents/GitHub/freellmapi/.archify/workflow-ai-report-20261012-2330/candidate-share.json",
+  "output": "/Users/paul/Documents/GitHub/freellmapi/.archify/workflow-ai-report-20261012-2330/ai-report-share.html",
+  "specification": {
+    "sha256": "5ea22700ccb915ce2197a34fe556dcdd54269ba3d3fff7f14acb4ae92465f4d1",
+    "bytes": 5781
+  },
+  "artifact": {
+    "sha256": "6365bf4627bbd4180a62ae13c59318aa01f5cb6fef81902b1e1b1eb74cb72db6",
+    "bytes": 770924
+  }
+}

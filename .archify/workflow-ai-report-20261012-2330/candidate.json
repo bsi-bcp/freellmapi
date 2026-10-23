@@ -1,0 +1,86 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "「AI 资讯晨报」演示方案 · freellmapi × n8n",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": ".archify/workflow-ai-report-20261012-2330/ai-report.html"
+  },
+  "lanes": [
+    { "id": "n8n", "label": "n8n 云端 worker（YTJ1 queue·3 容器实测 200）" },
+    { "id": "ai", "label": "AI 网关（Mac freellmapi）" },
+    { "id": "push", "label": "输出（飞书群）" },
+    { "id": "fallback", "label": "降级兜底", "variant": "exception" }
+  ],
+  "phases": [
+    { "id": "intake", "label": "采集", "fromCol": 0, "toCol": 1 },
+    { "id": "digest", "label": "分流与摘要", "fromCol": 2, "toCol": 3, "variant": "emphasis" },
+    { "id": "deliver", "label": "生成与推送", "fromCol": 4, "toCol": 5, "variant": "dashed" }
+  ],
+  "groups": [
+    { "id": "tunnel", "label": "stcp 加密隧道 · 零公网暴露口", "lane": "ai", "fromCol": 3, "toCol": 4, "variant": "security" },
+    { "id": "fallbackgrp", "label": "自动降级 · Mac 离线可感知", "lane": "fallback", "fromCol": 4, "toCol": 5, "variant": "dashed" }
+  ],
+  "mainPath": ["trigger", "hn", "shape", "gate", "llm", "push"],
+  "semanticChecks": {
+    "allowedTerminals": ["push", "fallback"]
+  },
+  "nodes": [
+    { "id": "trigger", "lane": "n8n", "col": 0, "type": "messagebus", "label": "触发入口", "sublabel": "手动·定时·Webhook", "tag": "定时默认停用", "width": 160 },
+    { "id": "hn", "lane": "n8n", "col": 1, "type": "external", "label": "HN 热帖抓取", "sublabel": "48h·points>20·重试2", "tag": "免费无鉴权源", "width": 170 },
+    { "id": "shape", "lane": "n8n", "col": 2, "type": "backend", "label": "整形去重", "sublabel": "按热度取 Top10", "width": 140 },
+    { "id": "gate", "lane": "n8n", "col": 3, "type": "backend", "label": "有热帖?", "tag": "count>0", "width": 110 },
+    { "id": "llm", "lane": "ai", "col": 4, "type": "cloud", "label": "freellmapi 中文晨报", "sublabel": "model=auto·免费额度", "tag": "Mac 原生 :3001", "width": 180 },
+    { "id": "push", "lane": "push", "col": 5, "type": "messagebus", "label": "组装·签名·推送", "sublabel": "HMAC·飞书 post 卡片", "width": 170 },
+    { "id": "fallback", "lane": "fallback", "col": 5, "type": "backend", "label": "降级通知", "sublabel": "断网/无热帖兜底", "tag": "天然告警通道", "width": 160 }
+  ],
+  "edges": [
+    { "id": "e1", "from": "trigger", "to": "hn", "label": "三入口合一", "variant": "emphasis" },
+    { "id": "e2", "from": "hn", "to": "shape", "variant": "default" },
+    { "id": "e3", "from": "shape", "to": "gate", "variant": "default" },
+    { "id": "e4", "from": "gate", "to": "llm", "label": "有热帖", "variant": "emphasis" },
+    { "id": "e5", "from": "gate", "to": "fallback", "label": "无热帖", "role": "error", "variant": "security" },
+    { "id": "e6", "from": "llm", "to": "push", "variant": "emphasis" },
+    { "id": "e7", "from": "hn", "to": "fallback", "label": "抓取失败", "role": "error", "variant": "security" },
+    { "id": "e8", "from": "llm", "to": "fallback", "label": "网关不可用", "role": "error", "variant": "security" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "网络拓扑（零公网新增端口）",
+      "items": [
+        "YTJ1 worker → stcp visitor 172.31.0.1:16001（仅容器网络可达）",
+        "→ TX-43 FRP(43.139.228.145) → Mac frpc → freellmapi 127.0.0.1:3001",
+        "freellmapi 原生 Node 运行（Docker Desktop 起不来的替代），代理出海聚合 34 家免费 LLM"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "成本与路由",
+      "items": [
+        "HN Algolia API 免费无鉴权（public-apis 目录收录源）",
+        "model=auto 自动路由+故障切换，免费额度按 UTC 重置",
+        "实测 26s 端到端出卡，X-Routed-Via 可见实际提供商"
+      ]
+    },
+    {
+      "dot": "cyan",
+      "title": "三类 API Key 的流向",
+      "items": [
+        "provider key（Google/OpenRouter/ModelScope）→ 只进 freellmapi 管理页 Keys，AES-256-GCM 加密落库，n8n 永不接触",
+        "unified key（freellmapi-...）→ dashboard 复制，作 Bearer 填 n8n 凭据，是 n8n 侧唯一需要的 key",
+        "数据源 key：HN 源免鉴权（public-apis 表 Auth=No）；换需 key 的源则配在 n8n 节点，与 freellmapi 无关"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "安全与灰度纪律",
+      "items": [
+        "Webhook 带 Header Auth；机器人签名 HMAC-SHA256（ts+\\n+secret，空串 body）",
+        "[DEMO] 前缀 + 定时默认停用 + 不碰实例现有 144 条流",
+        "回收路径：删机器人 / 删 visitor / 停隧道 / 删工作流与凭据"
+      ]
+    }
+  ]
+}

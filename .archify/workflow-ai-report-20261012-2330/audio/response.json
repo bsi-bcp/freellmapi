@@ -1,0 +1,15 @@
+{
+  "output": {
+    "audio": {
+      "data": "",
+      "id": "audio_431d3012-8e2b-4221-956a-e9e5dbbdd8b7",
+      "expires_at": 1791906241,
+      "url": "http://dashscope-result-bj.oss-cn-beijing.aliyuncs.com/prod/qwen-audio-3.0-tts-plus/20261012/1567810153119509/431d3012-8e2b-4221-956a-e9e5dbbdd8b7.mp3?Expires=1791906241&OSSAccessKeyId=LTAI5tGzqbGcEmE58b221XQy&Signature=Nzhh1lE6tAHiVNG2foYKr57A6NQ%3D"
+    },
+    "finish_reason": "stop"
+  },
+  "usage": {
+    "characters": 161
+  },
+  "request_id": "431d3012-8e2b-4221-956a-e9e5dbbdd8b7"
+}
