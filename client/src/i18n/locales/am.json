@@ -60,7 +60,16 @@
     "emailChanged": "ኢሜይል በተሳካ ሁኔታ ተቀይሯል።",
     "passwordReset": "የይለፍ ቃል ዳግም ተጀምሯል። እባክዎ ይግቡ።",
     "resetCodeDockerHint": "በ Docker ውስጥ እየሮጠ ነው? ኮዱ በኮንቴይነሩ መዝገብ ውስጥ ነው፦ docker logs <container>።",
-    "desktopSessionFailed": "ዳሽቦርዱ ወደ አካባቢያዊ አገልጋዩ መግባት አልቻለም። FreeLLMAPI ን ዘግተው እንደገና ይክፈቱት።"
+    "desktopSessionFailed": "ዳሽቦርዱ ወደ አካባቢያዊ አገልጋዩ መግባት አልቻለም። FreeLLMAPI ን ዘግተው እንደገና ይክፈቱት።",
+    "signInWithSso": "Sign in with {provider}",
+    "orContinueWithPassword": "or continue with email",
+    "reverifyWithSso": "Re-verify with {provider}",
+    "oidcReauthHint": "Confirm your identity with {provider} to access plaintext keys.",
+    "oidcReauthSuccess": "Identity verified for the next 5 minutes.",
+    "oidcErrorNotAllowed": "Your account is not permitted to sign in to this dashboard.",
+    "oidcErrorUnverifiedEmail": "Your identity provider must verify your email address before signing in.",
+    "oidcErrorNoAccount": "No matching account exists and automatic account creation is disabled.",
+    "oidcErrorFailed": "Single sign-on failed. Please try again."
   },
   "common": {
     "save": "አስቀምጥ",
@@ -109,6 +118,8 @@
     "sectionAdvanced": "የላቀ",
     "sectionPreview": "ቅድመ-እይታ",
     "generalDescription": "የዚህ ዳሽቦርድ ቋንቋ እና አቀራረብ።",
+    "startAtLogin": "በስርዓት ሲጀመር ይጀምሩ",
+    "startAtLoginHelp": "ወደ ኮምፒውተርዎ ሲገቡ FreeLLMAPI በራስ-ሰር ያስነሱ",
     "advancedDescription": "የጭመቃ ሂደት ገደቦች እና የደህንነት መቀየሪያዎች።",
     "compressionTitle": "የፕሮምፕት ጭመቃ",
     "compressionDescription": "ኮድን፣ ስህተቶችን፣ ዱካዎችን፣ ቁጥሮችን እና የመሣሪያ ትርጓሜዎችን በመጠበቅ ከመላክ በፊት የጥያቄውን መጠን ይቀንሱ።",
@@ -169,7 +180,12 @@
     "updateNow": "አሁን አዘምን",
     "updatingContainer": "አዲሱን ምስል እያወረደ እንደገና በመጀመር ላይ። FreeLLMAPI ሲመለስ ይህ ገጽ እንደገና ይጫናል።",
     "updateNowFailed": "አዘማኙ ጥያቄውን አልተቀበለም። የwatchtower ኮንቴይነር እየሰራ መሆኑን ያረጋግጡ።",
-    "updateNowTimeout": "FreeLLMAPI ከ5 ደቂቃ በኋላም እንደገና አልጀመረም። የwatchtower ኮንቴይነርን ምዝግብ ማስታወሻዎች ይመልከቱ።"
+    "updateNowTimeout": "FreeLLMAPI ከ5 ደቂቃ በኋላም እንደገና አልጀመረም። የwatchtower ኮንቴይነርን ምዝግብ ማስታወሻዎች ይመልከቱ።",
+    "injectSystemDate": "System date in prompt",
+    "injectSystemDateHelp": "Prepend today’s UTC date (YYYY-MM-DD) to the system prompt so models query web search for current information. Skipped if the caller already includes a date. Off or Web search is recommended to preserve prompt caching.",
+    "injectSystemDateOff": "Off",
+    "injectSystemDateWebSearch": "Web search",
+    "injectSystemDateAlways": "Always"
   },
   "models": {
     "title": "ሞዴሎች",
@@ -393,6 +409,8 @@
     "pageDescription": "የአቅራቢ ምስክርነቶች እና መተግበሪያዎችዎ የሚያገናኙት የተዋሃደ API ቁልፍ።",
     "tabProviders": "አቅራቢዎች",
     "checklistSummary": "ከ{total} አቅራቢዎች {configured} ተዋቅረዋል",
+    "keylessAvailable": "ቁልፍ የማያስፈልጋቸው አቅራቢዎች አሉ ({count})",
+    "keylessEnableAll": "ሁሉንም አንቃ",
     "checklistKeyless": "ቁልፍ አያስፈልግም",
     "checklistNoKeyTip": "እስካሁን ቁልፍ አልታከለም። ለመጨመር ጠቅ ያድርጉ።",
     "checklistSignupLink": "መለያ ለመፍጠር እና ቁልፍ ለማግኘት {provider} ክፈት",
@@ -432,6 +450,7 @@
     "familyHaiku": "ሃይኩ",
     "selectPlatform": "አቅራቢ ይምረጡ",
     "addKey": "ቁልፍ አክል",
+    "addAnotherKey": "ሌላ የAPI ቁልፍ ያክሉ",
     "keyAdded": "ቁልፍ ታክሏል",
     "endpointKeysShareModels": "የአንድ መዳረሻ ቁልፎች ተመሳሳይ ሞዴሎችን ይጋራሉ።",
     "export": "ወደ ውጪ መላክ",
@@ -474,6 +493,8 @@
     "customTypeImage": "ምስል",
     "customTypeAudio": "ኦዲዮ",
     "customTypeTranscription": "Transcription",
+    "customTypeSearch": "Web search",
+    "customTypeDecision": "Decision",
     "customBaseUrl": "የመሠረት URL",
     "customModels": "ሞዴሎች",
     "customModel": "ሞዴል",
@@ -482,6 +503,9 @@
     "customDisplayNameOptional": "ግዴታ ያልሆነ",
     "customFamily": "ቤተሰብ",
     "customFamilyPlaceholder": "የሞዴል መታወቂያ ነባሪዎች",
+    "customEmbeddingInputType": "Input type",
+    "customEmbeddingInputTypeUnset": "Not specified",
+    "customEmbeddingInputTypeNone": "None (symmetric)",
     "customApiKey": "API ቁልፍ",
     "customCapabilities": "ችሎታዎች",
     "addModel": "ሞዴል ያክሉ",
@@ -491,6 +515,10 @@
     "addImageModel": "የምስል ሞዴል ያክሉ",
     "addAudioModel": "የድምጽ ሞዴል ያክሉ",
     "addTranscriptionModel": "Add transcription model",
+    "addSearchEngine": "Add search engine",
+    "addDecisionModel": "Add decision model",
+    "customSearchHint": "Search endpoints must accept POST <base URL>/search in Tavily's request format and return a results list.",
+    "customDecisionHint": "Decision endpoints must accept POST <base URL>/decide and answer with one of the question's choices.",
     "addingCustom": "በማከል ላይ...",
     "discoverModels": "ሞዴሎችን አምጣ",
     "probeNow": "የመጨረሻ ነጥቡን ይፈትሹ",
@@ -937,6 +965,8 @@
     "dictationStop": "መቅረጽ አቁም",
     "dictationTranscribing": "እየተጻፈ ነው…",
     "dictationUnavailable": "ተናግረው ለመጻፍ የድምፅ ሞዴል አቅራቢዎችን ያክሉ።",
+    "dictationMacShortcut": "የማይክሮፎን ቁልፉን ወይም በቁልፍ ሰሌዳ ቅንብሮች የተዘጋጀውን የቃል ጽሕፈት አቋራጭ ይጫኑ።",
+    "dictationWindowsShortcut": "በድምፅ መጻፍ ለመጀመር Win + H ይጫኑ።",
     "dictationModel": "የቃል ጽሕፈት ሞዴል",
     "dictationFailed": "መጻፍ አልተሳካም: {reason}",
     "artifactOpen": "ቅድመ እይታ ክፈት",
@@ -986,7 +1016,8 @@
     "tokMax": "{tokens} ቶክ ማክስ",
     "emptyTitle": "እስካሁን ምንም የመክተት ሞዴሎች የሉም",
     "emptyDesc": "መክተትን የሚደግፍ የአቅራቢ ቁልፍ ካከሉ በኋላ ቤተሰቦችን መክተት እዚህ ይታያል።",
-    "dragToReorder": "አቅራቢውን እንደገና ለማዘዝ ይጎትቱ"
+    "dragToReorder": "አቅራቢውን እንደገና ለማዘዝ ይጎትቱ",
+    "inputTypeTitle": "Asymmetric embedding model: this side of the vector space is sent as input_type."
   },
   "fusion": {
     "title": "ቅልጥፍና",
@@ -1140,6 +1171,8 @@
     "step1Title": "የአቅራቢ ቁልፍ ያክሉ",
     "step1Desc": "ቢያንስ አንድ የአቅራቢ መለያ ያገናኙ። ነፃ ቁልፎች ይሰራሉ.",
     "step1Cta": "ቁልፎችን ያክሉ",
+    "step1KeylessTitle": "ቁልፍ የማያስፈልጋቸው አቅራቢዎች በርተዋል",
+    "step1KeylessDesc": "ነጻ ሞዴሎች ዝግጁ ናቸው፣ ምዝገባ አያስፈልግም። ለተጨማሪ እና ፈጣን ሞዴሎች የራስዎን ቁልፎች ያክሉ።",
     "step2Title": "የሙከራ ጥያቄ ይላኩ",
     "step2Desc": "በመጫወቻ ስፍራው ውስጥ ማንኛውንም ሞዴል ይምረጡ እና ሰላም ይበሉ።",
     "step2Cta": "የመጫወቻ ሜዳ ክፈት",
@@ -1180,6 +1213,24 @@
     "manualHint": "በመሣሪያው ራሱ ቅንብሮች ውስጥ የሚገባ የመሠረት URL እና ቁልፍ።",
     "endpoint": "የመዳረሻ ነጥብ",
     "documentation": "ሰነዶች",
+    "connect": {
+      "button": "ከFreeLLMAPI ጋር አገናኝ",
+      "details": "የማዋቀሪያ ዝርዝሮች",
+      "gateway": "የአካባቢ መግቢያ",
+      "saved": "ቅንብሮቹ ተቀምጠዋል",
+      "finish": "ማዋቀሩን ጨርስ",
+      "launch": "በተርሚናል ክፈት",
+      "quit": "ቅንብሮቹ እንዳይተኩ ከማስቀመጥዎ በፊት ZCode Desktopን ዝጉ።",
+      "restart": "{name} እየሠራ ከሆነ እንደገና ያስጀምሩት።",
+      "send": "{name}ን ከፍተው መልዕክት ይላኩ።",
+      "files": "የውቅር ፋይሎች",
+      "writeError": "የፋይል ፈቃዶችንና ነባር ቅንብሮችን ያረጋግጡና እንደገና ይሞክሩ።",
+      "missing": "CLIን ይጫኑ ወይም ወደ PATH ያክሉት።",
+      "intro": "የኮድ አጻጻፍ መሣሪያዎችን በተፈጠረ እና ምትኬን በሚጠብቅ ውቅር ወደ አንድ የነፃ ሞዴል ጌትዌይ ያገናኙ።",
+      "all": "ወኪሎች",
+      "find": "Search",
+      "cursor": "The AI-first editor; it calls through Cursor's cloud, so it needs a public URL."
+    },
     "descriptions": {
       "claude": "Anthropic's terminal agent: it plans, edits files, and runs commands in your repo.",
       "codex": "OpenAI's terminal agent, which runs your task in a local sandbox first.",
@@ -1201,7 +1252,8 @@
       "hermes": "የ Nous Research ራሱን የሚያሻሽል ኤጀንት፣ ቋሚ ማህደረ ትውስታ እና ክህሎቶች ያሉት፣ በተርሚናል ወይም በቻት መተግበሪያዎች ላይ።",
       "pi": "በራስዎ ቅጥያዎች፣ ክህሎቶች እና የጥያቄ አብነቶች የሚቀርጹት አነስተኛ የተርሚናል ኤጀንት።",
       "reasonix": "ለDeepSeek የተሰራ የተርሚናል ኮዲንግ ወኪል፤ ረጅም ክፍለ ጊዜዎች ርካሽ እንዲሆኑ በprefix caching ዙሪያ የተገነባ።",
-      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry."
+      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry.",
+      "zero": "ዘላቂ ክፍለ ጊዜዎች፣ ፈቃዶች እና ከOpenAI ጋር የሚስማማ ማንኛውም አቅራቢ ያለው የአካባቢ ተርሚናል ኮዲንግ ወኪል።"
     }
   },
   "update": {
@@ -1260,7 +1312,15 @@
     "renameHint": "የዚህ ሰንሰለት ስም ቀይር",
     "renameConfirm": "ሰንሰለት \"{oldName}\" ስሙን ወደ \"{name}\" ቀይር? auto:{oldName} የሚጠሩ ደንበኞች ወደ auto:{name} ማለፍ አለባቸው።",
     "renamePlaceholder": "አዲስ የሰንሰለት ስም",
-    "renameFailed": "የሰንሰለቱን ስም መቀየር አልተቻለም።"
+    "renameFailed": "የሰንሰለቱን ስም መቀየር አልተቻለም።",
+    "strategy": "Routing strategy",
+    "strategyHint": "How this chain ranks its models. Inherit uses the global setting.",
+    "strategyInherit": "Inherit global",
+    "strategyPriority": "Manual order",
+    "strategyBalanced": "Balanced",
+    "strategySmartest": "Smartest",
+    "strategyFastest": "Fastest",
+    "strategyReliable": "Most reliable"
   },
   "updates": {
     "versionAvailable": "ስሪት {version} ይገኛል",

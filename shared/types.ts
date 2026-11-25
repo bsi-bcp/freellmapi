@@ -40,10 +40,6 @@ export interface PreviewResponse {
   duplicates: number;
 }
 
-export interface ImportSelectedRequest {
-  keys: ImportKey[];
-}
-
 export interface ImportSelectedResponse {
   imported: number;
   skipped: string[];
@@ -104,11 +100,23 @@ export type Platform =
   | 'jamai'
   // One shared renewable monthly credit allowance; signed catalog only.
   | 'nabh'
+  // Zro by MoonMath.ai: selected chat routes share daily free usage. The
+  // allowance is not monthly cash credit; model rows are hosted-catalog only.
+  | 'zro'
   // Daily-free video route; signed catalog only.
   | 'novai'
   | 'varosity'
   // Native TTS and transcription; one shared renewable monthly credit grant.
+  | 'speechflow'
+  | 'meldport'
   | 'rime'
+  // Native speech: shared monthly credits, non-commercial Free output.
+  | 'typecast'
+  | 'cartesia'
+  // OpenAI-compatible gateway; one shared daily free allowance.
+  | 'silvr'
+  // Local personal BYOK TTS; shared monthly characters, watermarked Free audio.
+  | 'freetts'
   // Research API; chat and embeddings share a daily quota. Requests are logged.
   | 'freeinference'
   // Personal BYOK client; shared monthly account allowance, Telegram verification.
@@ -145,6 +153,21 @@ export type Platform =
   // glm-4.7-flash ($0 / 1M in+out, 0 Credits). RPM/RPD unpublished. Hosted
   // catalog only (no migration seed), same as the anyapi/bai gateways.
   | 'powertokens'
+  // cheapllm.shop - OpenAI-compatible host for one model, DeepSeek V4.1 Flash
+  // 1017. Free with no rate limit during its beta; afterwards a permanent free
+  // tier of at least 5,000 input + 1,000 output tokens per hour per account.
+  // Email sign-up, no card. Hosted catalog only (no migration seed).
+  | 'cheapllm'
+  // LLM.kiwi - OpenAI-compatible. Ongoing free plan, no card: `auto` and
+  // `hrllm` only (other models answer 403 pro_model_access_denied). 20
+  // requests/minute per account from its x-ratelimit headers, 2026-11-23.
+  // Hosted catalog only.
+  | 'llmkiwi'
+  // TokenReply - OpenAI-compatible relay. A changing set of free models next to
+  // paid ones in one roster; only live-verified free ids go in the hosted
+  // catalog. Some free ids need a linked Discord account. 2026-11-23.
+  | 'tokenreply'
+  | 'puter'
   // AMD Radeon Cloud TokenFactory — OpenAI-compatible shared inference. Its
   // rotating public-model roster is free without consuming instance credits,
   // with recurring account-level allowance and request/concurrency controls.
@@ -167,7 +190,10 @@ export type Platform =
   | 'keenable'
   | 'halx'
   | 'aisense'
+  | 'classifierdev'
   | 'brave'
+  | 'outcrawl'
+  | 'tinyfish'
   | 'cloudflare'
   | 'zhipu'
   | 'ollama'
@@ -200,9 +226,8 @@ export type Platform =
   // BazaarLink — OpenAI-compatible aggregator. Free 'auto:free' route picks an
   // available zero-cost model. Key from bazaarlink.ai (no card).
   | 'bazaarlink'
-  // AINative Studio — OpenAI-compatible aggregator. Advertises a recurring
-  // ~10M tokens/month free allocation (no card); quota unverified. Key from
-  // ainative.studio.
+  // AINative Studio — OpenAI-compatible aggregator. Paid plans only (#2019);
+  // no free allocation to advertise. Key from ainative.studio.
   | 'ainative'
   // Aion Labs — OpenAI-compatible aggregator with a no-card free API key.
   // Catalog rows live in the Oracle catalog (premium now, free after 30 days).
@@ -298,7 +323,7 @@ export type Platform =
  *  web_search tools), never chat. Search engine rows arrive through the
  *  catalog's `searchEngines` registry. The server keeps its own runtime copy in
  *  server/src/lib/search-platforms.ts (shared is type-only on the server). */
-export const SEARCH_PLATFORMS = ['tavily', 'exa', 'firecrawl', 'linkup', 'parallel', 'serpsearch', 'keenable', 'brave'] as const;
+export const SEARCH_PLATFORMS = ['tavily', 'exa', 'firecrawl', 'linkup', 'parallel', 'serpsearch', 'keenable', 'brave', 'outcrawl', 'tinyfish'] as const;
 export type SearchPlatform = (typeof SEARCH_PLATFORMS)[number];
 
 export function isSearchPlatform(platform: string): platform is SearchPlatform {
@@ -361,7 +386,7 @@ export type KeyStatus = 'healthy' | 'rate_limited' | 'invalid' | 'error' | 'unkn
 
 export interface ApiKeyModel {
   id: number;
-  kind: 'chat' | 'embedding' | 'image' | 'audio' | 'transcription';
+  kind: 'chat' | 'embedding' | 'image' | 'audio' | 'transcription' | 'search' | 'decision';
   modelId: string;
   displayName: string;
   family?: string | null;
@@ -376,6 +401,10 @@ export interface ApiKeyCooldown {
   expiresAtMs: number;
   remainingMs: number;
 }
+
+/** What a key's healthy verdict rests on (#1516, display-only). See
+ *  `ApiKey.verificationBasis`. */
+export type KeyVerificationBasis = 'models_only' | 'inference_verified';
 
 export interface ApiKey {
   id: number;
@@ -403,6 +432,12 @@ export interface ApiKey {
    *  live request (#1493). Unlike lastCheckedAt, a transport error does not
    *  refresh it, so "checked recently but never worked" is visible. */
   lastHealthyAt?: string | null;
+  /** What the key's healthy verdict actually rests on (#1516, display-only):
+   *  'models_only' when it comes from the /models catalog probe — a 200 there
+   *  says nothing about real inference — 'inference_verified' once the key
+   *  served a live request. Null = never verified, or cleared by an invalid
+   *  verdict. Changes no routing. */
+  verificationBasis?: KeyVerificationBasis | null;
   lastHealthError: string | null;
   /** Model ids this key is limited to; null = serves every model of its
    *  platform (#657). */
@@ -429,12 +464,6 @@ export interface ApiKey {
   modelsAvailable?: number;
 }
 
-export interface ApiKeyCreate {
-  platform: Platform;
-  key: string;
-  label?: string;
-}
-
 // ---- Fallback Config ----
 
 export interface FallbackEntry {
@@ -456,23 +485,12 @@ export interface FallbackEntry {
 // One logical model can be served by several providers (rows in the `models`
 // table). When unification is enabled, those rows collapse into a single group
 // keyed by a normalized display name; see server/src/services/model-groups.ts.
-export interface ModelGroupInfo {
-  groupKey: string;     // normalized display name — the grouping identity
-  canonicalId: string;  // stable slug advertised on /v1/models
-  groupLabel: string;   // human label (suffix-stripped display name)
-}
-
 export interface UnifyOverrides {
   // Coalesce several normalized display-names (or exact "platform:model_id"
   // members) into one group keyed by `into`.
   merges: { into: string; keys: string[] }[];
   // Force a specific "platform:model_id" row out of its computed group.
   splits: { member: string; groupKey?: string }[];
-}
-
-export interface UnifySettings {
-  enabled: boolean;
-  overrides: UnifyOverrides;
 }
 
 // ---- OpenAI-Compatible Types ----
@@ -616,57 +634,6 @@ export interface ChatCompletionChunk {
   safeguard_results?: unknown;
 }
 
-// ---- Analytics Types ----
-
-export interface AnalyticsSummary {
-  totalRequests: number;
-  successRate: number;
-  totalInputTokens: number;
-  totalOutputTokens: number;
-  avgLatencyMs: number;
-  estimatedCostSavings: number;
-}
-
-export interface PlatformStats {
-  platform: Platform;
-  requests: number;
-  successRate: number;
-  avgLatencyMs: number;
-  totalInputTokens: number;
-  totalOutputTokens: number;
-}
-
-export interface TimelinePoint {
-  timestamp: string;
-  requests: number;
-  successCount: number;
-  failureCount: number;
-}
-
-export interface RequestLog {
-  id: number;
-  platform: Platform;
-  modelId: string;
-  status: 'success' | 'error';
-  inputTokens: number;
-  outputTokens: number;
-  latencyMs: number;
-  error: string | null;
-  createdAt: string;
-}
-
-// ---- Rate Limit Types ----
-
-export interface RateLimitStatus {
-  platform: Platform;
-  modelId: string;
-  rpm: { used: number; limit: number | null };
-  rpd: { used: number; limit: number | null };
-  tpm: { used: number; limit: number | null };
-  available: boolean;
-  nextResetAt: string | null;
-}
-
 // ---- Provider Quota Observability ----
 
 export type QuotaMetric = 'requests' | 'tokens' | 'credits' | 'neurons';
@@ -727,46 +694,6 @@ export interface QuotaOutlookResponse {
 }
 
 // ---- Provider Dashboard Types ----
-
-export type ProviderHealthStatus = 'healthy' | 'issues' | 'rate_limited' | 'unknown' | 'unconfigured';
-
-export interface ProviderSummary {
-  platform: Platform;
-  name: string;
-  totalKeys: number;
-  enabledKeys: number;
-  healthyKeys: number;
-  totalModels: number;
-  activeModels: number;
-  status: ProviderHealthStatus;
-  isConfigured: boolean;
-}
-
-export interface GroupedProvider {
-  id: string;
-  platform: Platform;
-  name: string;
-  url?: string;
-  baseUrl?: string | null;
-  endpointScope?: string | null;
-  keyless?: boolean;
-  keys: ApiKey[];
-  models: Model[];
-  summary: ProviderSummary;
-}
-
-export interface CustomModelCreate {
-  platform: Platform;
-  modelId: string;
-  displayName?: string;
-  contextWindow?: number | null;
-  rpmLimit?: number | null;
-  rpdLimit?: number | null;
-  tpmLimit?: number | null;
-  tpdLimit?: number | null;
-  supportsVision?: boolean;
-  supportsTools?: boolean;
-}
 
 export interface ModelTestResult {
   success: boolean;

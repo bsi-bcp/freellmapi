@@ -5,6 +5,7 @@ import { getDb, getUnifiedApiKey, initDb, setSetting } from '../../db/index.js';
 import { encrypt } from '../../lib/crypto.js';
 import { mintDashboardToken } from '../helpers/auth.js';
 import { isLoopback } from '../../routes/ollama.js';
+import { REQUEST_MAX_TOKENS_BUDGET_SETTING } from '../../lib/guardrails.js';
 
 async function request(
   app: Express,
@@ -150,6 +151,23 @@ describe('Ollama emulation', () => {
     expect(isLoopback(peer('127.0.0.1', '127.0.0.1'))).toBe(true);
   });
 
+  // #1884: X-Forwarded-For is appended to, so the left-most hop is whatever the
+  // caller sent. A remote client through an appending local proxy must not become
+  // local by claiming 127.0.0.1 first.
+  it('ignores a caller-supplied loopback hop in front of the proxy hop', () => {
+    const peer = (remoteAddress: string, forwarded?: string) => ({
+      socket: { remoteAddress },
+      headers: forwarded ? { 'x-forwarded-for': forwarded } : {},
+    }) as any;
+    expect(isLoopback(peer('127.0.0.1', '127.0.0.1, 203.0.113.5'))).toBe(false);
+    expect(isLoopback(peer('127.0.0.1', '::1,203.0.113.5'))).toBe(false);
+    expect(isLoopback(peer('127.0.0.1', '127.0.0.1, 127.0.0.1'))).toBe(true);
+    expect(isLoopback(peer('127.0.0.1', '10.0.0.5, 127.0.0.1'))).toBe(true);
+    // A hop this module cannot read as an address is refused, not trusted.
+    expect(isLoopback(peer('127.0.0.1', '127.0.0.1, 203.0.113.5:41234'))).toBe(false);
+    expect(isLoopback(peer('127.0.0.1', '  '))).toBe(true);
+  });
+
   it('emits Ollama-compatible NDJSON chat frames', async () => {
     setSetting('ollama_emulation', 'open-loopback');
     const originalFetch = global.fetch;
@@ -175,6 +193,53 @@ describe('Ollama emulation', () => {
     expect(frames.slice(0, 2).map(frame => frame.message.content)).toEqual(['one', ' two']);
     expect(frames.at(-1).done).toBe(true);
     expect(frames.at(-1).done_reason).toBe('stop');
+  });
+
+  it('does not cap answers when num_predict is unset or -1', async () => {
+    setSetting('ollama_emulation', 'open-loopback');
+    const originalFetch = global.fetch;
+    const sent: unknown[] = [];
+    vi.spyOn(global, 'fetch').mockImplementation(async (url, init) => {
+      if (String(url).includes('api.groq.com/openai/v1/chat/completions')) {
+        sent.push(JSON.parse(String(init?.body)).max_tokens);
+        return Response.json({
+          id: 'x', object: 'chat.completion', created: 1, model: 'x',
+          choices: [{ index: 0, message: { role: 'assistant', content: 'ok' }, finish_reason: 'stop' }],
+        });
+      }
+      return originalFetch(url, init);
+    });
+    const messages = [{ role: 'user', content: 'write a long essay' }];
+    await request(app, 'POST', '/api/chat', { model: 'auto', stream: false, messages });
+    await request(app, 'POST', '/api/chat', { model: 'auto', stream: false, messages, options: { num_predict: -1 } });
+    await request(app, 'POST', '/api/chat', { model: 'auto', stream: false, messages, options: { num_predict: 200 } });
+    expect(sent).toHaveLength(3);
+    expect(sent[0]).toBeGreaterThan(1024);
+    expect(sent[1]).toBe(sent[0]);
+    expect(sent[2]).toBe(200);
+  });
+
+  it('keeps unset num_predict within the token budget instead of rejecting it', async () => {
+    setSetting('ollama_emulation', 'open-loopback');
+    setSetting(REQUEST_MAX_TOKENS_BUDGET_SETTING, '4000');
+    const originalFetch = global.fetch;
+    vi.spyOn(global, 'fetch').mockImplementation(async (url, init) => {
+      if (String(url).includes('api.groq.com/openai/v1/chat/completions')) {
+        return Response.json({
+          id: 'x', object: 'chat.completion', created: 1, model: 'x',
+          choices: [{ index: 0, message: { role: 'assistant', content: 'ok' }, finish_reason: 'stop' }],
+        });
+      }
+      return originalFetch(url, init);
+    });
+    try {
+      const response = await request(app, 'POST', '/api/chat', {
+        model: 'auto', stream: false, messages: [{ role: 'user', content: 'hi' }],
+      });
+      expect(response.status).toBe(200);
+    } finally {
+      setSetting(REQUEST_MAX_TOKENS_BUDGET_SETTING, '0');
+    }
   });
 
   it('correlates Ollama tool results with the preceding OpenAI tool call', async () => {

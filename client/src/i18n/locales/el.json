@@ -60,7 +60,16 @@
     "emailChanged": "Το e-mail άλλαξε.",
     "passwordReset": "Ο κωδικός επαναφέρθηκε. Συνδεθείτε.",
     "resetCodeDockerHint": "Εκτελείται σε Docker; Ο κωδικός βρίσκεται στο αρχείο καταγραφής του container: docker logs <container>.",
-    "desktopSessionFailed": "Ο πίνακας ελέγχου δεν μπόρεσε να συνδεθεί στον τοπικό διακομιστή. Κλείστε το FreeLLMAPI και ανοίξτε το ξανά."
+    "desktopSessionFailed": "Ο πίνακας ελέγχου δεν μπόρεσε να συνδεθεί στον τοπικό διακομιστή. Κλείστε το FreeLLMAPI και ανοίξτε το ξανά.",
+    "signInWithSso": "Sign in with {provider}",
+    "orContinueWithPassword": "or continue with email",
+    "reverifyWithSso": "Re-verify with {provider}",
+    "oidcReauthHint": "Confirm your identity with {provider} to access plaintext keys.",
+    "oidcReauthSuccess": "Identity verified for the next 5 minutes.",
+    "oidcErrorNotAllowed": "Your account is not permitted to sign in to this dashboard.",
+    "oidcErrorUnverifiedEmail": "Your identity provider must verify your email address before signing in.",
+    "oidcErrorNoAccount": "No matching account exists and automatic account creation is disabled.",
+    "oidcErrorFailed": "Single sign-on failed. Please try again."
   },
   "common": {
     "save": "Αποθήκευση",
@@ -109,6 +118,8 @@
     "sectionAdvanced": "Για προχωρημένους",
     "sectionPreview": "Προεπισκόπηση",
     "generalDescription": "Γλώσσα και εμφάνιση αυτού του πίνακα ελέγχου.",
+    "startAtLogin": "Εκκίνηση κατά την εκκίνηση του συστήματος",
+    "startAtLoginHelp": "Εκκινήστε αυτόματα το FreeLLMAPI όταν συνδέεστε στον υπολογιστή σας.",
     "advancedDescription": "Όρια και διακόπτες ασφαλείας για τη ροή συμπίεσης.",
     "compressionTitle": "Συμπίεση prompt",
     "compressionDescription": "Μειώστε το μέγεθος του αιτήματος πριν από τη δρομολόγηση, διατηρώντας κώδικα, σφάλματα, διαδρομές, αριθμούς και ορισμούς εργαλείων.",
@@ -169,7 +180,12 @@
     "updateNow": "Ενημέρωση τώρα",
     "updatingContainer": "Λήψη της νέας εικόνας και επανεκκίνηση. Η σελίδα θα φορτωθεί ξανά όταν επιστρέψει το FreeLLMAPI.",
     "updateNowFailed": "Το πρόγραμμα ενημέρωσης δεν δέχτηκε το αίτημα. Ελέγξτε ότι εκτελείται το κοντέινερ watchtower.",
-    "updateNowTimeout": "Το FreeLLMAPI δεν έχει επανεκκινηθεί μετά από 5 λεπτά. Ελέγξτε τα αρχεία καταγραφής του κοντέινερ watchtower."
+    "updateNowTimeout": "Το FreeLLMAPI δεν έχει επανεκκινηθεί μετά από 5 λεπτά. Ελέγξτε τα αρχεία καταγραφής του κοντέινερ watchtower.",
+    "injectSystemDate": "System date in prompt",
+    "injectSystemDateHelp": "Prepend today’s UTC date (YYYY-MM-DD) to the system prompt so models query web search for current information. Skipped if the caller already includes a date. Off or Web search is recommended to preserve prompt caching.",
+    "injectSystemDateOff": "Off",
+    "injectSystemDateWebSearch": "Web search",
+    "injectSystemDateAlways": "Always"
   },
   "models": {
     "title": "Μοντέλα",
@@ -393,6 +409,8 @@
     "pageDescription": "Διαπιστευτήρια παρόχου και το ενοποιημένο κλειδί API με το οποίο συνδέονται οι εφαρμογές σας.",
     "tabProviders": "Πάροχοι",
     "checklistSummary": "{configured} από {total} παρόχους έχουν ρυθμιστεί",
+    "keylessAvailable": "Διαθέσιμοι πάροχοι χωρίς κλειδί ({count})",
+    "keylessEnableAll": "Ενεργοποίηση όλων",
     "checklistKeyless": "δεν απαιτείται κλειδί",
     "checklistNoKeyTip": "Δεν έχει προστεθεί κλειδί ακόμη. Κάντε κλικ για να προσθέσετε ένα.",
     "checklistSignupLink": "Ανοίξτε το {provider} για να δημιουργήσετε λογαριασμό και να λάβετε κλειδί",
@@ -432,6 +450,7 @@
     "familyHaiku": "Χαϊκού",
     "selectPlatform": "Επιλέξτε έναν πάροχο",
     "addKey": "Προσθήκη κλειδιού",
+    "addAnotherKey": "Προσθήκη άλλου κλειδιού API",
     "keyAdded": "Προστέθηκε κλειδί",
     "endpointKeysShareModels": "Τα κλειδιά του ίδιου endpoint μοιράζονται τα μοντέλα του.",
     "export": "Εξαγωγή",
@@ -474,6 +493,8 @@
     "customTypeImage": "Εικόνα",
     "customTypeAudio": "Ήχος",
     "customTypeTranscription": "Transcription",
+    "customTypeSearch": "Web search",
+    "customTypeDecision": "Decision",
     "customBaseUrl": "Βάση URL",
     "customModels": "Μοντέλα",
     "customModel": "Μοντέλο",
@@ -482,6 +503,9 @@
     "customDisplayNameOptional": "προαιρετικός",
     "customFamily": "Οικογένεια",
     "customFamilyPlaceholder": "Προεπιλογή σε αναγνωριστικό μοντέλου",
+    "customEmbeddingInputType": "Input type",
+    "customEmbeddingInputTypeUnset": "Not specified",
+    "customEmbeddingInputTypeNone": "None (symmetric)",
     "customApiKey": "API κλειδί",
     "customCapabilities": "Δυνατότητες",
     "addModel": "Προσθήκη μοντέλου",
@@ -491,6 +515,10 @@
     "addImageModel": "Προσθήκη μοντέλου εικόνας",
     "addAudioModel": "Προσθήκη μοντέλου ήχου",
     "addTranscriptionModel": "Add transcription model",
+    "addSearchEngine": "Add search engine",
+    "addDecisionModel": "Add decision model",
+    "customSearchHint": "Search endpoints must accept POST <base URL>/search in Tavily's request format and return a results list.",
+    "customDecisionHint": "Decision endpoints must accept POST <base URL>/decide and answer with one of the question's choices.",
     "addingCustom": "Προσθέτοντας...",
     "discoverModels": "Λήψη μοντέλων",
     "probeNow": "Δοκιμή του endpoint",
@@ -937,6 +965,8 @@
     "dictationStop": "Διακοπή ηχογράφησης",
     "dictationTranscribing": "Μεταγραφή…",
     "dictationUnavailable": "Προσθέστε παρόχους μοντέλων ήχου για να χρησιμοποιήσετε την υπαγόρευση.",
+    "dictationMacShortcut": "Πατήστε το πλήκτρο μικροφώνου ή χρησιμοποιήστε τη συντόμευση υπαγόρευσης από τις ρυθμίσεις πληκτρολογίου.",
+    "dictationWindowsShortcut": "Πατήστε Win + H για να ξεκινήσετε τη φωνητική πληκτρολόγηση.",
     "dictationModel": "Μοντέλο υπαγόρευσης",
     "dictationFailed": "Η μεταγραφή απέτυχε: {reason}",
     "artifactOpen": "Άνοιγμα προεπισκόπησης",
@@ -986,7 +1016,8 @@
     "tokMax": "{tokens} tok max",
     "emptyTitle": "Δεν υπάρχουν ακόμη μοντέλα ενσωμάτωσης",
     "emptyDesc": "Οι οικογένειες ενσωμάτωσης εμφανίζονται εδώ μόλις προσθέσετε ένα κλειδί υπηρεσίας παροχής που υποστηρίζει ενσωματώσεις.",
-    "dragToReorder": "Σύρετε για να αλλάξετε τη σειρά του παρόχου"
+    "dragToReorder": "Σύρετε για να αλλάξετε τη σειρά του παρόχου",
+    "inputTypeTitle": "Asymmetric embedding model: this side of the vector space is sent as input_type."
   },
   "fusion": {
     "title": "Σύντηξη",
@@ -1140,6 +1171,8 @@
     "step1Title": "Προσθήκη κλειδιού παρόχου",
     "step1Desc": "Συνδέστε τουλάχιστον έναν λογαριασμό παρόχου. Τα δωρεάν κλειδιά λειτουργούν.",
     "step1Cta": "Προσθήκη κλειδιών",
+    "step1KeylessTitle": "Οι πάροχοι χωρίς κλειδί είναι ενεργοί",
+    "step1KeylessDesc": "Τα δωρεάν μοντέλα είναι έτοιμα, χωρίς εγγραφή. Προσθέστε δικά σας κλειδιά για περισσότερα και ταχύτερα μοντέλα.",
     "step2Title": "Αποστολή αιτήματος δοκιμής",
     "step2Desc": "Διαλέξτε οποιοδήποτε μοντέλο στην παιδική χαρά και πείτε γεια.",
     "step2Cta": "Ανοιχτός Παιδότοπος",
@@ -1180,6 +1213,24 @@
     "manualHint": "Βασικό URL και κλειδί για καταχώριση στις ρυθμίσεις του ίδιου του εργαλείου.",
     "endpoint": "Τελικό σημείο",
     "documentation": "Τεκμηρίωση",
+    "connect": {
+      "button": "Σύνδεση με FreeLLMAPI",
+      "details": "Λεπτομέρειες ρύθμισης",
+      "gateway": "Τοπική πύλη",
+      "saved": "Οι ρυθμίσεις αποθηκεύτηκαν",
+      "finish": "Ολοκλήρωση ρύθμισης",
+      "launch": "Εκκίνηση στο τερματικό",
+      "quit": "Κλείστε το ZCode Desktop πριν από την αποθήκευση για να μην αντικαταστήσει τις ρυθμίσεις.",
+      "restart": "Επανεκκινήστε το {name} αν εκτελείται.",
+      "send": "Ανοίξτε το {name} και στείλτε ένα μήνυμα.",
+      "files": "Αρχεία ρυθμίσεων",
+      "writeError": "Ελέγξτε τα δικαιώματα των αρχείων και τις υπάρχουσες ρυθμίσεις και δοκιμάστε ξανά.",
+      "missing": "Εγκαταστήστε το CLI ή προσθέστε το στο PATH.",
+      "intro": "Συνδέστε εργαλεία προγραμματισμού σε μία πύλη δωρεάν μοντέλων με παραγόμενη διαμόρφωση που προστατεύει τα αντίγραφα ασφαλείας.",
+      "all": "Πράκτορες",
+      "find": "Search",
+      "cursor": "The AI-first editor; it calls through Cursor's cloud, so it needs a public URL."
+    },
     "descriptions": {
       "claude": "Anthropic's terminal agent: it plans, edits files, and runs commands in your repo.",
       "codex": "OpenAI's terminal agent, which runs your task in a local sandbox first.",
@@ -1201,7 +1252,8 @@
       "hermes": "Ο αυτοβελτιούμενος πράκτορας της Nous Research με μόνιμη μνήμη και δεξιότητες, στο τερματικό ή σε εφαρμογές συνομιλίας.",
       "pi": "Ένας μινιμαλιστικός πράκτορας τερματικού που διαμορφώνετε με δικές σας επεκτάσεις, δεξιότητες και πρότυπα προτροπών.",
       "reasonix": "Πράκτορας προγραμματισμού για το τερματικό, φτιαγμένος για το DeepSeek γύρω από την προσωρινή αποθήκευση προθεμάτων, ώστε οι μεγάλες συνεδρίες να μένουν φθηνές.",
-      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry."
+      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry.",
+      "zero": "Ένας τοπικός πράκτορας προγραμματισμού τερματικού με μόνιμες συνεδρίες, δικαιώματα και κάθε πάροχο συμβατό με OpenAI."
     }
   },
   "update": {
@@ -1260,7 +1312,15 @@
     "renameHint": "Μετονομασία αυτής της αλυσίδας",
     "renameConfirm": "Μετονομασία της αλυσίδας \"{oldName}\" σε \"{name}\"; Οι πελάτες που καλούν auto:{oldName} πρέπει να μεταβούν σε auto:{name}.",
     "renamePlaceholder": "Νέο όνομα αλυσίδας",
-    "renameFailed": "Δεν ήταν δυνατή η μετονομασία της αλυσίδας."
+    "renameFailed": "Δεν ήταν δυνατή η μετονομασία της αλυσίδας.",
+    "strategy": "Routing strategy",
+    "strategyHint": "How this chain ranks its models. Inherit uses the global setting.",
+    "strategyInherit": "Inherit global",
+    "strategyPriority": "Manual order",
+    "strategyBalanced": "Balanced",
+    "strategySmartest": "Smartest",
+    "strategyFastest": "Fastest",
+    "strategyReliable": "Most reliable"
   },
   "updates": {
     "versionAvailable": "Η έκδοση {version} είναι διαθέσιμη",

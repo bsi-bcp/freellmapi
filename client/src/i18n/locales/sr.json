@@ -60,7 +60,16 @@
     "emailChanged": "Имејл је промењен.",
     "passwordReset": "Лозинка је ресетована. Пријавите се.",
     "resetCodeDockerHint": "Користите Docker? Код се налази у логу контејнера: docker logs <container>.",
-    "desktopSessionFailed": "Контролна табла није успела да се пријави на локални сервер. Затворите FreeLLMAPI и поново га отворите."
+    "desktopSessionFailed": "Контролна табла није успела да се пријави на локални сервер. Затворите FreeLLMAPI и поново га отворите.",
+    "signInWithSso": "Sign in with {provider}",
+    "orContinueWithPassword": "or continue with email",
+    "reverifyWithSso": "Re-verify with {provider}",
+    "oidcReauthHint": "Confirm your identity with {provider} to access plaintext keys.",
+    "oidcReauthSuccess": "Identity verified for the next 5 minutes.",
+    "oidcErrorNotAllowed": "Your account is not permitted to sign in to this dashboard.",
+    "oidcErrorUnverifiedEmail": "Your identity provider must verify your email address before signing in.",
+    "oidcErrorNoAccount": "No matching account exists and automatic account creation is disabled.",
+    "oidcErrorFailed": "Single sign-on failed. Please try again."
   },
   "common": {
     "save": "Сачувај",
@@ -109,6 +118,8 @@
     "sectionAdvanced": "Напредно",
     "sectionPreview": "Преглед",
     "generalDescription": "Језик и изглед ове контролне табле.",
+    "startAtLogin": "Покрени при покретању система",
+    "startAtLoginHelp": "Аутоматски покрените FreeLLMAPI када се пријавите на рачунар.",
     "advancedDescription": "Прагови и сигурносни прекидачи ланца компресије.",
     "compressionTitle": "Компресија промптова",
     "compressionDescription": "Смањује величину захтева пре рутирања, уз очување кода, грешака, путања, бројева и дефиниција алата.",
@@ -169,7 +180,12 @@
     "updateNow": "Ажурирај сада",
     "updatingContainer": "Преузима се нова слика и поново се покреће. Страница ће се поново учитати када се FreeLLMAPI врати.",
     "updateNowFailed": "Ажурирач није прихватио захтев. Проверите да ли контејнер watchtower ради.",
-    "updateNowTimeout": "FreeLLMAPI се није поново покренуо након 5 минута. Проверите логове контејнера watchtower."
+    "updateNowTimeout": "FreeLLMAPI се није поново покренуо након 5 минута. Проверите логове контејнера watchtower.",
+    "injectSystemDate": "System date in prompt",
+    "injectSystemDateHelp": "Prepend today’s UTC date (YYYY-MM-DD) to the system prompt so models query web search for current information. Skipped if the caller already includes a date. Off or Web search is recommended to preserve prompt caching.",
+    "injectSystemDateOff": "Off",
+    "injectSystemDateWebSearch": "Web search",
+    "injectSystemDateAlways": "Always"
   },
   "models": {
     "title": "Модели",
@@ -393,6 +409,8 @@
     "pageDescription": "Акредитиви добављача и обједињени кључ API са којим се ваше апликације повезују.",
     "tabProviders": "Провајдери",
     "checklistSummary": "Подешено {configured} од {total} провајдера",
+    "keylessAvailable": "Доступни провајдери без кључа ({count})",
+    "keylessEnableAll": "Укључи све",
     "checklistKeyless": "кључ није потребан",
     "checklistNoKeyTip": "Кључ још није додат. Кликните да бисте га додали.",
     "checklistSignupLink": "Отворите {provider} да бисте направили налог и добили кључ",
@@ -432,6 +450,7 @@
     "familyHaiku": "Хаику",
     "selectPlatform": "Изаберите провајдера",
     "addKey": "Додај кључ",
+    "addAnotherKey": "Додај још један API кључ",
     "keyAdded": "Кључ је додат",
     "endpointKeysShareModels": "Кључеви исте крајње тачке деле њене моделе.",
     "export": "Извоз",
@@ -474,6 +493,8 @@
     "customTypeImage": "Слика",
     "customTypeAudio": "Аудио",
     "customTypeTranscription": "Transcription",
+    "customTypeSearch": "Web search",
+    "customTypeDecision": "Decision",
     "customBaseUrl": "База URL",
     "customModels": "Модели",
     "customModel": "Модел",
@@ -482,6 +503,9 @@
     "customDisplayNameOptional": "опционо",
     "customFamily": "Породица",
     "customFamilyPlaceholder": "подразумевано је на ИД модела",
+    "customEmbeddingInputType": "Input type",
+    "customEmbeddingInputTypeUnset": "Not specified",
+    "customEmbeddingInputTypeNone": "None (symmetric)",
     "customApiKey": "Кључ API",
     "customCapabilities": "Могућности",
     "addModel": "Додајте модел",
@@ -491,6 +515,10 @@
     "addImageModel": "Додајте модел слике",
     "addAudioModel": "Додајте аудио модел",
     "addTranscriptionModel": "Add transcription model",
+    "addSearchEngine": "Add search engine",
+    "addDecisionModel": "Add decision model",
+    "customSearchHint": "Search endpoints must accept POST <base URL>/search in Tavily's request format and return a results list.",
+    "customDecisionHint": "Decision endpoints must accept POST <base URL>/decide and answer with one of the question's choices.",
     "addingCustom": "Додавање…",
     "discoverModels": "Преузми моделе",
     "probeNow": "Тестирај крајњу тачку",
@@ -937,6 +965,8 @@
     "dictationStop": "Заустави снимање",
     "dictationTranscribing": "Транскрибовање…",
     "dictationUnavailable": "Додајте провајдере аудио модела да бисте могли да диктирате.",
+    "dictationMacShortcut": "Притисните тастер микрофона или користите пречицу за диктирање из подешавања тастатуре.",
+    "dictationWindowsShortcut": "Притисните Win + H да бисте започели гласовни унос.",
     "dictationModel": "Модел диктирања",
     "dictationFailed": "Транскрипција није успела: {reason}",
     "artifactOpen": "Отвори преглед",
@@ -986,7 +1016,8 @@
     "tokMax": "{tokens} ток мак",
     "emptyTitle": "Још нема модела за уграђивање",
     "emptyDesc": "Породице за уграђивање се појављују овде када додате кључ добављача који подржава уграђивање.",
-    "dragToReorder": "Превуците да бисте променили редослед добављача"
+    "dragToReorder": "Превуците да бисте променили редослед добављача",
+    "inputTypeTitle": "Asymmetric embedding model: this side of the vector space is sent as input_type."
   },
   "fusion": {
     "title": "Фусион",
@@ -1140,6 +1171,8 @@
     "step1Title": "Додајте кључ провајдера",
     "step1Desc": "Повежите најмање један налог провајдера. Бесплатни кључеви раде.",
     "step1Cta": "Додајте кључеве",
+    "step1KeylessTitle": "Провајдери без кључа су укључени",
+    "step1KeylessDesc": "Бесплатни модели су спремни, без регистрације. Додајте своје кључеве за више и бржих модела.",
     "step2Title": "Пошаљите захтев за тестирање",
     "step2Desc": "Изаберите било који модел у Плаигроунду и поздравите се.",
     "step2Cta": "Опен Плаигроунд",
@@ -1180,6 +1213,24 @@
     "manualHint": "Основни URL и кључ за унос у сопствена подешавања алата.",
     "endpoint": "Крајња тачка",
     "documentation": "Документација",
+    "connect": {
+      "button": "Повежи са FreeLLMAPI",
+      "details": "Детаљи подешавања",
+      "gateway": "Локални мрежни пролаз",
+      "saved": "Подешавања сачувана",
+      "finish": "Заврши подешавање",
+      "launch": "Покрени у терминалу",
+      "quit": "Затворите ZCode Desktop пре чувања да не би преписао подешавања.",
+      "restart": "Поново покрените {name} ако је активан.",
+      "send": "Отворите {name} и пошаљите поруку.",
+      "files": "Конфигурационе датотеке",
+      "writeError": "Проверите дозволе датотека и постојећа подешавања па покушајте поново.",
+      "missing": "Инсталирајте CLI или га додајте у PATH.",
+      "intro": "Повежите алате за кодирање са једним мрежним пролазом бесплатних модела уз генерисану конфигурацију безбедну за резервне копије.",
+      "all": "Агенти",
+      "find": "Search",
+      "cursor": "The AI-first editor; it calls through Cursor's cloud, so it needs a public URL."
+    },
     "descriptions": {
       "claude": "Anthropic's terminal agent: it plans, edits files, and runs commands in your repo.",
       "codex": "OpenAI's terminal agent, which runs your task in a local sandbox first.",
@@ -1201,7 +1252,8 @@
       "hermes": "Агент компаније Nous Research који сам себе усавршава, са трајном меморијом и вештинама, у терминалу или у чет апликацијама.",
       "pi": "Минималистички терминалски агент који обликујете сопственим проширењима, вештинама и шаблонима упита.",
       "reasonix": "Терминалски агент за програмирање направљен за DeepSeek, око кеширања префикса, како би дуге сесије остале јефтине.",
-      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry."
+      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry.",
+      "zero": "Локални терминалски агент за програмирање са трајним сесијама, дозволама и подршком за било ког провајдера компатибилног са OpenAI."
     }
   },
   "update": {
@@ -1260,7 +1312,15 @@
     "renameHint": "Преименуј овај ланац",
     "renameConfirm": "Преименовати ланац „{oldName}“ у „{name}“? Клијенти који зову auto:{oldName} морају прећи на auto:{name}.",
     "renamePlaceholder": "Нови назив ланца",
-    "renameFailed": "Није могуће преименовати тај ланац."
+    "renameFailed": "Није могуће преименовати тај ланац.",
+    "strategy": "Routing strategy",
+    "strategyHint": "How this chain ranks its models. Inherit uses the global setting.",
+    "strategyInherit": "Inherit global",
+    "strategyPriority": "Manual order",
+    "strategyBalanced": "Balanced",
+    "strategySmartest": "Smartest",
+    "strategyFastest": "Fastest",
+    "strategyReliable": "Most reliable"
   },
   "updates": {
     "versionAvailable": "Доступна је верзија {version}",

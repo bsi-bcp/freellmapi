@@ -60,7 +60,16 @@
     "emailChanged": "E-posta değiştirildi.",
     "passwordReset": "Şifre sıfırlandı. Lütfen giriş yapın.",
     "resetCodeDockerHint": "Docker içinde mi çalışıyor? Kod konteyner günlüğündedir: docker logs <container>.",
-    "desktopSessionFailed": "Kontrol paneli yerel sunucuya giriş yapamadı. FreeLLMAPI uygulamasını kapatıp yeniden açın."
+    "desktopSessionFailed": "Kontrol paneli yerel sunucuya giriş yapamadı. FreeLLMAPI uygulamasını kapatıp yeniden açın.",
+    "signInWithSso": "{provider} ile oturum aç",
+    "orContinueWithPassword": "veya e-posta ile devam et",
+    "reverifyWithSso": "{provider} ile yeniden doğrula",
+    "oidcReauthHint": "Düz metin anahtarlara erişmek için kimliğini {provider} ile doğrula.",
+    "oidcReauthSuccess": "Kimlik önümüzdeki 5 dakika için doğrulandı.",
+    "oidcErrorNotAllowed": "Hesabının bu panoda oturum açma izni yok.",
+    "oidcErrorUnverifiedEmail": "Oturum açmadan önce kimlik sağlayıcın e-posta adresini doğrulamalıdır.",
+    "oidcErrorNoAccount": "Eşleşen bir hesap yok ve otomatik hesap oluşturma kapalı.",
+    "oidcErrorFailed": "Tek oturum açma başarısız oldu. Lütfen tekrar dene."
   },
   "common": {
     "save": "Kaydet",
@@ -109,6 +118,8 @@
     "sectionAdvanced": "Gelişmiş",
     "sectionPreview": "Önizleme",
     "generalDescription": "Bu panonun dili ve görünümü.",
+    "startAtLogin": "Sistem başlangıcında başlat",
+    "startAtLoginHelp": "Bilgisayarınızda oturum açtığınızda FreeLLMAPI'yi otomatik olarak başlatın.",
     "advancedDescription": "Sıkıştırma hattı için eşikler ve güvenlik ayarları.",
     "compressionTitle": "İstem sıkıştırma",
     "compressionDescription": "Kod, hatalar, yollar, sayılar ve araç tanımlarını koruyarak yönlendirmeden önce istek boyutunu azaltın.",
@@ -169,7 +180,12 @@
     "updateNow": "Şimdi güncelle",
     "updatingContainer": "Yeni imaj çekiliyor ve yeniden başlatılıyor. FreeLLMAPI geri geldiğinde bu sayfa yenilenecek.",
     "updateNowFailed": "Güncelleyici isteği kabul etmedi. watchtower konteynerinin çalıştığından emin olun.",
-    "updateNowTimeout": "FreeLLMAPI 5 dakika sonra hâlâ yeniden başlamadı. watchtower konteynerinin günlüklerine bakın."
+    "updateNowTimeout": "FreeLLMAPI 5 dakika sonra hâlâ yeniden başlamadı. watchtower konteynerinin günlüklerine bakın.",
+    "injectSystemDate": "System date in prompt",
+    "injectSystemDateHelp": "Prepend today’s UTC date (YYYY-MM-DD) to the system prompt so models query web search for current information. Skipped if the caller already includes a date. Off or Web search is recommended to preserve prompt caching.",
+    "injectSystemDateOff": "Off",
+    "injectSystemDateWebSearch": "Web search",
+    "injectSystemDateAlways": "Always"
   },
   "models": {
     "title": "Modeller",
@@ -393,6 +409,8 @@
     "pageDescription": "Sağlayıcı kimlik bilgileri ve uygulamalarınızın bağlandığı birleşik API anahtarı.",
     "tabProviders": "Sağlayıcılar",
     "checklistSummary": "{total} sağlayıcıdan {configured} tanesi yapılandırıldı",
+    "keylessAvailable": "Anahtarsız sağlayıcılar mevcut ({count})",
+    "keylessEnableAll": "Tümünü etkinleştir",
     "checklistKeyless": "anahtar gerekmez",
     "checklistNoKeyTip": "Henüz anahtar eklenmedi. Eklemek için tıklayın.",
     "checklistSignupLink": "Hesap oluşturmak ve anahtar almak için {provider} adresini açın",
@@ -432,6 +450,7 @@
     "familyHaiku": "Haiku",
     "selectPlatform": "Bir sağlayıcı seçin",
     "addKey": "Anahtar ekle",
+    "addAnotherKey": "Başka bir API anahtarı ekle",
     "keyAdded": "Anahtar eklendi",
     "endpointKeysShareModels": "Aynı uç noktanın anahtarları onun modellerini paylaşır.",
     "export": "Dışa aktar",
@@ -474,6 +493,8 @@
     "customTypeImage": "Resim",
     "customTypeAudio": "Ses",
     "customTypeTranscription": "Transkripsiyon",
+    "customTypeSearch": "Web araması",
+    "customTypeDecision": "Karar",
     "customBaseUrl": "Temel URL",
     "customModels": "Modeller",
     "customModel": "Model",
@@ -482,6 +503,9 @@
     "customDisplayNameOptional": "isteğe bağlı",
     "customFamily": "Aile",
     "customFamilyPlaceholder": "varsayılan olarak model kimliği kullanılır",
+    "customEmbeddingInputType": "Giriş türü",
+    "customEmbeddingInputTypeUnset": "Belirtilmemiş",
+    "customEmbeddingInputTypeNone": "Yok (simetrik)",
     "customApiKey": "API anahtarı",
     "customCapabilities": "Yetenekler",
     "addModel": "Model ekle",
@@ -491,6 +515,10 @@
     "addImageModel": "Resim modeli ekle",
     "addAudioModel": "Ses modeli ekle",
     "addTranscriptionModel": "Transkripsiyon modeli ekle",
+    "addSearchEngine": "Arama motoru ekle",
+    "addDecisionModel": "Karar modeli ekle",
+    "customSearchHint": "Arama uç noktaları Tavily istek biçiminde POST <temel URL>/search kabul etmeli ve bir sonuç listesi döndürmelidir.",
+    "customDecisionHint": "Karar uç noktaları POST <temel URL>/decide kabul etmeli ve sorunun seçeneklerinden biriyle yanıt vermelidir.",
     "addingCustom": "Ekleniyor…",
     "discoverModels": "Modelleri getir",
     "probeNow": "Uç noktayı test et",
@@ -937,6 +965,8 @@
     "dictationStop": "Kaydı durdur",
     "dictationTranscribing": "Yazıya dökülüyor…",
     "dictationUnavailable": "Dikteyi kullanabilmek için ses modellerini destekleyen sağlayıcılar ekleyin.",
+    "dictationMacShortcut": "Mikrofon tuşuna basın veya klavye ayarlarında belirlenen dikte kestirmesini kullanın.",
+    "dictationWindowsShortcut": "Sesle yazmaya başlamak için Win + H tuşlarına basın.",
     "dictationModel": "Dikte modeli",
     "dictationFailed": "Yazıya dökme başarısız: {reason}",
     "artifactOpen": "Önizlemeyi aç",
@@ -986,7 +1016,8 @@
     "tokMax": "maks. {tokens} token",
     "emptyTitle": "Henüz gömme modeli yok",
     "emptyDesc": "Gömmeleri destekleyen bir sağlayıcı anahtarı eklediğinizde gömme aileleri burada görünür.",
-    "dragToReorder": "Sağlayıcıyı yeniden sıralamak için sürükleyin"
+    "dragToReorder": "Sağlayıcıyı yeniden sıralamak için sürükleyin",
+    "inputTypeTitle": "Asimetrik gömme modeli: vektör uzayının bu tarafı input_type olarak gönderilir."
   },
   "fusion": {
     "title": "Füzyon",
@@ -1140,6 +1171,8 @@
     "step1Title": "Sağlayıcı anahtarı ekleyin",
     "step1Desc": "En az bir sağlayıcı hesabını bağlayın. Ücretsiz anahtarlar çalışır.",
     "step1Cta": "Anahtar ekle",
+    "step1KeylessTitle": "Anahtarsız sağlayıcılar açık",
+    "step1KeylessDesc": "Ücretsiz modeller hazır, kayıt gerekmez. Daha fazla ve daha hızlı model için kendi anahtarlarınızı ekleyin.",
     "step2Title": "Test isteği gönder",
     "step2Desc": "Oyun Alanında herhangi bir modeli seçin ve merhaba deyin.",
     "step2Cta": "Oyun Alanını aç",
@@ -1180,6 +1213,24 @@
     "manualHint": "Aracın kendi ayarlarına girilecek temel URL ve anahtar.",
     "endpoint": "Uç nokta",
     "documentation": "Dokümantasyon",
+    "connect": {
+      "button": "FreeLLMAPI’ye bağlan",
+      "details": "Kurulum ayrıntıları",
+      "gateway": "Yerel ağ geçidi",
+      "saved": "Yapılandırma kaydedildi",
+      "finish": "Kurulumu tamamla",
+      "launch": "Terminalde başlat",
+      "quit": "Ayarların üzerine yazılmaması için kaydetmeden önce ZCode Desktop’ı kapatın.",
+      "restart": "Çalışıyorsa {name} uygulamasını yeniden başlatın.",
+      "send": "{name} uygulamasını açıp bir ileti gönderin.",
+      "files": "Yapılandırma dosyaları",
+      "writeError": "Dosya izinlerini ve mevcut yapılandırmayı kontrol edip yeniden deneyin.",
+      "missing": "CLI’yi yükleyin veya PATH’e ekleyin.",
+      "intro": "Kodlama araçlarını, otomatik oluşturulan ve yedeklemeye uygun bir yapılandırmayla tek bir ücretsiz model ağ geçidine bağlayın.",
+      "all": "Ajanlar",
+      "find": "Search",
+      "cursor": "Yapay zekâ odaklı düzenleyici; Cursor bulutundan geçtiği için herkese açık bir URL ister."
+    },
     "descriptions": {
       "claude": "Anthropic'in terminal ajanı: planlar, dosyaları düzenler ve deponuzda komut çalıştırır.",
       "codex": "OpenAI'nin terminal ajanı; görevi önce yerel bir kum havuzunda çalıştırır.",
@@ -1201,7 +1252,8 @@
       "hermes": "Nous Research'ün kendini geliştiren ajanı; kalıcı bellek ve becerilerle, terminalde ya da sohbet uygulamalarında.",
       "pi": "Kendi uzantılarınız, becerileriniz ve istem şablonlarınızla şekillendirdiğiniz minimal bir terminal ajanı.",
       "reasonix": "DeepSeek için geliştirilmiş bir terminal kodlama ajanı; uzun oturumlar ucuz kalsın diye önek önbelleği etrafında kurulmuştur.",
-      "zcode": "Z.ai'nin GLM modelleri için kodlama ajanı; sağlayıcı kaydıyla herhangi bir OpenAI uyumlu uç noktaya bağlanır."
+      "zcode": "Z.ai'nin GLM modelleri için kodlama ajanı; sağlayıcı kaydıyla herhangi bir OpenAI uyumlu uç noktaya bağlanır.",
+      "zero": "Kalıcı oturumlar, izinler ve OpenAI uyumlu herhangi bir sağlayıcıyla çalışan yerel bir terminal kodlama ajanı."
     }
   },
   "update": {
@@ -1260,7 +1312,15 @@
     "renameHint": "Bu zinciri yeniden adlandır",
     "renameConfirm": "\"{oldName}\" zincirinin adı \"{name}\" olarak değiştirilsin mi? auto:{oldName} kullanan istemcilerin auto:{name} değerine geçmesi gerekir.",
     "renamePlaceholder": "Yeni zincir adı",
-    "renameFailed": "Zincir yeniden adlandırılamadı."
+    "renameFailed": "Zincir yeniden adlandırılamadı.",
+    "strategy": "Routing strategy",
+    "strategyHint": "How this chain ranks its models. Inherit uses the global setting.",
+    "strategyInherit": "Inherit global",
+    "strategyPriority": "Manual order",
+    "strategyBalanced": "Balanced",
+    "strategySmartest": "Smartest",
+    "strategyFastest": "Fastest",
+    "strategyReliable": "Most reliable"
   },
   "updates": {
     "versionAvailable": "{version} sürümü kullanılabilir",

@@ -60,7 +60,16 @@
     "emailChanged": "ಇಮೇಲ್ ಯಶಸ್ವಿಯಾಗಿ ಬದಲಾಯಿಸಲಾಗಿದೆ.",
     "passwordReset": "ಪಾಸ್‌ವರ್ಡ್ ಮರುಹೊಂದಿಸಲಾಗಿದೆ. ದಯವಿಟ್ಟು ಸೈನ್ ಇನ್ ಮಾಡಿ.",
     "resetCodeDockerHint": "Docker ನಲ್ಲಿ ಚಾಲನೆಯಲ್ಲಿದೆಯೇ? ಕೋಡ್ ಕಂಟೈನರ್ ಲಾಗ್‌ನಲ್ಲಿದೆ: docker logs <container>.",
-    "desktopSessionFailed": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಸ್ಥಳೀಯ ಸರ್ವರ್‌ಗೆ ಸೈನ್ ಇನ್ ಆಗಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. FreeLLMAPI ಅನ್ನು ಮುಚ್ಚಿ ಮತ್ತೆ ತೆರೆಯಿರಿ."
+    "desktopSessionFailed": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಸ್ಥಳೀಯ ಸರ್ವರ್‌ಗೆ ಸೈನ್ ಇನ್ ಆಗಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. FreeLLMAPI ಅನ್ನು ಮುಚ್ಚಿ ಮತ್ತೆ ತೆರೆಯಿರಿ.",
+    "signInWithSso": "Sign in with {provider}",
+    "orContinueWithPassword": "or continue with email",
+    "reverifyWithSso": "Re-verify with {provider}",
+    "oidcReauthHint": "Confirm your identity with {provider} to access plaintext keys.",
+    "oidcReauthSuccess": "Identity verified for the next 5 minutes.",
+    "oidcErrorNotAllowed": "Your account is not permitted to sign in to this dashboard.",
+    "oidcErrorUnverifiedEmail": "Your identity provider must verify your email address before signing in.",
+    "oidcErrorNoAccount": "No matching account exists and automatic account creation is disabled.",
+    "oidcErrorFailed": "Single sign-on failed. Please try again."
   },
   "common": {
     "save": "ಉಳಿಸಿ",
@@ -109,6 +118,8 @@
     "sectionAdvanced": "ಸುಧಾರಿತ",
     "sectionPreview": "ಪೂರ್ವವೀಕ್ಷಣೆ",
     "generalDescription": "ಈ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ನ ಭಾಷೆ ಮತ್ತು ನೋಟ.",
+    "startAtLogin": "ಸಿಸ್ಟಮ್ ಸ್ಟಾರ್ಟ್ಅಪ್ನಲ್ಲಿ ಪ್ರಾರಂಭಿಸಿ",
+    "startAtLoginHelp": "ನಿಮ್ಮ ಕಂಪ್ಯೂಟರ್ಗೆ ಸೈನ್ ಇನ್ ಮಾಡಿದಾಗ FreeLLMAPI ಅನ್ನು ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಪ್ರಾರಂಭಿಸಿ.",
     "advancedDescription": "ಸಂಕೋಚನ ಪೈಪ್‌ಲೈನ್‌ಗಾಗಿ ಮಿತಿಗಳು ಮತ್ತು ಸುರಕ್ಷತಾ ಸ್ವಿಚ್‌ಗಳು.",
     "compressionTitle": "ಪ್ರಾಂಪ್ಟ್ ಸಂಕೋಚನ",
     "compressionDescription": "ಕೋಡ್, ದೋಷಗಳು, ಪಾತ್‌ಗಳು, ಸಂಖ್ಯೆಗಳು ಮತ್ತು ಟೂಲ್ ವ್ಯಾಖ್ಯಾನಗಳನ್ನು ಉಳಿಸಿಕೊಂಡು ರೂಟಿಂಗ್‌ಗೆ ಮೊದಲು ವಿನಂತಿಯ ಗಾತ್ರವನ್ನು ಕಡಿಮೆ ಮಾಡಿ.",
@@ -169,7 +180,12 @@
     "updateNow": "ಈಗಲೇ ಅಪ್‌ಡೇಟ್ ಮಾಡಿ",
     "updatingContainer": "ಹೊಸ ಇಮೇಜ್ ಎಳೆಯಲಾಗುತ್ತಿದೆ ಮತ್ತು ಮರುಪ್ರಾರಂಭಿಸಲಾಗುತ್ತಿದೆ. FreeLLMAPI ಮರಳಿದಾಗ ಈ ಪುಟ ಮರುಲೋಡ್ ಆಗುತ್ತದೆ.",
     "updateNowFailed": "ಅಪ್‌ಡೇಟರ್ ವಿನಂತಿಯನ್ನು ಸ್ವೀಕರಿಸಲಿಲ್ಲ. watchtower ಕಂಟೇನರ್ ಚಾಲನೆಯಲ್ಲಿದೆಯೇ ಎಂದು ಪರಿಶೀಲಿಸಿ.",
-    "updateNowTimeout": "5 ನಿಮಿಷಗಳ ನಂತರವೂ FreeLLMAPI ಮರುಪ್ರಾರಂಭವಾಗಿಲ್ಲ. watchtower ಕಂಟೇನರ್ ಲಾಗ್‌ಗಳನ್ನು ಪರಿಶೀಲಿಸಿ."
+    "updateNowTimeout": "5 ನಿಮಿಷಗಳ ನಂತರವೂ FreeLLMAPI ಮರುಪ್ರಾರಂಭವಾಗಿಲ್ಲ. watchtower ಕಂಟೇನರ್ ಲಾಗ್‌ಗಳನ್ನು ಪರಿಶೀಲಿಸಿ.",
+    "injectSystemDate": "System date in prompt",
+    "injectSystemDateHelp": "Prepend today’s UTC date (YYYY-MM-DD) to the system prompt so models query web search for current information. Skipped if the caller already includes a date. Off or Web search is recommended to preserve prompt caching.",
+    "injectSystemDateOff": "Off",
+    "injectSystemDateWebSearch": "Web search",
+    "injectSystemDateAlways": "Always"
   },
   "models": {
     "title": "ಮಾದರಿಗಳು",
@@ -393,6 +409,8 @@
     "pageDescription": "ಒದಗಿಸುವವರ ರುಜುವಾತುಗಳು ಮತ್ತು ಏಕೀಕೃತ API ಕೀ ನಿಮ್ಮ ಅಪ್ಲಿಕೇಶನ್‌ಗಳನ್ನು ಸಂಪರ್ಕಿಸುತ್ತದೆ.",
     "tabProviders": "ಪೂರೈಕೆದಾರರು",
     "checklistSummary": "{total} ರಲ್ಲಿ {configured} ಪೂರೈಕೆದಾರರನ್ನು ಕಾನ್ಫಿಗರ್ ಮಾಡಲಾಗಿದೆ",
+    "keylessAvailable": "ಕೀ ಇಲ್ಲದ ಪೂರೈಕೆದಾರರು ಲಭ್ಯವಿದ್ದಾರೆ ({count})",
+    "keylessEnableAll": "ಎಲ್ಲವನ್ನೂ ಆನ್ ಮಾಡಿ",
     "checklistKeyless": "ಕೀ ಅಗತ್ಯವಿಲ್ಲ",
     "checklistNoKeyTip": "ಇನ್ನೂ ಯಾವುದೇ ಕೀ ಸೇರಿಸಿಲ್ಲ. ಸೇರಿಸಲು ಕ್ಲಿಕ್ ಮಾಡಿ.",
     "checklistSignupLink": "ಖಾತೆ ರಚಿಸಿ ಕೀ ಪಡೆಯಲು {provider} ತೆರೆಯಿರಿ",
@@ -432,6 +450,7 @@
     "familyHaiku": "ಹೈಕು",
     "selectPlatform": "ಒದಗಿಸುವವರನ್ನು ಆಯ್ಕೆಮಾಡಿ",
     "addKey": "ಕೀ ಸೇರಿಸಿ",
+    "addAnotherKey": "ಮತ್ತೊಂದು API ಕೀ ಸೇರಿಸಿ",
     "keyAdded": "ಕೀ ಸೇರಿಸಲಾಗಿದೆ",
     "endpointKeysShareModels": "ಒಂದೇ ಎಂಡ್‌ಪಾಯಿಂಟ್‌ನ ಕೀಗಳು ಅದರ ಮಾದರಿಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳುತ್ತವೆ.",
     "export": "ರಫ್ತು ಮಾಡಿ",
@@ -474,6 +493,8 @@
     "customTypeImage": "ಚಿತ್ರ",
     "customTypeAudio": "ಆಡಿಯೋ",
     "customTypeTranscription": "Transcription",
+    "customTypeSearch": "Web search",
+    "customTypeDecision": "Decision",
     "customBaseUrl": "ಬೇಸ್ URL",
     "customModels": "ಮಾದರಿಗಳು",
     "customModel": "ಮಾದರಿ",
@@ -482,6 +503,9 @@
     "customDisplayNameOptional": "ಐಚ್ಛಿಕ",
     "customFamily": "ಕುಟುಂಬ",
     "customFamilyPlaceholder": "ಮಾದರಿ ಐಡಿಗೆ ಡಿಫಾಲ್ಟ್",
+    "customEmbeddingInputType": "Input type",
+    "customEmbeddingInputTypeUnset": "Not specified",
+    "customEmbeddingInputTypeNone": "None (symmetric)",
     "customApiKey": "API ಕೀ",
     "customCapabilities": "ಸಾಮರ್ಥ್ಯಗಳು",
     "addModel": "ಮಾದರಿಯನ್ನು ಸೇರಿಸಿ",
@@ -491,6 +515,10 @@
     "addImageModel": "ಚಿತ್ರದ ಮಾದರಿಯನ್ನು ಸೇರಿಸಿ",
     "addAudioModel": "ಆಡಿಯೋ ಮಾದರಿಯನ್ನು ಸೇರಿಸಿ",
     "addTranscriptionModel": "Add transcription model",
+    "addSearchEngine": "Add search engine",
+    "addDecisionModel": "Add decision model",
+    "customSearchHint": "Search endpoints must accept POST <base URL>/search in Tavily's request format and return a results list.",
+    "customDecisionHint": "Decision endpoints must accept POST <base URL>/decide and answer with one of the question's choices.",
     "addingCustom": "ಸೇರಿಸಲಾಗುತ್ತಿದೆ...",
     "discoverModels": "ಮಾದರಿಗಳನ್ನು ತರಿಸಿ",
     "probeNow": "ಎಂಡ್‌ಪಾಯಿಂಟ್ ಪರೀಕ್ಷಿಸಿ",
@@ -937,6 +965,8 @@
     "dictationStop": "ರೆಕಾರ್ಡಿಂಗ್ ನಿಲ್ಲಿಸಿ",
     "dictationTranscribing": "ಲಿಪ್ಯಂತರ…",
     "dictationUnavailable": "ಡಿಕ್ಟೇಷನ್ ಬಳಸಲು ಆಡಿಯೊ ಮಾದರಿ ಪೂರೈಕೆದಾರರನ್ನು ಸೇರಿಸಿ.",
+    "dictationMacShortcut": "ಮೈಕ್ರೊಫೋನ್ ಕೀ ಒತ್ತಿ ಅಥವಾ ಕೀಬೋರ್ಡ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ಹೊಂದಿಸಿರುವ ಡಿಕ್ಟೇಷನ್ ಶಾರ್ಟ್‌ಕಟ್ ಬಳಸಿ.",
+    "dictationWindowsShortcut": "ಧ್ವನಿಯ ಮೂಲಕ ಟೈಪ್ ಮಾಡಲು Win + H ಒತ್ತಿ.",
     "dictationModel": "ಡಿಕ್ಟೇಷನ್ ಮಾದರಿ",
     "dictationFailed": "ಲಿಪ್ಯಂತರ ವಿಫಲ: {reason}",
     "artifactOpen": "ಪೂರ್ವವೀಕ್ಷಣೆ ತೆರೆಯಿರಿ",
@@ -986,7 +1016,8 @@
     "tokMax": "{tokens} tok max",
     "emptyTitle": "ಇನ್ನೂ ಎಂಬೆಡಿಂಗ್ ಮಾಡೆಲ್‌ಗಳಿಲ್ಲ",
     "emptyDesc": "ಎಂಬೆಡಿಂಗ್‌ಗಳನ್ನು ಬೆಂಬಲಿಸುವ ಪ್ರೊವೈಡರ್ ಕೀಯನ್ನು ಒಮ್ಮೆ ನೀವು ಸೇರಿಸಿದಾಗ ಎಂಬೆಡಿಂಗ್ ಕುಟುಂಬಗಳು ಇಲ್ಲಿ ಕಾಣಿಸಿಕೊಳ್ಳುತ್ತವೆ.",
-    "dragToReorder": "ಪೂರೈಕೆದಾರರನ್ನು ಮರುಕ್ರಮಗೊಳಿಸಲು ಎಳೆಯಿರಿ"
+    "dragToReorder": "ಪೂರೈಕೆದಾರರನ್ನು ಮರುಕ್ರಮಗೊಳಿಸಲು ಎಳೆಯಿರಿ",
+    "inputTypeTitle": "Asymmetric embedding model: this side of the vector space is sent as input_type."
   },
   "fusion": {
     "title": "ಫ್ಯೂಷನ್",
@@ -1140,6 +1171,8 @@
     "step1Title": "ಒದಗಿಸುವವರ ಕೀ ಸೇರಿಸಿ",
     "step1Desc": "ಕನಿಷ್ಠ ಒಂದು ಪೂರೈಕೆದಾರರ ಖಾತೆಯನ್ನು ಸಂಪರ್ಕಿಸಿ. ಉಚಿತ ಕೀಗಳು ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತವೆ.",
     "step1Cta": "ಕೀಲಿಗಳನ್ನು ಸೇರಿಸಿ",
+    "step1KeylessTitle": "ಕೀ ಇಲ್ಲದ ಪೂರೈಕೆದಾರರು ಆನ್ ಆಗಿದ್ದಾರೆ",
+    "step1KeylessDesc": "ಉಚಿತ ಮಾದರಿಗಳು ಸಿದ್ಧವಾಗಿವೆ, ಸೈನ್-ಅಪ್ ಬೇಕಿಲ್ಲ. ಹೆಚ್ಚು ಮತ್ತು ವೇಗದ ಮಾದರಿಗಳಿಗಾಗಿ ನಿಮ್ಮ ಸ್ವಂತ ಕೀಗಳನ್ನು ಸೇರಿಸಿ.",
     "step2Title": "ಪರೀಕ್ಷಾ ವಿನಂತಿಯನ್ನು ಕಳುಹಿಸಿ",
     "step2Desc": "ಆಟದ ಮೈದಾನದಲ್ಲಿ ಯಾವುದೇ ಮಾದರಿಯನ್ನು ಆರಿಸಿ ಮತ್ತು ಹಲೋ ಹೇಳಿ.",
     "step2Cta": "ಆಟದ ಮೈದಾನವನ್ನು ತೆರೆಯಿರಿ",
@@ -1180,6 +1213,24 @@
     "manualHint": "ಸಾಧನದ ಸ್ವಂತ ಸೆಟ್ಟಿಂಗ್‌ಗಳಲ್ಲಿ ನಮೂದಿಸಲು ಬೇಸ್ URL ಮತ್ತು ಕೀ.",
     "endpoint": "ಅಂತಿಮ ಬಿಂದು",
     "documentation": "ದಾಖಲಾತಿ",
+    "connect": {
+      "button": "FreeLLMAPI ಗೆ ಸಂಪರ್ಕಿಸಿ",
+      "details": "ಸೆಟಪ್ ವಿವರಗಳು",
+      "gateway": "ಸ್ಥಳೀಯ ಗೇಟ್‌ವೇ",
+      "saved": "ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಉಳಿಸಲಾಗಿದೆ",
+      "finish": "ಸೆಟಪ್ ಮುಗಿಸಿ",
+      "launch": "ಟರ್ಮಿನಲ್‌ನಲ್ಲಿ ತೆರೆಯಿರಿ",
+      "quit": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು ತಿದ್ದಲ್ಪಡುವುದನ್ನು ತಪ್ಪಿಸಲು ಉಳಿಸುವ ಮೊದಲು ZCode Desktop ಮುಚ್ಚಿ.",
+      "restart": "{name} ಚಾಲನೆಯಲ್ಲಿದ್ದರೆ ಅದನ್ನು ಮರುಪ್ರಾರಂಭಿಸಿ.",
+      "send": "{name} ತೆರೆದು ಸಂದೇಶ ಕಳುಹಿಸಿ.",
+      "files": "ಸಂರಚನಾ ಕಡತಗಳು",
+      "writeError": "ಕಡತದ ಅನುಮತಿಗಳು ಮತ್ತು ಪ್ರಸ್ತುತ ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಪರಿಶೀಲಿಸಿ ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+      "missing": "CLI ಸ್ಥಾಪಿಸಿ ಅಥವಾ ಅದನ್ನು PATH ಗೆ ಸೇರಿಸಿ.",
+      "intro": "ರಚಿಸಲಾದ, ಬ್ಯಾಕಪ್-ಸುರಕ್ಷಿತ ಕಾನ್ಫಿಗರೇಶನ್‌ನೊಂದಿಗೆ ಕೋಡಿಂಗ್ ಉಪಕರಣಗಳನ್ನು ಒಂದು ಉಚಿತ-ಮಾದರಿ ಗೇಟ್‌ವೇಗೆ ಸಂಪರ್ಕಿಸಿ.",
+      "all": "ಏಜೆಂಟ್‌ಗಳು",
+      "find": "Search",
+      "cursor": "The AI-first editor; it calls through Cursor's cloud, so it needs a public URL."
+    },
     "descriptions": {
       "claude": "Anthropic's terminal agent: it plans, edits files, and runs commands in your repo.",
       "codex": "OpenAI's terminal agent, which runs your task in a local sandbox first.",
@@ -1201,7 +1252,8 @@
       "hermes": "Nous Research ನ ಸ್ವಯಂ-ಸುಧಾರಣಾ ಏಜೆಂಟ್, ಶಾಶ್ವತ ಮೆಮೊರಿ ಮತ್ತು ಕೌಶಲ್ಯಗಳೊಂದಿಗೆ, ಟರ್ಮಿನಲ್‌ನಲ್ಲಿ ಅಥವಾ ಚಾಟ್ ಆ್ಯಪ್‌ಗಳಲ್ಲಿ.",
       "pi": "ನಿಮ್ಮದೇ ಎಕ್ಸ್‌ಟೆನ್ಶನ್‌ಗಳು, ಕೌಶಲ್ಯಗಳು ಮತ್ತು ಪ್ರಾಂಪ್ಟ್ ಟೆಂಪ್ಲೇಟ್‌ಗಳಿಂದ ರೂಪಿಸುವ ಕನಿಷ್ಠ ಟರ್ಮಿನಲ್ ಏಜೆಂಟ್.",
       "reasonix": "DeepSeekಗಾಗಿ ನಿರ್ಮಿಸಿದ ಟರ್ಮಿನಲ್ ಕೋಡಿಂಗ್ ಏಜೆಂಟ್, ದೀರ್ಘ ಸೆಷನ್‌ಗಳೂ ಅಗ್ಗವಾಗಿರಲು ಪ್ರಿಫಿಕ್ಸ್ ಕ್ಯಾಶಿಂಗ್ ಸುತ್ತ ರೂಪಿಸಲಾಗಿದೆ.",
-      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry."
+      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry.",
+      "zero": "ಸ್ಥಿರ ಸೆಷನ್‌ಗಳು, ಅನುಮತಿಗಳು ಮತ್ತು ಯಾವುದೇ OpenAI-ಹೊಂದಾಣಿಕೆಯ ಪೂರೈಕೆದಾರರೊಂದಿಗೆ ಸ್ಥಳೀಯ ಟರ್ಮಿನಲ್ ಕೋಡಿಂಗ್ ಏಜೆಂಟ್."
     }
   },
   "update": {
@@ -1260,7 +1312,15 @@
     "renameHint": "ಈ ಚೈನ್ ಹೆಸರನ್ನು ಮಾರ್ಪಡಿಸಿ",
     "renameConfirm": "ಚೈನ್ \"{oldName}\" ಹೆಸರನ್ನು \"{name}\" ಗೆ ಬದಲಾಯಿಸುವುದೇ? auto:{oldName} ಕರೆ ಮಾಡುವ ಕ್ಲೈಂಟ್‌ಗಳು auto:{name} ಗೆ ಬದಲಾಗಬೇಕು.",
     "renamePlaceholder": "ಹೊಸ ಚೈನ್ ಹೆಸರು",
-    "renameFailed": "ಚೈನ್ ಹೆಸರನ್ನು ಮರುಹೆಸರಿಸಲಾಗಲಿಲ್ಲ."
+    "renameFailed": "ಚೈನ್ ಹೆಸರನ್ನು ಮರುಹೆಸರಿಸಲಾಗಲಿಲ್ಲ.",
+    "strategy": "Routing strategy",
+    "strategyHint": "How this chain ranks its models. Inherit uses the global setting.",
+    "strategyInherit": "Inherit global",
+    "strategyPriority": "Manual order",
+    "strategyBalanced": "Balanced",
+    "strategySmartest": "Smartest",
+    "strategyFastest": "Fastest",
+    "strategyReliable": "Most reliable"
   },
   "updates": {
     "versionAvailable": "ಆವೃತ್ತಿ {version} ಲಭ್ಯವಿದೆ",

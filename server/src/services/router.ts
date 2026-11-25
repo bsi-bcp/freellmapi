@@ -1,4 +1,4 @@
-import { getDb, getSetting, setSetting } from '../db/index.js';
+import { getDb, getSetting as dbGetSetting, setSetting as dbSetSetting } from '../db/index.js';
 import { getProvider, hasProvider, resolveProvider } from '../providers/index.js';
 import { decrypt } from '../lib/crypto.js';
 import { decryptProxyUrl } from '../lib/key-proxy.js';
@@ -185,6 +185,13 @@ export interface ChainRow {
    * answering on score alone would be a silent substitution (#651).
    */
   match_tier?: number;
+  /**
+   * The routing preset this row's chain carries (profiles.routing_strategy), or
+   * null/absent to inherit the global strategy. Selected together with the chain
+   * rows so routeRequest can rank by the chain's own preset without a second
+   * query, and without widening routeRequest's signature.
+   */
+  profile_strategy?: string | null;
 }
 
 export interface RouteResult {
@@ -375,6 +382,50 @@ const PEAK_END_KEY = 'routing_peak_end_hour';
 const PEAK_TZ_KEY = 'routing_peak_timezone';
 const COMMUNITY_PRIOR_KEY = 'routing_community_prior';
 const COMMUNITY_PRIOR_ENABLED_KEY = 'routing_community_prior_enabled';
+// ── Routing settings snapshot ─────────────────────────────────────────────────
+// orderChain runs on every failover attempt and used to issue ~10 uncached
+// SELECTs on `settings` each time. Reads in this module now go through a short
+// TTL snapshot (same 1s the chain cache uses); every setter below invalidates it,
+// so a dashboard write is visible to the next read in this process. Writes made
+// by other code paths or processes are picked up within the TTL. Bypassed under
+// NODE_ENV=test for the same reason as the chain cache (suites write settings via
+// raw SQL and route immediately), unless a test opts in.
+const SETTINGS_CACHE_TTL_MS = 1_000;
+let settingsCache: { db: unknown; at: number; map: Map<string, string | undefined> } | null = null;
+let settingsCacheForced = false;
+
+function settingsCacheActive(): boolean {
+  return settingsCacheForced || process.env.NODE_ENV !== 'test';
+}
+
+function invalidateRouterSettingsCache(): void {
+  settingsCache = null;
+}
+
+/** Test hook: turn the settings snapshot on under NODE_ENV=test. */
+export function setRouterSettingsCacheForTests(on: boolean): void {
+  settingsCacheForced = on;
+  settingsCache = null;
+}
+
+function getSetting(key: string): string | undefined {
+  if (!settingsCacheActive()) return dbGetSetting(key);
+  const db = getDb();
+  const now = Date.now();
+  if (!settingsCache || settingsCache.db !== db || now < settingsCache.at || now - settingsCache.at >= SETTINGS_CACHE_TTL_MS) {
+    settingsCache = { db, at: now, map: new Map() };
+  }
+  if (settingsCache.map.has(key)) return settingsCache.map.get(key);
+  const value = dbGetSetting(key);
+  settingsCache.map.set(key, value);
+  return value;
+}
+
+function setSetting(key: string, value: string): void {
+  dbSetSetting(key, value);
+  invalidateRouterSettingsCache();
+}
+
 // Headroom guardrail thresholds (#899): the remaining-budget fraction at which
 // demotion begins and the score floor at 0 remaining. Stored as decimals
 // (0.2 = 20%). Absent/invalid values fall back to the scoring.ts constants so
@@ -399,6 +450,7 @@ export function setHeadroomThresholds(rampStart?: number | null, floor?: number 
     if (value === undefined) return;
     if (value === null) {
       db.prepare('DELETE FROM settings WHERE key = ?').run(key); // back to default
+      invalidateRouterSettingsCache();
       return;
     }
     if (!Number.isFinite(value) || value < 0 || value > 1) {
@@ -430,6 +482,7 @@ export function setMinReliabilityFloor(floor?: number | null): void {
   if (floor === undefined) return;
   if (floor === null) {
     getDb().prepare('DELETE FROM settings WHERE key = ?').run(MIN_RELIABILITY_FLOOR_KEY);
+    invalidateRouterSettingsCache();
     return;
   }
   if (!Number.isFinite(floor) || floor < 0 || floor > 1) {
@@ -463,6 +516,7 @@ export function setProviderMomentAttribution(enabled: boolean): void {
     setSetting(PROVIDER_MOMENT_ATTRIBUTION_KEY, '1');
   } else {
     getDb().prepare('DELETE FROM settings WHERE key = ?').run(PROVIDER_MOMENT_ATTRIBUTION_KEY);
+    invalidateRouterSettingsCache();
   }
   // The stats cache bakes the attribution filter into its SQL, so a toggle
   // must not wait for the cache TTL to change routing.
@@ -496,6 +550,7 @@ export function getTaskWeightShare(): number {
 export function setTaskWeightShare(value: number | null): void {
   if (value === null) {
     getDb().prepare('DELETE FROM settings WHERE key = ?').run(TASK_WEIGHT_SHARE_KEY);
+    invalidateRouterSettingsCache();
     return;
   }
   if (!Number.isFinite(value) || value < 0 || value > 1) {
@@ -1340,18 +1395,21 @@ function getActiveChain(db: Db): ChainRow[] {
   if (profileId != null) {
     rows = db.prepare(`
       SELECT pm.model_db_id, pm.priority, pm.enabled,
+             p.routing_strategy AS profile_strategy,
              m.platform, m.model_id, m.display_name, m.intelligence_rank,
              m.size_label, m.monthly_token_budget,
              m.rpm_limit, m.rpd_limit, m.tpm_limit, m.tpd_limit, m.supports_vision,
              m.supports_tools, m.context_window, m.key_id, m.endpoint_scope
       FROM profile_models pm
       JOIN models m ON m.id = pm.model_db_id AND m.enabled = 1
+      JOIN profiles p ON p.id = pm.profile_id
       WHERE pm.profile_id = ?
       ORDER BY pm.priority ASC
     `).all(profileId) as ChainRow[];
   } else {
     rows = db.prepare(`
       SELECT fc.model_db_id, fc.priority, fc.enabled,
+             NULL AS profile_strategy,
              m.platform, m.model_id, m.display_name, m.intelligence_rank,
              m.size_label, m.monthly_token_budget,
              m.rpm_limit, m.rpd_limit, m.tpm_limit, m.tpd_limit, m.supports_vision,
@@ -1371,12 +1429,14 @@ function getChainByProfileName(db: Db, name: string): ChainRow[] | null {
 
   return db.prepare(`
     SELECT pm.model_db_id, pm.priority, pm.enabled,
+           p.routing_strategy AS profile_strategy,
            m.platform, m.model_id, m.display_name, m.intelligence_rank,
            m.size_label, m.monthly_token_budget,
            m.rpm_limit, m.rpd_limit, m.tpm_limit, m.tpd_limit, m.supports_vision,
            m.supports_tools, m.context_window, m.key_id, m.endpoint_scope
     FROM profile_models pm
     JOIN models m ON m.id = pm.model_db_id AND m.enabled = 1
+    JOIN profiles p ON p.id = pm.profile_id
     WHERE pm.profile_id = ?
     ORDER BY pm.priority ASC
   `).all(profile.id) as ChainRow[];
@@ -2207,15 +2267,21 @@ export function resolveFusionCandidate(modelId: string): FusionCandidate | null 
 export function routeRequest(estimatedTokens = 1000, skipKeys?: Set<string>, preferredModelDbId?: number, requireVision = false, requireTools = false, skipModels?: Set<number>, prefetchedChain?: ChainRow[], requireStructured = false, skipPlatforms?: Set<string>, exactOutputReserve = 0, task?: 'code' | 'chat', strategyOverride?: PresetStrategy): RouteResult {
   const db = getDb();
 
-  // The alias's axis wins for this request (#1628): scoring the prefetched
-  // chain under the global strategy silently discarded what `auto:smart` /
-  // `auto:fast` asked for. Absent an override, whatever this request routes
-  // with governs — the operator's setting, or the preset the 'decision' model
-  // picked (#1354).
-  const strategy = strategyOverride ?? effectiveRoutingStrategy();
+  const rawChain = prefetchedChain ?? getActiveChain(db);
+  // A chain may carry its own routing preset (profiles.routing_strategy, #1696).
+  // Precedence for THIS request: an `auto:<axis>` alias (#1628) first, then the
+  // chain's own preset, then whatever the request otherwise routes with (the
+  // operator's setting, or the preset the 'decision' model picked, #1354).
+  // Ranking still goes through orderChain, so the reliability floor and the
+  // rate-limit/failure penalties keep applying; only the base preset changes.
+  const chainPreset = rawChain.find(e => e.profile_strategy)?.profile_strategy;
+  const strategy = strategyOverride
+    ?? ((chainPreset && VALID_STRATEGIES.includes(chainPreset as RoutingStrategy))
+      ? (chainPreset as RoutingStrategy)
+      : effectiveRoutingStrategy());
   if (strategy !== 'priority') refreshStatsCache(db);
 
-  const chain = (prefetchedChain ?? getActiveChain(db)).filter(e => e.enabled);
+  const chain = rawChain.filter(e => e.enabled);
 
   const sortedChain = orderChain(chain, strategy, true, task);
 

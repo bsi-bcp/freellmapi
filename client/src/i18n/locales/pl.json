@@ -60,7 +60,16 @@
     "emailChanged": "E-mail został zmieniony.",
     "passwordReset": "Hasło zresetowane. Zaloguj się ponownie.",
     "resetCodeDockerHint": "Serwer działa w kontenerze Docker? Kod znajduje się w logu kontenera: docker logs <container>.",
-    "desktopSessionFailed": "Panel nie mógł zalogować się do lokalnego serwera. Zamknij FreeLLMAPI i otwórz go ponownie."
+    "desktopSessionFailed": "Panel nie mógł zalogować się do lokalnego serwera. Zamknij FreeLLMAPI i otwórz go ponownie.",
+    "signInWithSso": "Zaloguj się przez {provider}",
+    "orContinueWithPassword": "lub kontynuuj przez e-mail",
+    "reverifyWithSso": "Potwierdź ponownie przez {provider}",
+    "oidcReauthHint": "Potwierdź tożsamość w {provider}, aby uzyskać dostęp do jawnych kluczy.",
+    "oidcReauthSuccess": "Tożsamość zweryfikowana na kolejne 5 minut.",
+    "oidcErrorNotAllowed": "Twoje konto nie ma uprawnień do logowania się do tego panelu.",
+    "oidcErrorUnverifiedEmail": "Dostawca tożsamości musi zweryfikować Twój adres e-mail przed zalogowaniem.",
+    "oidcErrorNoAccount": "Brak pasującego konta, a automatyczne tworzenie kont jest wyłączone.",
+    "oidcErrorFailed": "Logowanie jednokrotne nie powiodło się. Spróbuj ponownie."
   },
   "common": {
     "save": "Zapisz",
@@ -109,6 +118,8 @@
     "sectionAdvanced": "Zaawansowane",
     "sectionPreview": "Podgląd",
     "generalDescription": "Język i wygląd tego panelu.",
+    "startAtLogin": "Uruchamiaj przy starcie systemu",
+    "startAtLoginHelp": "Automatycznie uruchamiaj FreeLLMAPI po zalogowaniu się do komputera.",
     "advancedDescription": "Progi i zabezpieczenia potoku kompresji.",
     "compressionTitle": "Kompresja promptów",
     "compressionDescription": "Zmniejszaj rozmiar żądań przed routingiem, zachowując kod, błędy, ścieżki, liczby i definicje narzędzi.",
@@ -169,7 +180,12 @@
     "updateNow": "Aktualizuj teraz",
     "updatingContainer": "Pobieranie nowego obrazu i ponowne uruchamianie. Strona odświeży się, gdy FreeLLMAPI wróci.",
     "updateNowFailed": "Aktualizator nie przyjął żądania. Sprawdź, czy kontener watchtower działa.",
-    "updateNowTimeout": "FreeLLMAPI nie uruchomił się ponownie po 5 minutach. Sprawdź logi kontenera watchtower."
+    "updateNowTimeout": "FreeLLMAPI nie uruchomił się ponownie po 5 minutach. Sprawdź logi kontenera watchtower.",
+    "injectSystemDate": "System date in prompt",
+    "injectSystemDateHelp": "Prepend today’s UTC date (YYYY-MM-DD) to the system prompt so models query web search for current information. Skipped if the caller already includes a date. Off or Web search is recommended to preserve prompt caching.",
+    "injectSystemDateOff": "Off",
+    "injectSystemDateWebSearch": "Web search",
+    "injectSystemDateAlways": "Always"
   },
   "models": {
     "title": "Modele",
@@ -393,6 +409,8 @@
     "pageDescription": "Poświadczenia dostawcy i ujednolicony klucz API, z którym łączą się Twoje aplikacje.",
     "tabProviders": "Dostawcy",
     "checklistSummary": "Skonfigurowano {configured} z {total} dostawców",
+    "keylessAvailable": "Dostępni dostawcy bez klucza ({count})",
+    "keylessEnableAll": "Włącz wszystkie",
     "checklistKeyless": "klucz niepotrzebny",
     "checklistNoKeyTip": "Nie dodano jeszcze klucza. Kliknij, aby dodać.",
     "checklistSignupLink": "Otwórz {provider}, aby utworzyć konto i uzyskać klucz",
@@ -432,6 +450,7 @@
     "familyHaiku": "Haiku",
     "selectPlatform": "Wybierz dostawcę",
     "addKey": "Dodaj klucz",
+    "addAnotherKey": "Dodaj kolejny klucz API",
     "keyAdded": "Dodano klucz",
     "endpointKeysShareModels": "Klucze tego samego punktu końcowego współdzielą jego modele.",
     "export": "Eksportuj",
@@ -474,6 +493,8 @@
     "customTypeImage": "Obraz",
     "customTypeAudio": "Dźwięk",
     "customTypeTranscription": "Transcription",
+    "customTypeSearch": "Web search",
+    "customTypeDecision": "Decision",
     "customBaseUrl": "Podstawa URL",
     "customModels": "Modele",
     "customModel": "Modelka",
@@ -482,6 +503,9 @@
     "customDisplayNameOptional": "opcjonalne",
     "customFamily": "Rodzina",
     "customFamilyPlaceholder": "domyślnie jest to identyfikator modelu",
+    "customEmbeddingInputType": "Input type",
+    "customEmbeddingInputTypeUnset": "Not specified",
+    "customEmbeddingInputTypeNone": "None (symmetric)",
     "customApiKey": "Klucz API",
     "customCapabilities": "Możliwości",
     "addModel": "Dodaj model",
@@ -491,6 +515,10 @@
     "addImageModel": "Dodaj model obrazu",
     "addAudioModel": "Dodaj model audio",
     "addTranscriptionModel": "Add transcription model",
+    "addSearchEngine": "Add search engine",
+    "addDecisionModel": "Add decision model",
+    "customSearchHint": "Search endpoints must accept POST <base URL>/search in Tavily's request format and return a results list.",
+    "customDecisionHint": "Decision endpoints must accept POST <base URL>/decide and answer with one of the question's choices.",
     "addingCustom": "Dodawanie…",
     "discoverModels": "Pobierz modele",
     "probeNow": "Przetestuj punkt końcowy",
@@ -937,6 +965,8 @@
     "dictationStop": "Zatrzymaj nagrywanie",
     "dictationTranscribing": "Transkrypcja…",
     "dictationUnavailable": "Dodaj dostawców modeli audio, aby korzystać z dyktowania.",
+    "dictationMacShortcut": "Naciśnij klawisz mikrofonu lub użyj skrótu dyktowania z ustawień klawiatury.",
+    "dictationWindowsShortcut": "Naciśnij Win + H, aby rozpocząć pisanie głosowe.",
     "dictationModel": "Model dyktowania",
     "dictationFailed": "Transkrypcja nie powiodła się: {reason}",
     "artifactOpen": "Otwórz podgląd",
@@ -986,7 +1016,8 @@
     "tokMax": "{tokens} tok max",
     "emptyTitle": "Nie ma jeszcze osadzonych modeli",
     "emptyDesc": "Rodziny osadzania pojawiają się tutaj po dodaniu klucza dostawcy obsługującego osadzanie.",
-    "dragToReorder": "Przeciągnij, aby zmienić kolejność dostawcy"
+    "dragToReorder": "Przeciągnij, aby zmienić kolejność dostawcy",
+    "inputTypeTitle": "Asymmetric embedding model: this side of the vector space is sent as input_type."
   },
   "fusion": {
     "title": "Fuzja",
@@ -1140,6 +1171,8 @@
     "step1Title": "Dodaj klucz dostawcy",
     "step1Desc": "Połącz co najmniej jedno konto dostawcy. Darmowe klucze działają.",
     "step1Cta": "Dodaj klucze",
+    "step1KeylessTitle": "Dostawcy bez klucza są włączeni",
+    "step1KeylessDesc": "Darmowe modele są gotowe, bez rejestracji. Dodaj własne klucze, aby mieć więcej i szybszych modeli.",
     "step2Title": "Wyślij prośbę o test",
     "step2Desc": "Wybierz dowolny model na placu zabaw i przywitaj się.",
     "step2Cta": "Otwarty plac zabaw",
@@ -1180,6 +1213,24 @@
     "manualHint": "Bazowy adres URL i klucz do wpisania w ustawieniach samego narzędzia.",
     "endpoint": "Punkt końcowy",
     "documentation": "Dokumentacja",
+    "connect": {
+      "button": "Połącz z FreeLLMAPI",
+      "details": "Szczegóły konfiguracji",
+      "gateway": "Lokalna brama",
+      "saved": "Zapisano konfigurację",
+      "finish": "Dokończ konfigurację",
+      "launch": "Uruchom w terminalu",
+      "quit": "Zamknij ZCode Desktop przed zapisem, aby nie nadpisać ustawień.",
+      "restart": "Uruchom ponownie {name}, jeśli działa.",
+      "send": "Otwórz {name} i wyślij wiadomość.",
+      "files": "Pliki konfiguracji",
+      "writeError": "Sprawdź uprawnienia plików i bieżącą konfigurację i spróbuj ponownie.",
+      "missing": "Zainstaluj CLI lub dodaj je do PATH.",
+      "intro": "Połącz narzędzia programistyczne z jedną bramą darmowych modeli dzięki generowanej konfiguracji bezpiecznej dla kopii zapasowych.",
+      "all": "Agenci",
+      "find": "Search",
+      "cursor": "Edytor pisany pod AI; działa przez chmurę Cursora, więc potrzebuje publicznego adresu URL."
+    },
     "descriptions": {
       "claude": "Agent terminalowy Anthropic: planuje, edytuje pliki i uruchamia polecenia w twoim repozytorium.",
       "codex": "Agent terminalowy OpenAI, który najpierw wykonuje zadanie w lokalnej piaskownicy.",
@@ -1201,7 +1252,8 @@
       "hermes": "Samodoskonalący się agent Nous Research z trwałą pamięcią i umiejętnościami, w terminalu lub w aplikacjach czatowych.",
       "pi": "Minimalistyczny agent terminalowy, który kształtujesz własnymi rozszerzeniami, umiejętnościami i szablonami promptów.",
       "reasonix": "Terminalowy agent do programowania stworzony dla DeepSeek, oparty na cache'owaniu prefiksów, by długie sesje pozostawały tanie.",
-      "zcode": "Agent kodujący Z.ai dla jego modeli GLM, łączący się z dowolnym końcowym punktem zgodnym z OpenAI przez rejestr dostawców."
+      "zcode": "Agent kodujący Z.ai dla jego modeli GLM, łączący się z dowolnym końcowym punktem zgodnym z OpenAI przez rejestr dostawców.",
+      "zero": "Lokalny terminalowy agent programistyczny z trwałymi sesjami, uprawnieniami i obsługą dowolnego dostawcy zgodnego z OpenAI."
     }
   },
   "update": {
@@ -1260,7 +1312,15 @@
     "renameHint": "Zmień nazwę tego łańcucha",
     "renameConfirm": "Zmienić nazwę łańcucha \"{oldName}\" na \"{name}\"? Klienci wywołujący auto:{oldName} muszą przejść na auto:{name}.",
     "renamePlaceholder": "Nowa nazwa łańcucha",
-    "renameFailed": "Nie udało się zmienić nazwy łańcucha."
+    "renameFailed": "Nie udało się zmienić nazwy łańcucha.",
+    "strategy": "Routing strategy",
+    "strategyHint": "How this chain ranks its models. Inherit uses the global setting.",
+    "strategyInherit": "Inherit global",
+    "strategyPriority": "Manual order",
+    "strategyBalanced": "Balanced",
+    "strategySmartest": "Smartest",
+    "strategyFastest": "Fastest",
+    "strategyReliable": "Most reliable"
   },
   "updates": {
     "versionAvailable": "Dostępna jest wersja {version}",

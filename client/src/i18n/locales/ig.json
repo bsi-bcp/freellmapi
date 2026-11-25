@@ -60,7 +60,16 @@
     "emailChanged": "Agbanwela ozi-e.",
     "passwordReset": "Atọghatala okwuntughe. Biko banye.",
     "resetCodeDockerHint": "Ị na-agba na Docker? Koodu ahụ dị na ndekọ kọntetina: docker logs <container>.",
-    "desktopSessionFailed": "Dashboard enweghị ike ịbanye na sava mpaghara. Mechie FreeLLMAPI ma mepee ya ọzọ."
+    "desktopSessionFailed": "Dashboard enweghị ike ịbanye na sava mpaghara. Mechie FreeLLMAPI ma mepee ya ọzọ.",
+    "signInWithSso": "Sign in with {provider}",
+    "orContinueWithPassword": "or continue with email",
+    "reverifyWithSso": "Re-verify with {provider}",
+    "oidcReauthHint": "Confirm your identity with {provider} to access plaintext keys.",
+    "oidcReauthSuccess": "Identity verified for the next 5 minutes.",
+    "oidcErrorNotAllowed": "Your account is not permitted to sign in to this dashboard.",
+    "oidcErrorUnverifiedEmail": "Your identity provider must verify your email address before signing in.",
+    "oidcErrorNoAccount": "No matching account exists and automatic account creation is disabled.",
+    "oidcErrorFailed": "Single sign-on failed. Please try again."
   },
   "common": {
     "save": "Chekwa",
@@ -109,6 +118,8 @@
     "sectionAdvanced": "Nke dị elu",
     "sectionPreview": "Nlele",
     "generalDescription": "Asụsụ na ọdịdị nke dashboard a.",
+    "startAtLogin": "Malite na mbido sistemụ",
+    "startAtLoginHelp": "Mịlọ FreeLLMAPI ozugbo mgbe ị banyere na kọmputa gị.",
     "advancedDescription": "Oke na mgbanwe nchekwa maka usoro mpịkọta.",
     "compressionTitle": "Mpịkọta prompt",
     "compressionDescription": "Belata nha arịrịọ tupu ntụzịaka ma na-echekwa koodu, njehie, ụzọ, ọnụọgụgụ, na nkọwa ngwaọrụ.",
@@ -169,7 +180,12 @@
     "updateNow": "Melite ugbu a",
     "updatingContainer": "Na-adọta onyonyo ọhụrụ ma na-amalitegharị. Ibe a ga-ebugharị mgbe FreeLLMAPI lọghachiri.",
     "updateNowFailed": "Onye mmelite anabataghị arịrịọ ahụ. Lelee ma akpa watchtower na-arụ ọrụ.",
-    "updateNowTimeout": "FreeLLMAPI amalitegharịbeghị mgbe nkeji 5 gachara. Lelee ndekọ akpa watchtower."
+    "updateNowTimeout": "FreeLLMAPI amalitegharịbeghị mgbe nkeji 5 gachara. Lelee ndekọ akpa watchtower.",
+    "injectSystemDate": "System date in prompt",
+    "injectSystemDateHelp": "Prepend today’s UTC date (YYYY-MM-DD) to the system prompt so models query web search for current information. Skipped if the caller already includes a date. Off or Web search is recommended to preserve prompt caching.",
+    "injectSystemDateOff": "Off",
+    "injectSystemDateWebSearch": "Web search",
+    "injectSystemDateAlways": "Always"
   },
   "models": {
     "title": "Ụdị",
@@ -393,6 +409,8 @@
     "pageDescription": "Asambodo onye na-eweta yana igodo API jikọtara ọnụ na ngwa gị jikọtara.",
     "tabProviders": "Ndị na-enye ihe",
     "checklistSummary": "Ahaziela {configured} n'ime {total} ndị na-enye ihe",
+    "keylessAvailable": "Ndị na-enye ọrụ na-enweghị igodo dị ({count})",
+    "keylessEnableAll": "Gbanye ha niile",
     "checklistKeyless": "achọghị igodo",
     "checklistNoKeyTip": "Etinyebeghị igodo. Pịa iji tinye otu.",
     "checklistSignupLink": "Meghe {provider} iji mepụta akaụntụ ma nweta igodo",
@@ -432,6 +450,7 @@
     "familyHaiku": "Haiku",
     "selectPlatform": "Họrọ onye na-eweta ya",
     "addKey": "Tinye igodo",
+    "addAnotherKey": "Tinye igodo API ọzọ",
     "keyAdded": "Igodo agbakwunyere",
     "endpointKeysShareModels": "Igodo nke otu njedebe na-ekekọrịta ụdị ya.",
     "export": "Mbupụ",
@@ -474,6 +493,8 @@
     "customTypeImage": "Onyonyo",
     "customTypeAudio": "Audio",
     "customTypeTranscription": "Transcription",
+    "customTypeSearch": "Web search",
+    "customTypeDecision": "Decision",
     "customBaseUrl": "Ntọala URL",
     "customModels": "Ụdị",
     "customModel": "Nlereanya",
@@ -482,6 +503,9 @@
     "customDisplayNameOptional": "nhọrọ",
     "customFamily": "Ezinụlọ",
     "customFamilyPlaceholder": "ndabara na ụdị id",
+    "customEmbeddingInputType": "Input type",
+    "customEmbeddingInputTypeUnset": "Not specified",
+    "customEmbeddingInputTypeNone": "None (symmetric)",
     "customApiKey": "igodo API",
     "customCapabilities": "Ike",
     "addModel": "Tinye ihe nlereanya",
@@ -491,6 +515,10 @@
     "addImageModel": "Tinye ihe onyonyo",
     "addAudioModel": "Tinye ụdị ọdịyo",
     "addTranscriptionModel": "Add transcription model",
+    "addSearchEngine": "Add search engine",
+    "addDecisionModel": "Add decision model",
+    "customSearchHint": "Search endpoints must accept POST <base URL>/search in Tavily's request format and return a results list.",
+    "customDecisionHint": "Decision endpoints must accept POST <base URL>/decide and answer with one of the question's choices.",
     "addingCustom": "Na-agbakwụnye…",
     "discoverModels": "Weta ụdị",
     "probeNow": "Nwalee njedebe",
@@ -937,6 +965,8 @@
     "dictationStop": "Kwụsị ndekọ",
     "dictationTranscribing": "Na-edegharị…",
     "dictationUnavailable": "Tinye ndị na-enye ụdị ụda iji jiri ikwu ka e dee.",
+    "dictationMacShortcut": "Pịa igodo igwe okwu ma ọ bụ jiri ụzọ mkpirisi e debere na ntọala kiibọọdu maka ikwu ka e dee.",
+    "dictationWindowsShortcut": "Pịa Win + H ka ị malite iji olu dee ihe.",
     "dictationModel": "Ụdị ikwu ka e dee",
     "dictationFailed": "Ndegharị dara: {reason}",
     "artifactOpen": "Mepee nlele",
@@ -986,7 +1016,8 @@
     "tokMax": "{tokens} tok max",
     "emptyTitle": "Ọnweghị ụdị mgbakwunye",
     "emptyDesc": "Ezinaụlọ agbakwunyere na-apụta ebe a ozugbo ị gbakwunye igodo ndị na-eweta ihe na-akwado ntinye.",
-    "dragToReorder": "Dọrọ ka ịhazigharị onye na-eweta ya"
+    "dragToReorder": "Dọrọ ka ịhazigharị onye na-eweta ya",
+    "inputTypeTitle": "Asymmetric embedding model: this side of the vector space is sent as input_type."
   },
   "fusion": {
     "title": "Ngwakọta",
@@ -1140,6 +1171,8 @@
     "step1Title": "Tinye igodo eweta",
     "step1Desc": "Jikọọ opekata mpe otu akaụntụ onye na-eweta. Igodo efu na-arụ ọrụ.",
     "step1Cta": "Tinye igodo",
+    "step1KeylessTitle": "Ndị na-enye ọrụ na-enweghị igodo agbanyela",
+    "step1KeylessDesc": "Ụdị efu adịla njikere, achọghị ndebanye aha. Tinye igodo nke gị maka ụdị ndị ọzọ dị ngwa karị.",
     "step2Title": "Zipu arịrịọ ule",
     "step2Desc": "Họrọ ụdị ọ bụla na ebe egwuregwu wee sị ndewo.",
     "step2Cta": "Mepee ebe egwuregwu",
@@ -1180,6 +1213,24 @@
     "manualHint": "Isi URL na igodo ị ga-etinye na ntọala nke ngwá ọrụ ahụ.",
     "endpoint": "Njedebe",
     "documentation": "Akwụkwọ ntuziaka",
+    "connect": {
+      "button": "Jikọọ na FreeLLMAPI",
+      "details": "Nkọwa nhazi",
+      "gateway": "Ọnụ ụzọ mpaghara",
+      "saved": "Echekwara nhazi",
+      "finish": "Mechie nhazi",
+      "launch": "Mepee na terminal",
+      "quit": "Mechie ZCode Desktop tupu ịchekwa ka ọ ghara idegharị ntọala ndị ahụ.",
+      "restart": "Malitegharịa {name} ma ọ bụrụ na ọ na-arụ ọrụ.",
+      "send": "Mepee {name} ma ziga ozi.",
+      "files": "Faịlụ nhazi",
+      "writeError": "Lelee ikike faịlụ na ntọala dị ugbu a ma nwaa ọzọ.",
+      "missing": "Wụnye CLI ma ọ bụ tinye ya na PATH.",
+      "intro": "Jikọọ ngwaọrụ koodu na otu ọnụ ụzọ ụdị n'efu nwere nhazi emepụtara nke dị mma maka ndabere.",
+      "all": "Ndị ejenti",
+      "find": "Search",
+      "cursor": "The AI-first editor; it calls through Cursor's cloud, so it needs a public URL."
+    },
     "descriptions": {
       "claude": "Anthropic's terminal agent: it plans, edits files, and runs commands in your repo.",
       "codex": "OpenAI's terminal agent, which runs your task in a local sandbox first.",
@@ -1201,7 +1252,8 @@
       "hermes": "Onye ọrụ Nous Research na-emeziwanye onwe ya, nwere ebe nchekwa na-adịgide na nkà, na terminal ma ọ bụ na ngwa mkparịta ụka.",
       "pi": "Obere onye ọrụ terminal ị na-akpụ site na ndọtị, nkà na ndebiri ajụjụ nke gị.",
       "reasonix": "Onye nnọchite ide koodu na terminal emere maka DeepSeek, wuru gburugburu prefix caching ka ogologo nnọkọ wee dị ọnụ ala.",
-      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry."
+      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry.",
+      "zero": "Onye ọrụ koodu terminal mpaghara nwere nnọkọ na-adịgide adịgide, ikike, na onye na-enye ọrụ ọ bụla kwekọrọ na OpenAI."
     }
   },
   "update": {
@@ -1260,7 +1312,15 @@
     "renameHint": "Gbanwee aha chain a",
     "renameConfirm": "Gbanwee aha chain \"{oldName}\" ka ọ bụrụ \"{name}\"? Ndị ahịa na-akpọ auto:{oldName} ga-agbanwe gaa auto:{name}.",
     "renamePlaceholder": "Aha chain ọhụrụ",
-    "renameFailed": "Enweghị ike ịgbanwe aha chain ahụ."
+    "renameFailed": "Enweghị ike ịgbanwe aha chain ahụ.",
+    "strategy": "Routing strategy",
+    "strategyHint": "How this chain ranks its models. Inherit uses the global setting.",
+    "strategyInherit": "Inherit global",
+    "strategyPriority": "Manual order",
+    "strategyBalanced": "Balanced",
+    "strategySmartest": "Smartest",
+    "strategyFastest": "Fastest",
+    "strategyReliable": "Most reliable"
   },
   "updates": {
     "versionAvailable": "Ụdị {version} dị",

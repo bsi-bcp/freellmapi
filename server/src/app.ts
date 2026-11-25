@@ -42,7 +42,13 @@ import { createProxyRateLimiter, createAdminRateLimiter } from './middleware/rat
 // Password-guess ceiling for GET /api/keys/export. Deliberately low: a real
 // user exports keys occasionally, never ten times a minute.
 const EXPORT_RATE_LIMIT_RPM = 10;
+// Same idea for POST /api/keys/:id/reveal (#1885), which also re-checks the
+// password. Looser than export because a user may copy several keys in a row,
+// but far below the 600/min dashboard limit it used to share.
+const REVEAL_RATE_LIMIT_RPM = 60;
+const REVEAL_PATH_RE = /^\/[^/]+\/reveal\/?$/;
 import { errorHandler } from './middleware/errorHandler.js';
+import { collapseDoubledV1Prefix } from './middleware/doubled-v1.js';
 import { clientContextMiddleware } from './lib/client-context.js';
 import type { Config } from './lib/config.js';
 import { loadConfig } from './lib/config.js';
@@ -95,6 +101,18 @@ function isHttpsRequest(req: express.Request): boolean {
 // reported in #734.
 function isTrustworthyOrigin(req: express.Request): boolean {
   return isHttpsRequest(req) || LOOPBACK_HOST_RE.test(req.hostname ?? '');
+}
+
+const NON_COMPRESSIBLE_API_PREFIXES = ['/api/chat', '/api/generate'];
+
+/** Compression filter for /api: never touch streaming responses. */
+export function apiCompressionFilter(req: express.Request, res: express.Response): boolean {
+  const url = req.originalUrl || req.url;
+  if (url.startsWith('/v1')) return false;
+  if (NON_COMPRESSIBLE_API_PREFIXES.some(p => url === p || url.startsWith(`${p}/`) || url.startsWith(`${p}?`))) return false;
+  const type = String(res.getHeader('Content-Type') ?? '').toLowerCase();
+  if (type.includes('text/event-stream') || type.includes('application/x-ndjson')) return false;
+  return compression.filter(req, res);
 }
 
 export function createApp(config?: Config) {
@@ -187,6 +205,14 @@ export function createApp(config?: Config) {
 
     next();
   });
+  // Forgive a doubled `/v1` prefix (#1956). Anthropic-style clients (Claude
+  // Desktop's gateway, Claude Code, the Anthropic SDK) append `/v1/...` to the
+  // base URL themselves, so a user who pastes the OpenAI-style base URL
+  // (`http://host:port/v1`) ends up calling `/v1/v1/models` and gets a bare
+  // 404. Strip the duplicate before any path-scoped middleware or router sees
+  // it, so the request gets the same body limits, rate limiting and auth as
+  // the canonical path.
+  app.use(collapseDoubledV1Prefix);
   app.use(cors({
     origin(origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
       callback(null, !origin || allowedCorsOrigins.has(origin));
@@ -238,6 +264,11 @@ export function createApp(config?: Config) {
   // for the limiter as the one /api path it did not cover. It still sits below
   // the Ollama /api/* mount above, which carries its own proxy limiter.
   const adminRateLimiter = createAdminRateLimiter();
+  // Gzip admin API JSON (/api only). Mounted before the /api routers so their
+  // responses pass through it. Streaming is never compressed or buffered: no
+  // /v1 (or other proxy surface), no text/event-stream, no Ollama NDJSON
+  // streams (/api/chat, /api/generate); all else defers to the default filter.
+  app.use('/api', compression({ filter: apiCompressionFilter }));
   app.use('/api', adminRateLimiter);
 
   // Dashboard auth (#35): /api/auth/{status,setup,login} bootstrap without a
@@ -250,6 +281,14 @@ export function createApp(config?: Config) {
   // dashboard traffic and far too loose for that, so this path gets its own
   // tight per-IP bucket on top of it.
   app.use('/api/keys/export', createAdminRateLimiter(EXPORT_RATE_LIMIT_RPM));
+  const revealRateLimiter = createAdminRateLimiter(REVEAL_RATE_LIMIT_RPM);
+  app.use('/api/keys', (req, res, next) => {
+    if (req.method === 'POST' && REVEAL_PATH_RE.test(req.path)) {
+      revealRateLimiter(req, res, next);
+      return;
+    }
+    next();
+  });
 
   app.use('/api/keys', requireAuth, keysRouter);
   // Per-client key management (#411). Dashboard-session gated like the rest of
@@ -356,7 +395,11 @@ export function createApp(config?: Config) {
     // end their responses upstream and never fall through to this middleware,
     // so nothing (crucially the /v1/chat/completions SSE streams) gets buffered
     // or re-encoded by compression.
-    app.use(compression());
+    // /api responses that fall through to here were already offered to the
+    // /api-scoped compression above; skip them so a body is never wrapped twice.
+    app.use(compression({
+      filter: (req, res) => (req.originalUrl.startsWith('/api') ? false : compression.filter(req, res)),
+    }));
     app.use(express.static(clientDist, {
       // Vite emits content-hashed build assets under assets/ (index-<hash>.js,
       // chunk-<hash>.js, *.css, fonts…). The URL changes whenever the bytes do,

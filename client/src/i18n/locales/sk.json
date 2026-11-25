@@ -60,7 +60,16 @@
     "emailChanged": "E-mail bol zmenený.",
     "passwordReset": "Heslo bolo resetované. Prihláste sa.",
     "resetCodeDockerHint": "Používate Docker? Kód je v logu kontajnera: docker logs <container>.",
-    "desktopSessionFailed": "Ovládací panel sa nedokázal prihlásiť k lokálnemu serveru. Ukončite FreeLLMAPI a spustite ho znova."
+    "desktopSessionFailed": "Ovládací panel sa nedokázal prihlásiť k lokálnemu serveru. Ukončite FreeLLMAPI a spustite ho znova.",
+    "signInWithSso": "Sign in with {provider}",
+    "orContinueWithPassword": "or continue with email",
+    "reverifyWithSso": "Re-verify with {provider}",
+    "oidcReauthHint": "Confirm your identity with {provider} to access plaintext keys.",
+    "oidcReauthSuccess": "Identity verified for the next 5 minutes.",
+    "oidcErrorNotAllowed": "Your account is not permitted to sign in to this dashboard.",
+    "oidcErrorUnverifiedEmail": "Your identity provider must verify your email address before signing in.",
+    "oidcErrorNoAccount": "No matching account exists and automatic account creation is disabled.",
+    "oidcErrorFailed": "Single sign-on failed. Please try again."
   },
   "common": {
     "save": "Uložiť",
@@ -109,6 +118,8 @@
     "sectionAdvanced": "Rozšírené",
     "sectionPreview": "Náhľad",
     "generalDescription": "Jazyk a vzhľad tohto panela.",
+    "startAtLogin": "Spustiť pri štarte systému",
+    "startAtLoginHelp": "Automaticky spustite FreeLLMAPI po prihlásení sa do počítača.",
     "advancedDescription": "Prahové hodnoty a poistky kompresného reťazca.",
     "compressionTitle": "Kompresia promptov",
     "compressionDescription": "Zmenšuje veľkosť požiadaviek pred smerovaním, pričom zachováva kód, chyby, cesty, čísla a definície nástrojov.",
@@ -169,7 +180,12 @@
     "updateNow": "Aktualizovať teraz",
     "updatingContainer": "Sťahuje sa nový obraz a prebieha reštart. Stránka sa znova načíta, keď bude FreeLLMAPI späť.",
     "updateNowFailed": "Aktualizátor žiadosť neprijal. Skontrolujte, či kontajner watchtower beží.",
-    "updateNowTimeout": "FreeLLMAPI sa ani po 5 minútach nereštartoval. Skontrolujte logy kontajnera watchtower."
+    "updateNowTimeout": "FreeLLMAPI sa ani po 5 minútach nereštartoval. Skontrolujte logy kontajnera watchtower.",
+    "injectSystemDate": "System date in prompt",
+    "injectSystemDateHelp": "Prepend today’s UTC date (YYYY-MM-DD) to the system prompt so models query web search for current information. Skipped if the caller already includes a date. Off or Web search is recommended to preserve prompt caching.",
+    "injectSystemDateOff": "Off",
+    "injectSystemDateWebSearch": "Web search",
+    "injectSystemDateAlways": "Always"
   },
   "models": {
     "title": "Modely",
@@ -393,6 +409,8 @@
     "pageDescription": "Prihlasovacie údaje poskytovateľa a jednotný kľúč API sa pripájajú vaše aplikácie.",
     "tabProviders": "Poskytovatelia",
     "checklistSummary": "Nastavených {configured} z {total} poskytovateľov",
+    "keylessAvailable": "Dostupní poskytovatelia bez kľúča ({count})",
+    "keylessEnableAll": "Zapnúť všetko",
     "checklistKeyless": "kľúč nie je potrebný",
     "checklistNoKeyTip": "Zatiaľ nebol pridaný žiadny kľúč. Kliknutím ho pridáte.",
     "checklistSignupLink": "Otvorte {provider} na vytvorenie účtu a získanie kľúča",
@@ -432,6 +450,7 @@
     "familyHaiku": "Haiku",
     "selectPlatform": "Vyberte si poskytovateľa",
     "addKey": "Pridať kľúč",
+    "addAnotherKey": "Pridať ďalší kľúč API",
     "keyAdded": "Kľúč pridaný",
     "endpointKeysShareModels": "Kľúče toho istého endpointu zdieľajú jeho modely.",
     "export": "Export",
@@ -474,6 +493,8 @@
     "customTypeImage": "Obrázok",
     "customTypeAudio": "Zvuk",
     "customTypeTranscription": "Transcription",
+    "customTypeSearch": "Web search",
+    "customTypeDecision": "Decision",
     "customBaseUrl": "Základná URL",
     "customModels": "Modely",
     "customModel": "Model",
@@ -482,6 +503,9 @@
     "customDisplayNameOptional": "voliteľné",
     "customFamily": "Rodina",
     "customFamilyPlaceholder": "Predvolené na Model ID",
+    "customEmbeddingInputType": "Input type",
+    "customEmbeddingInputTypeUnset": "Not specified",
+    "customEmbeddingInputTypeNone": "None (symmetric)",
     "customApiKey": "API kľúč",
     "customCapabilities": "Schopnosti",
     "addModel": "Pridaj model",
@@ -491,6 +515,10 @@
     "addImageModel": "Pridať model obrázka",
     "addAudioModel": "Pridať zvukový model",
     "addTranscriptionModel": "Add transcription model",
+    "addSearchEngine": "Add search engine",
+    "addDecisionModel": "Add decision model",
+    "customSearchHint": "Search endpoints must accept POST <base URL>/search in Tavily's request format and return a results list.",
+    "customDecisionHint": "Decision endpoints must accept POST <base URL>/decide and answer with one of the question's choices.",
     "addingCustom": "Pridávam...",
     "discoverModels": "Načítať modely",
     "probeNow": "Otestovať endpoint",
@@ -937,6 +965,8 @@
     "dictationStop": "Zastaviť nahrávanie",
     "dictationTranscribing": "Prepisuje sa…",
     "dictationUnavailable": "Pridajte poskytovateľov audio modelov, aby ste mohli diktovať.",
+    "dictationMacShortcut": "Stlačte kláves mikrofónu alebo použite skratku diktovania z nastavení klávesnice.",
+    "dictationWindowsShortcut": "Hlasové zadávanie spustíte stlačením Win + H.",
     "dictationModel": "Model diktovania",
     "dictationFailed": "Prepis zlyhal: {reason}",
     "artifactOpen": "Otvoriť náhľad",
@@ -986,7 +1016,8 @@
     "tokMax": "{tokens} tok max",
     "emptyTitle": "Zatiaľ žiadne modely vkladania",
     "emptyDesc": "Embeddingové rodiny sa tu objavia po pridaní poskytovateľského kľúča, ktorý podporuje embeddingy.",
-    "dragToReorder": "Drag to reorder provider"
+    "dragToReorder": "Drag to reorder provider",
+    "inputTypeTitle": "Asymmetric embedding model: this side of the vector space is sent as input_type."
   },
   "fusion": {
     "title": "Fúzia",
@@ -1140,6 +1171,8 @@
     "step1Title": "Pridajte kľúč poskytovateľa",
     "step1Desc": "Pripojte aspoň jeden účet poskytovateľa. Voľné kľúče fungujú.",
     "step1Cta": "Pridať kľúče",
+    "step1KeylessTitle": "Poskytovatelia bez kľúča sú zapnutí",
+    "step1KeylessDesc": "Bezplatné modely sú pripravené, bez registrácie. Pridajte vlastné kľúče pre viac a rýchlejších modelov.",
     "step2Title": "Pošlite požiadavku na test",
     "step2Desc": "Vyberte si akýkoľvek model z Playgroundu a pozdravte ho.",
     "step2Cta": "Otvorené ihrisko",
@@ -1180,6 +1213,24 @@
     "manualHint": "Základná URL a kľúč na zadanie do vlastných nastavení nástroja.",
     "endpoint": "Endpoint",
     "documentation": "Dokumentácia",
+    "connect": {
+      "button": "Pripojiť k FreeLLMAPI",
+      "details": "Podrobnosti nastavenia",
+      "gateway": "Miestna brána",
+      "saved": "Nastavenia uložené",
+      "finish": "Dokončiť nastavenie",
+      "launch": "Spustiť v termináli",
+      "quit": "Pred uložením ukončite ZCode Desktop, aby neprepísal nastavenia.",
+      "restart": "Ak {name} beží, reštartujte ho.",
+      "send": "Otvorte {name} a odošlite správu.",
+      "files": "Konfiguračné súbory",
+      "writeError": "Skontrolujte oprávnenia súborov a súčasné nastavenia a skúste znova.",
+      "missing": "Nainštalujte CLI alebo ju pridajte do PATH.",
+      "intro": "Pripojte kódovacie nástroje k jednej bráne bezplatných modelov s generovanou konfiguráciou bezpečnou pre zálohy.",
+      "all": "Agenti",
+      "find": "Search",
+      "cursor": "The AI-first editor; it calls through Cursor's cloud, so it needs a public URL."
+    },
     "descriptions": {
       "claude": "Anthropic's terminal agent: it plans, edits files, and runs commands in your repo.",
       "codex": "OpenAI's terminal agent, which runs your task in a local sandbox first.",
@@ -1201,7 +1252,8 @@
       "hermes": "Samozdokonaľujúci sa agent od Nous Research s trvalou pamäťou a zručnosťami, v termináli alebo v chatovacích aplikáciách.",
       "pi": "Minimalistický terminálový agent, ktorý si prispôsobíte vlastnými rozšíreniami, zručnosťami a šablónami promptov.",
       "reasonix": "Terminálový agent na programovanie stavaný pre DeepSeek, postavený na cachovaní prefixov, aby dlhé relácie zostali lacné.",
-      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry."
+      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry.",
+      "zero": "Lokálny terminálový agent na programovanie s trvalými reláciami, oprávneniami a podporou akéhokoľvek poskytovateľa kompatibilného s OpenAI."
     }
   },
   "update": {
@@ -1260,7 +1312,15 @@
     "renameHint": "Premenovať tento reťazec",
     "renameConfirm": "Premenovať reťazec \"{oldName}\" na \"{name}\"? Klienti volajúci auto:{oldName} musia prejsť na auto:{name}.",
     "renamePlaceholder": "Nový názov reťazca",
-    "renameFailed": "Reťazec sa nepodarilo premenovať."
+    "renameFailed": "Reťazec sa nepodarilo premenovať.",
+    "strategy": "Routing strategy",
+    "strategyHint": "How this chain ranks its models. Inherit uses the global setting.",
+    "strategyInherit": "Inherit global",
+    "strategyPriority": "Manual order",
+    "strategyBalanced": "Balanced",
+    "strategySmartest": "Smartest",
+    "strategyFastest": "Fastest",
+    "strategyReliable": "Most reliable"
   },
   "updates": {
     "versionAvailable": "K dispozícii je verzia {version}",

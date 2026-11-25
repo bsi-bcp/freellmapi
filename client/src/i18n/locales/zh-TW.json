@@ -60,7 +60,16 @@
     "emailChanged": "電子郵件已成功變更。",
     "passwordReset": "密碼已重設，請重新登入。",
     "resetCodeDockerHint": "在 Docker 中執行？重設碼在容器日誌中：docker logs <container>",
-    "desktopSessionFailed": "儀表板無法登入本機伺服器。請結束 FreeLLMAPI 並重新開啟。"
+    "desktopSessionFailed": "儀表板無法登入本機伺服器。請結束 FreeLLMAPI 並重新開啟。",
+    "signInWithSso": "使用 {provider} 登入",
+    "orContinueWithPassword": "或使用電子郵件密碼登入",
+    "reverifyWithSso": "使用 {provider} 重新驗證",
+    "oidcReauthHint": "請透過 {provider} 確認身分以存取明文金鑰。",
+    "oidcReauthSuccess": "身分已驗證，有效時間 5 分鐘。",
+    "oidcErrorNotAllowed": "你的帳號未被允許登入此儀表板。",
+    "oidcErrorUnverifiedEmail": "登入前，身分提供者必須先驗證你的電子郵件地址。",
+    "oidcErrorNoAccount": "沒有相符的帳號，且自動建立帳號已停用。",
+    "oidcErrorFailed": "單一登入失敗，請再試一次。"
   },
   "common": {
     "save": "儲存",
@@ -109,6 +118,8 @@
     "sectionAdvanced": "進階",
     "sectionPreview": "預覽",
     "generalDescription": "此儀表板的語言與外觀。",
+    "startAtLogin": "系統啟動時啟動",
+    "startAtLoginHelp": "在您登入電腦時自動啟動 FreeLLMAPI。",
     "advancedDescription": "壓縮流程的門檻值與安全開關。",
     "compressionTitle": "提示詞壓縮",
     "compressionDescription": "在路由前縮減請求大小，同時保留程式碼、錯誤、路徑、數字與工具定義。",
@@ -169,7 +180,12 @@
     "updateNow": "立即更新",
     "updatingContainer": "正在拉取新映像並重新啟動。FreeLLMAPI 恢復後此頁面會自動重新載入。",
     "updateNowFailed": "更新器未接受請求。請確認 watchtower 容器正在執行。",
-    "updateNowTimeout": "5 分鐘後 FreeLLMAPI 仍未重新啟動。請查看 watchtower 容器的記錄。"
+    "updateNowTimeout": "5 分鐘後 FreeLLMAPI 仍未重新啟動。請查看 watchtower 容器的記錄。",
+    "injectSystemDate": "在系統提示詞中注入目前日期",
+    "injectSystemDateHelp": "在系統提示詞前加入目前 UTC 日期（YYYY-MM-DD），協助模型搭配網路搜尋取得最新資訊。若呼叫端已包含日期則自動略過。建議選擇「關閉」或「網路搜尋」以維持提示詞快取。",
+    "injectSystemDateOff": "關閉",
+    "injectSystemDateWebSearch": "網路搜尋",
+    "injectSystemDateAlways": "始終"
   },
   "models": {
     "title": "模型",
@@ -393,6 +409,8 @@
     "pageDescription": "各提供者的憑證，以及供您的應用程式連線的統一 API 金鑰。",
     "tabProviders": "提供者",
     "checklistSummary": "已設定 {configured}/{total} 個提供者",
+    "keylessAvailable": "有可用的免金鑰供應商（{count}）",
+    "keylessEnableAll": "全部啟用",
     "checklistKeyless": "無需金鑰",
     "checklistNoKeyTip": "尚未新增金鑰。點擊即可新增。",
     "checklistSignupLink": "開啟 {provider} 註冊帳號並取得金鑰",
@@ -432,6 +450,7 @@
     "familyHaiku": "Haiku",
     "selectPlatform": "選擇提供者",
     "addKey": "新增金鑰",
+    "addAnotherKey": "新增另一個 API 金鑰",
     "keyAdded": "金鑰已新增",
     "endpointKeysShareModels": "同一端點的金鑰共用其模型。",
     "export": "匯出",
@@ -478,6 +497,8 @@
     "customTypeImage": "圖像",
     "customTypeAudio": "音訊",
     "customTypeTranscription": "Transcription",
+    "customTypeSearch": "Web search",
+    "customTypeDecision": "Decision",
     "customBaseUrl": "基礎 URL",
     "customModels": "模型",
     "customModel": "模型",
@@ -486,6 +507,9 @@
     "customDisplayNameOptional": "選填",
     "customFamily": "系列",
     "customFamilyPlaceholder": "預設為模型 ID",
+    "customEmbeddingInputType": "Input type",
+    "customEmbeddingInputTypeUnset": "Not specified",
+    "customEmbeddingInputTypeNone": "None (symmetric)",
     "customApiKey": "API 金鑰",
     "customCapabilities": "能力",
     "addModel": "新增模型",
@@ -495,6 +519,10 @@
     "addImageModel": "新增圖像模型",
     "addAudioModel": "新增音訊模型",
     "addTranscriptionModel": "Add transcription model",
+    "addSearchEngine": "Add search engine",
+    "addDecisionModel": "Add decision model",
+    "customSearchHint": "Search endpoints must accept POST <base URL>/search in Tavily's request format and return a results list.",
+    "customDecisionHint": "Decision endpoints must accept POST <base URL>/decide and answer with one of the question's choices.",
     "addingCustom": "新增中...",
     "discoverModels": "取得模型",
     "probeNow": "立即探測",
@@ -937,6 +965,8 @@
     "dictationStop": "停止錄音",
     "dictationTranscribing": "正在轉寫…",
     "dictationUnavailable": "請新增音訊模型的供應商以使用語音輸入。",
+    "dictationMacShortcut": "按下麥克風鍵，或使用在鍵盤設定中指定的聽寫快速鍵。",
+    "dictationWindowsShortcut": "按 Win + H 開始語音輸入。",
     "dictationModel": "語音輸入模型",
     "dictationFailed": "轉寫失敗：{reason}",
     "artifactOpen": "開啟預覽",
@@ -986,7 +1016,8 @@
     "tokMax": "最多 {tokens} Token",
     "emptyTitle": "尚無嵌入模型",
     "emptyDesc": "新增支援嵌入的提供者金鑰後，嵌入系列會顯示在這裡。",
-    "dragToReorder": "拖曳以重新排序提供者"
+    "dragToReorder": "拖曳以重新排序提供者",
+    "inputTypeTitle": "Asymmetric embedding model: this side of the vector space is sent as input_type."
   },
   "fusion": {
     "title": "融合",
@@ -1140,6 +1171,8 @@
     "step1Title": "新增提供者金鑰",
     "step1Desc": "至少連線一個提供者帳戶，免費金鑰即可。",
     "step1Cta": "新增金鑰",
+    "step1KeylessTitle": "免金鑰供應商已開啟",
+    "step1KeylessDesc": "免費模型已可使用，無需註冊。加入你自己的金鑰，取得更多更快的模型。",
     "step2Title": "傳送測試請求",
     "step2Desc": "在遊樂場中任選一個模型打個招呼。",
     "step2Cta": "開啟遊樂場",
@@ -1180,6 +1213,24 @@
     "manualHint": "在該工具的設定中輸入基礎 URL 和金鑰。",
     "endpoint": "端點",
     "documentation": "文件",
+    "connect": {
+      "button": "連線至 FreeLLMAPI",
+      "details": "設定詳情",
+      "gateway": "本機閘道",
+      "saved": "已儲存設定",
+      "finish": "完成設定",
+      "launch": "在終端機啟動",
+      "quit": "請先結束 ZCode Desktop 再儲存，以免設定被覆寫。",
+      "restart": "如果 {name} 正在執行，請重新啟動。",
+      "send": "開啟 {name} 並傳送一則訊息。",
+      "files": "設定檔",
+      "writeError": "請檢查檔案權限與現有設定後重試。",
+      "missing": "請安裝命令列工具或將其加入 PATH 後重試。",
+      "intro": "透過產生的、可安全備份的設定，將程式開發工具連接到一個免費模型閘道。",
+      "all": "代理程式",
+      "find": "Search",
+      "cursor": "The AI-first editor; it calls through Cursor's cloud, so it needs a public URL."
+    },
     "descriptions": {
       "claude": "Anthropic's terminal agent: it plans, edits files, and runs commands in your repo.",
       "codex": "OpenAI's terminal agent, which runs your task in a local sandbox first.",
@@ -1201,7 +1252,8 @@
       "hermes": "Nous Research 的自我改進代理，具備持久記憶與技能，可在終端機或聊天應用程式中使用。",
       "pi": "一個極簡的終端機代理，用你自己的擴充功能、技能與提示詞範本來塑造它。",
       "reasonix": "為 DeepSeek 原生打造的終端程式設計代理，圍繞前綴快取設計，長時間工作階段也能維持低成本。",
-      "zcode": "Z.ai 為其 GLM 模型打造的編程智能體，可透過提供方註冊表連線任何 OpenAI 相容端點。"
+      "zcode": "Z.ai 為其 GLM 模型打造的編程智能體，可透過提供方註冊表連線任何 OpenAI 相容端點。",
+      "zero": "一款本機終端程式設計代理，支援持久化工作階段、權限控制與任意 OpenAI 相容提供方。"
     }
   },
   "update": {
@@ -1260,7 +1312,15 @@
     "renameHint": "重新命名此鏈",
     "renameConfirm": "將鏈「{oldName}」重新命名為「{name}」？呼叫 auto:{oldName} 的客戶端必須改用 auto:{name}。",
     "renamePlaceholder": "新鏈名稱",
-    "renameFailed": "無法重新命名該鏈。"
+    "renameFailed": "無法重新命名該鏈。",
+    "strategy": "路由策略",
+    "strategyHint": "这条链如何给模型排序。选择“继承”则使用全局设置。",
+    "strategyInherit": "继承全局",
+    "strategyPriority": "手动顺序",
+    "strategyBalanced": "平衡",
+    "strategySmartest": "最智能",
+    "strategyFastest": "最快",
+    "strategyReliable": "最稳定"
   },
   "updates": {
     "versionAvailable": "版本 {version} 可用",

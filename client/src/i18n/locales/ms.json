@@ -60,7 +60,16 @@
     "emailChanged": "E-mel berjaya ditukar.",
     "passwordReset": "Kata laluan telah ditetapkan semula. Sila log masuk.",
     "resetCodeDockerHint": "Berjalan dalam Docker? Kod berada dalam log kontena: docker logs <container>.",
-    "desktopSessionFailed": "Papan pemuka tidak dapat log masuk ke pelayan tempatan. Tutup FreeLLMAPI dan buka semula."
+    "desktopSessionFailed": "Papan pemuka tidak dapat log masuk ke pelayan tempatan. Tutup FreeLLMAPI dan buka semula.",
+    "signInWithSso": "Sign in with {provider}",
+    "orContinueWithPassword": "or continue with email",
+    "reverifyWithSso": "Re-verify with {provider}",
+    "oidcReauthHint": "Confirm your identity with {provider} to access plaintext keys.",
+    "oidcReauthSuccess": "Identity verified for the next 5 minutes.",
+    "oidcErrorNotAllowed": "Your account is not permitted to sign in to this dashboard.",
+    "oidcErrorUnverifiedEmail": "Your identity provider must verify your email address before signing in.",
+    "oidcErrorNoAccount": "No matching account exists and automatic account creation is disabled.",
+    "oidcErrorFailed": "Single sign-on failed. Please try again."
   },
   "common": {
     "save": "Simpan",
@@ -109,6 +118,8 @@
     "sectionAdvanced": "Lanjutan",
     "sectionPreview": "Pratonton",
     "generalDescription": "Bahasa dan penampilan papan pemuka ini.",
+    "startAtLogin": "Mula semasa permulaan sistem",
+    "startAtLoginHelp": "Lancarkan FreeLLMAPI secara automatik apabila anda log masuk ke komputer anda.",
     "advancedDescription": "Ambang dan suis keselamatan untuk saluran pemampatan.",
     "compressionTitle": "Pemampatan prompt",
     "compressionDescription": "Kurangkan saiz permintaan sebelum penghalaan sambil mengekalkan kod, ralat, laluan, nombor, dan definisi alat.",
@@ -169,7 +180,12 @@
     "updateNow": "Kemas kini sekarang",
     "updatingContainer": "Menarik imej baharu dan memulakan semula. Halaman ini dimuat semula apabila FreeLLMAPI kembali.",
     "updateNowFailed": "Pengemas kini tidak menerima permintaan. Semak bahawa kontena watchtower sedang berjalan.",
-    "updateNowTimeout": "FreeLLMAPI belum bermula semula selepas 5 minit. Semak log kontena watchtower."
+    "updateNowTimeout": "FreeLLMAPI belum bermula semula selepas 5 minit. Semak log kontena watchtower.",
+    "injectSystemDate": "System date in prompt",
+    "injectSystemDateHelp": "Prepend today’s UTC date (YYYY-MM-DD) to the system prompt so models query web search for current information. Skipped if the caller already includes a date. Off or Web search is recommended to preserve prompt caching.",
+    "injectSystemDateOff": "Off",
+    "injectSystemDateWebSearch": "Web search",
+    "injectSystemDateAlways": "Always"
   },
   "models": {
     "title": "Model",
@@ -393,6 +409,8 @@
     "pageDescription": "Kelayakan penyedia dan kunci API bersatu yang aplikasi anda sambungkan.",
     "tabProviders": "Penyedia",
     "checklistSummary": "{configured} daripada {total} penyedia telah dikonfigurasi",
+    "keylessAvailable": "Penyedia tanpa kunci tersedia ({count})",
+    "keylessEnableAll": "Dayakan semua",
     "checklistKeyless": "tiada kunci diperlukan",
     "checklistNoKeyTip": "Belum ada kunci ditambah. Klik untuk menambah.",
     "checklistSignupLink": "Buka {provider} untuk membuat akaun dan mendapatkan kunci",
@@ -432,6 +450,7 @@
     "familyHaiku": "Haiku",
     "selectPlatform": "Pilih penyedia",
     "addKey": "Tambah kekunci",
+    "addAnotherKey": "Tambah kunci API lain",
     "keyAdded": "Kunci ditambah",
     "endpointKeysShareModels": "Kunci untuk endpoint yang sama berkongsi modelnya.",
     "export": "Eksport",
@@ -474,6 +493,8 @@
     "customTypeImage": "Imej",
     "customTypeAudio": "Audio",
     "customTypeTranscription": "Transcription",
+    "customTypeSearch": "Web search",
+    "customTypeDecision": "Decision",
     "customBaseUrl": "URL asas",
     "customModels": "Model",
     "customModel": "Model",
@@ -482,6 +503,9 @@
     "customDisplayNameOptional": "pilihan",
     "customFamily": "Keluarga",
     "customFamilyPlaceholder": "lalai kepada id model",
+    "customEmbeddingInputType": "Input type",
+    "customEmbeddingInputTypeUnset": "Not specified",
+    "customEmbeddingInputTypeNone": "None (symmetric)",
     "customApiKey": "kunci API",
     "customCapabilities": "Keupayaan",
     "addModel": "Tambah model",
@@ -491,6 +515,10 @@
     "addImageModel": "Tambah model imej",
     "addAudioModel": "Tambah model audio",
     "addTranscriptionModel": "Add transcription model",
+    "addSearchEngine": "Add search engine",
+    "addDecisionModel": "Add decision model",
+    "customSearchHint": "Search endpoints must accept POST <base URL>/search in Tavily's request format and return a results list.",
+    "customDecisionHint": "Decision endpoints must accept POST <base URL>/decide and answer with one of the question's choices.",
     "addingCustom": "Menambah...",
     "discoverModels": "Dapatkan model",
     "probeNow": "Uji endpoint",
@@ -937,6 +965,8 @@
     "dictationStop": "Hentikan rakaman",
     "dictationTranscribing": "Mentranskripsi…",
     "dictationUnavailable": "Tambah pembekal model audio untuk menggunakan dikte.",
+    "dictationMacShortcut": "Tekan kekunci mikrofon atau gunakan pintasan imlak yang ditetapkan dalam tetapan papan kekunci.",
+    "dictationWindowsShortcut": "Tekan Win + H untuk mula menaip dengan suara.",
     "dictationModel": "Model dikte",
     "dictationFailed": "Transkripsi gagal: {reason}",
     "artifactOpen": "Buka pratonton",
@@ -986,7 +1016,8 @@
     "tokMax": "{tokens} tok max",
     "emptyTitle": "Belum ada model yang disematkan lagi",
     "emptyDesc": "Keluarga penyematan akan muncul di sini apabila anda menambah kunci penyedia yang menyokong penyembatan.",
-    "dragToReorder": "Seret untuk menyusun semula penyedia"
+    "dragToReorder": "Seret untuk menyusun semula penyedia",
+    "inputTypeTitle": "Asymmetric embedding model: this side of the vector space is sent as input_type."
   },
   "fusion": {
     "title": "Fusi",
@@ -1140,6 +1171,8 @@
     "step1Title": "Tambah kunci penyedia",
     "step1Desc": "Sambungkan sekurang-kurangnya satu akaun penyedia. Kunci percuma berfungsi.",
     "step1Cta": "Tambah kekunci",
+    "step1KeylessTitle": "Penyedia tanpa kunci dihidupkan",
+    "step1KeylessDesc": "Model percuma sudah sedia, tiada pendaftaran diperlukan. Tambah kunci anda sendiri untuk lebih banyak model yang lebih pantas.",
     "step2Title": "Hantar permintaan ujian",
     "step2Desc": "Pilih mana-mana model di Playground dan ucapkan hello.",
     "step2Cta": "Taman Permainan Terbuka",
@@ -1180,6 +1213,24 @@
     "manualHint": "URL asas dan kunci untuk dimasukkan dalam tetapan alat itu sendiri.",
     "endpoint": "Titik akhir",
     "documentation": "Dokumentasi",
+    "connect": {
+      "button": "Sambungkan ke FreeLLMAPI",
+      "details": "Butiran persediaan",
+      "gateway": "Get laluan setempat",
+      "saved": "Konfigurasi disimpan",
+      "finish": "Selesaikan persediaan",
+      "launch": "Lancarkan dalam terminal",
+      "quit": "Tutup ZCode Desktop sebelum menyimpan agar tetapan tidak ditulis ganti.",
+      "restart": "Mulakan semula {name} jika sedang berjalan.",
+      "send": "Buka {name} dan hantar mesej.",
+      "files": "Fail konfigurasi",
+      "writeError": "Semak kebenaran fail dan konfigurasi semasa, kemudian cuba lagi.",
+      "missing": "Pasang CLI atau tambahkannya pada PATH.",
+      "intro": "Sambungkan alat pengekodan kepada satu gateway model percuma dengan konfigurasi terjana yang selamat untuk sandaran.",
+      "all": "Ejen",
+      "find": "Search",
+      "cursor": "The AI-first editor; it calls through Cursor's cloud, so it needs a public URL."
+    },
     "descriptions": {
       "claude": "Anthropic's terminal agent: it plans, edits files, and runs commands in your repo.",
       "codex": "OpenAI's terminal agent, which runs your task in a local sandbox first.",
@@ -1201,7 +1252,8 @@
       "hermes": "Ejen Nous Research yang menambah baik dirinya sendiri, dengan memori kekal dan kemahiran, di terminal atau di aplikasi sembang.",
       "pi": "Ejen terminal minimalis yang anda bentuk dengan sambungan, kemahiran dan templat prompt anda sendiri.",
       "reasonix": "Ejen pengekodan terminal yang dibina untuk DeepSeek, berasaskan cache awalan supaya sesi panjang kekal murah.",
-      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry."
+      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry.",
+      "zero": "Ejen pengekodan terminal tempatan dengan sesi kekal, kebenaran, dan mana-mana penyedia yang serasi dengan OpenAI."
     }
   },
   "update": {
@@ -1260,7 +1312,15 @@
     "renameHint": "Tukar nama rantaian ini",
     "renameConfirm": "Tukar nama rantaian \"{oldName}\" kepada \"{name}\"? Klien yang memanggil auto:{oldName} perlu bertukar ke auto:{name}.",
     "renamePlaceholder": "Nama rantaian baharu",
-    "renameFailed": "Tidak dapat menukar nama rantaian."
+    "renameFailed": "Tidak dapat menukar nama rantaian.",
+    "strategy": "Routing strategy",
+    "strategyHint": "How this chain ranks its models. Inherit uses the global setting.",
+    "strategyInherit": "Inherit global",
+    "strategyPriority": "Manual order",
+    "strategyBalanced": "Balanced",
+    "strategySmartest": "Smartest",
+    "strategyFastest": "Fastest",
+    "strategyReliable": "Most reliable"
   },
   "updates": {
     "versionAvailable": "Versi {version} tersedia",

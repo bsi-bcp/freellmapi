@@ -12,6 +12,7 @@ import type {
 import { routeRequest, hasEnabledVisionModel, hasEnabledToolsModel, resolveStickyPreference, routingReserveTokens, resolveModelGroupCandidates, resolveRoutingChain, failureAttributionFor, type RouteResult, type ResolvedChain, type ChainRow } from '../services/router.js';
 import { getDb } from '../db/index.js';
 import { resolveAuth, prependSystemPrompt } from '../lib/system-prompt.js';
+import { maybeInjectSystemDate } from '../lib/system-date.js';
 import { isUnifyEnabled, getModelGroups, resolveRequestedIdForDispatch } from '../services/model-groups.js';
 import { contentToString, estimateInputTokens, messageHasImage } from '../lib/content.js';
 import { routeOutputBudget } from '../lib/output-cap.js';
@@ -25,6 +26,7 @@ import {
   getRequestGroupId,
   getStickyModel,
   setStickyModel,
+  sessionIdentityMessages,
   streamReasoningText,
   completionReasoningText,
   traceRouteEvent,
@@ -37,7 +39,7 @@ import { applyTokenBudget, tokenBudgetMessage } from '../lib/guardrails.js';
 import { samplingParamSchemaFields, pickSamplingParams, type ResponseFormat } from '../lib/sampling-params.js';
 import { enforceJsonContent } from '../lib/structured-output.js';
 import { sanitizeProviderErrorMessage } from '../lib/error-redaction.js';
-import { isClientAbortError, newClientAbortError, newHedgeAbortError } from '../lib/error-classify.js';
+import { isClientAbortError, newClientAbortError, newHedgeAbortError, isUpstreamClassificationOutput } from '../lib/error-classify.js';
 import { inferQuotaPoolKey, type QuotaObservationContext } from '../services/provider-quota.js';
 import { compressRequest, formatCompressionHeader } from '../services/compression/pipeline.js';
 import { maybeServeResponsesWebSearch, webSearchCallToText } from '../lib/responses-web-search.js';
@@ -699,7 +701,7 @@ export async function handleResponses(req: Request, res: Response): Promise<void
   if (!parsed.success) {
     res.status(400).json({
       error: {
-        message: `Invalid request: ${parsed.error.errors.map((e) => `${e.path.join('.')}: ${e.message}`).join(', ')}`,
+        message: `Invalid request: ${parsed.error.issues.map((e) => `${e.path.join('.')}: ${e.message}`).join(', ')}`,
         type: 'invalid_request_error',
       },
     });
@@ -769,6 +771,8 @@ export async function handleResponses(req: Request, res: Response): Promise<void
     return Array.isArray(content)
       && content.some(block => block && typeof block === 'object' && 'cache_control' in block);
   });
+  // Session identity before compression can rewrite the first user turn (#1889).
+  const sessionMessages = sessionIdentityMessages(messages);
   const compressionResult = compressRequest(messages, {
     header: req.headers['x-freellm-compress'],
     tools,
@@ -776,6 +780,10 @@ export async function handleResponses(req: Request, res: Response): Promise<void
   });
   messages = compressionResult.messages;
   res.setHeader('X-FreeLLM-Compress', formatCompressionHeader(compressionResult));
+
+  // Opt-in system date (#1931): injected after compression and behind any
+  // client-profile enforced prompt.
+  messages = maybeInjectSystemDate(messages, { tools });
 
   // Server-enforced system prompt (#411): after compression so it is never
   // compressed away, first in the list so the caller's own instructions
@@ -856,7 +864,7 @@ export async function handleResponses(req: Request, res: Response): Promise<void
     // Strict over the tier's pool; an empty tier falls through to plain auto.
     groupChain = aliasTierChain;
     stickyStrategyKey = `tier:${aliasTierChain[0]!.model_db_id}`;
-    const sticky = getStickyModel(messages, sessionIdHeader, stickyStrategyKey);
+    const sticky = getStickyModel(sessionMessages, sessionIdHeader, stickyStrategyKey);
     preferredModel = (sticky != null && groupChain.some(r => r.model_db_id === sticky)) ? sticky : undefined;
   } else if (isAutoModel(routedModel)) {
     try {
@@ -872,7 +880,7 @@ export async function handleResponses(req: Request, res: Response): Promise<void
     }
     stickyStrategyKey = resolvedChain.strategyKey === 'auto' ? undefined : resolvedChain.strategyKey;
     preferredModel = resolveStickyPreference(
-      getStickyModel(messages, sessionIdHeader, stickyStrategyKey),
+      getStickyModel(sessionMessages, sessionIdHeader, stickyStrategyKey),
       resolvedChain.chain,
     );
   } else if (isFusionModel(routedModel)) {
@@ -897,7 +905,10 @@ export async function handleResponses(req: Request, res: Response): Promise<void
         });
         return;
       }
-      const sticky = getStickyModel(messages, sessionIdHeader, routedModel);
+      // Read and write the group's sticky member under the same key; the
+      // success path saves under stickyStrategyKey, as on /v1/chat/completions.
+      stickyStrategyKey = routedModel;
+      const sticky = getStickyModel(sessionMessages, sessionIdHeader, stickyStrategyKey);
       preferredModel = (sticky != null && groupChain.some(r => r.model_db_id === sticky)) ? sticky : undefined;
     } else {
       const enabled = db.prepare('SELECT id FROM models WHERE model_id = ? AND enabled = 1').get(routedModel) as { id: number } | undefined;
@@ -952,7 +963,9 @@ export async function handleResponses(req: Request, res: Response): Promise<void
   // Fallback-v2 hedging: the loop aborts this controller (via abortInFlight)
   // when the wall-clock retry budget expires mid-attempt, canceling the
   // in-flight upstream instead of waiting for a stalled attempt to time out.
-  const hedgeAbort = new AbortController();
+  // `let`: abortInFlight aborts only the in-flight attempt and replaces the
+  // controller, so a silent-window failover gets a fresh signal (#1960).
+  let hedgeAbort = new AbortController();
   res.on('close', () => {
     if (!res.writableEnded) {
       clientGone = true;
@@ -1211,7 +1224,8 @@ export async function handleResponses(req: Request, res: Response): Promise<void
     attemptLog,
     logIdentity: { surface: 'responses', requestId: requestGroupId, requestedModel: requestedModelLabel },
     clientGone: () => clientGone,
-    abortInFlight: () => hedgeAbort.abort(newHedgeAbortError()),
+    abortInFlight: () => { hedgeAbort.abort(newHedgeAbortError()); hedgeAbort = new AbortController(); },
+    streaming: stream === true,
     route: () => {
       // Task-type routing (#1127): same header/derivation as /chat/completions.
       const taskType = resolveTaskType(req, tools, messages);
@@ -1223,7 +1237,9 @@ export async function handleResponses(req: Request, res: Response): Promise<void
     },
     dispatch: async (route, attempt, ctx) => {
       const contextBudget = routeOutputBudget(route, estimatedInputTokens);
-      const routeOpts = contextBudget != null ? { ...dispatchOpts, contextBudget } : dispatchOpts;
+      // Signal composed per attempt: hedgeAbort is replaced after each abort.
+      const attemptOpts = { ...dispatchOpts, signal: AbortSignal.any([clientAbort.signal, hedgeAbort.signal]) };
+      const routeOpts = contextBudget != null ? { ...attemptOpts, contextBudget } : attemptOpts;
       traceRouteEvent('Responses', {
         event: attempt === 0 ? 'start' : 'next',
         requestId: requestGroupId,
@@ -1439,6 +1455,16 @@ export async function handleResponses(req: Request, res: Response): Promise<void
           // Resolve the dialect hold window now that the full text is known.
           // Held text was never emitted, so a dead dialect turn can still fail
           // over on the same SSE stream (nothing has been committed yet).
+          // #809 / quota notices: a turn whose whole (still-held, never
+          // emitted) text is an upstream classification word or a relay quota
+          // notice is a dead turn — fail over like an empty completion.
+          if (heldText.length > 0 && toolAcc.size === 0 && msgItemId === null
+            && isUpstreamClassificationOutput(heldText, route.platform)) {
+            throw Object.assign(
+              new Error(`empty completion from ${route.displayName} (upstream notice)`),
+              upstreamFinish === 'length' ? { skipBench: true } : {},
+            );
+          }
           if (heldText.length > 0) {
             const rescue = (wantsTools && (dialectMode === 'dialect' || containsDialectMarker(heldText)))
               ? rescueInlineToolCalls(heldText, new Set((tools ?? []).map(t => t.function.name)))
@@ -1545,7 +1571,7 @@ export async function handleResponses(req: Request, res: Response): Promise<void
           res.end();
 
           recordUpstreamSuccess(route, upstreamUsage?.total_tokens ?? inputTokens + outputTokens, state);
-          setStickyModel(messages, route.modelDbId, sessionIdHeader, stickyStrategyKey);
+          setStickyModel(sessionMessages, route.modelDbId, sessionIdHeader, stickyStrategyKey);
           traceRouteEvent('Responses', {
             event: 'ok',
             requestId: requestGroupId,
@@ -1654,6 +1680,14 @@ export async function handleResponses(req: Request, res: Response): Promise<void
           result.choices[0]?.finish_reason === 'length' ? { skipBench: true } : {},
         );
       }
+      // #809 / quota notices: an upstream classification word or a relay
+      // quota notice in place of the reply is a dead turn — fail over.
+      if (toolCalls.length === 0 && isUpstreamClassificationOutput(text, route.platform)) {
+        throw Object.assign(
+          new Error(`empty completion from ${route.displayName} (upstream notice)`),
+          result.choices[0]?.finish_reason === 'length' ? { skipBench: true } : {},
+        );
+      }
 
       // Structured-output enforcement — see /chat/completions. Heal fenced or
       // prose-wrapped JSON in place, fail over (skipBench + skipModelForRequest
@@ -1678,7 +1712,7 @@ export async function handleResponses(req: Request, res: Response): Promise<void
       // tokens against the rate-limit ledger; promptTokens/completionTokens
       // above already carry the chars/4 estimate.
       recordUpstreamSuccess(route, result.usage?.total_tokens ?? (promptTokens + completionTokens), state);
-      setStickyModel(messages, route.modelDbId, sessionIdHeader, stickyStrategyKey);
+      setStickyModel(sessionMessages, route.modelDbId, sessionIdHeader, stickyStrategyKey);
 
       res.setHeader('X-Routed-Via', routedViaValue(route.platform, route.modelId));
       setFallbackHeaders(res, attempt, attemptLog);

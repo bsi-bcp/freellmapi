@@ -60,7 +60,16 @@
     "emailChanged": "E-pochta muvaffaqiyatli o'zgartirildi.",
     "passwordReset": "Parol tiklandi. Iltimos, kiring.",
     "resetCodeDockerHint": "Docker ichida ishlayaptimi? Kod konteyner jurnalida: docker logs <container>.",
-    "desktopSessionFailed": "Boshqaruv paneli lokal serverga kira olmadi. FreeLLMAPI dasturini yopib, qayta oching."
+    "desktopSessionFailed": "Boshqaruv paneli lokal serverga kira olmadi. FreeLLMAPI dasturini yopib, qayta oching.",
+    "signInWithSso": "{provider} orqali kirish",
+    "orContinueWithPassword": "yoki email bilan davom eting",
+    "reverifyWithSso": "{provider} orqali qayta tasdiqlash",
+    "oidcReauthHint": "Ochiq kalitlarga kirish uchun shaxsingizni {provider} orqali tasdiqlang.",
+    "oidcReauthSuccess": "Shaxsingiz keyingi 5 daqiqa davomida tasdiqlandi.",
+    "oidcErrorNotAllowed": "Hisobingiz ushbu boshqaruv paneliga kirish huquqiga ega emas.",
+    "oidcErrorUnverifiedEmail": "Kirishdan oldin identifikatsiya provayderingiz email manzilingizni tasdiqlashi kerak.",
+    "oidcErrorNoAccount": "Mos keladigan hisob topilmadi va avtomatik hisob yaratish o'chirilgan.",
+    "oidcErrorFailed": "Yagona kirish (SSO) amalga oshmadi. Qaytadan urinib ko'ring."
   },
   "common": {
     "save": "Saqlash",
@@ -109,6 +118,8 @@
     "sectionAdvanced": "Kengaytirilgan",
     "sectionPreview": "Oldindan ko'rish",
     "generalDescription": "Ushbu boshqaruv panelining tili va ko'rinishi.",
+    "startAtLogin": "Tizim ishga tushganda ishga tushirish",
+    "startAtLoginHelp": "Kompyuteringizga kirganingizda FreeLLMAPI avtomatik ravishda ishga tushsin.",
     "advancedDescription": "Siqish jarayoni uchun chegaralar va xavfsizlik kalitlari.",
     "compressionTitle": "Promptni siqish",
     "compressionDescription": "Kod, xatolar, yo'llar, raqamlar va vosita ta'riflarini saqlagan holda marshrutlashdan oldin so'rov hajmini kamaytiring.",
@@ -169,7 +180,12 @@
     "updateNow": "Hozir yangilash",
     "updatingContainer": "Yangi obraz yuklab olinmoqda va qayta ishga tushirilmoqda. FreeLLMAPI qaytganda bu sahifa qayta yuklanadi.",
     "updateNowFailed": "Yangilovchi so‘rovni qabul qilmadi. watchtower konteyneri ishlayotganini tekshiring.",
-    "updateNowTimeout": "FreeLLMAPI 5 daqiqadan keyin ham qayta ishga tushmadi. watchtower konteyneri jurnallarini tekshiring."
+    "updateNowTimeout": "FreeLLMAPI 5 daqiqadan keyin ham qayta ishga tushmadi. watchtower konteyneri jurnallarini tekshiring.",
+    "injectSystemDate": "System date in prompt",
+    "injectSystemDateHelp": "Prepend today’s UTC date (YYYY-MM-DD) to the system prompt so models query web search for current information. Skipped if the caller already includes a date. Off or Web search is recommended to preserve prompt caching.",
+    "injectSystemDateOff": "Off",
+    "injectSystemDateWebSearch": "Web search",
+    "injectSystemDateAlways": "Always"
   },
   "models": {
     "title": "Modellar",
@@ -393,6 +409,8 @@
     "pageDescription": "Provayder hisob ma'lumotlari va ilovalaringiz ulanadigan yagona API kaliti.",
     "tabProviders": "Provayderlar",
     "checklistSummary": "{total} ta provayderdan {configured} tasi sozlangan",
+    "keylessAvailable": "Kalitsiz provayderlar mavjud ({count})",
+    "keylessEnableAll": "Hammasini yoqish",
     "checklistKeyless": "kalit kerak emas",
     "checklistNoKeyTip": "Hali kalit qo'shilmagan. Qo'shish uchun bosing.",
     "checklistSignupLink": "Hisob yaratish va kalit olish uchun {provider} ni oching",
@@ -432,6 +450,7 @@
     "familyHaiku": "Xayku",
     "selectPlatform": "Provayderni tanlang",
     "addKey": "Kalit qo'shing",
+    "addAnotherKey": "Boshqa API kalitini qo‘shish",
     "keyAdded": "Kalit qo'shildi",
     "endpointKeysShareModels": "Bir xil endpoint kalitlari uning modellarini baham ko'radi.",
     "export": "Eksport",
@@ -474,6 +493,8 @@
     "customTypeImage": "Rasm",
     "customTypeAudio": "Audio",
     "customTypeTranscription": "Transcription",
+    "customTypeSearch": "Web search",
+    "customTypeDecision": "Decision",
     "customBaseUrl": "Baza URL",
     "customModels": "Modellar",
     "customModel": "Model",
@@ -482,6 +503,9 @@
     "customDisplayNameOptional": "ixtiyoriy",
     "customFamily": "Oila",
     "customFamilyPlaceholder": "standart identifikatori uchun",
+    "customEmbeddingInputType": "Input type",
+    "customEmbeddingInputTypeUnset": "Not specified",
+    "customEmbeddingInputTypeNone": "None (symmetric)",
     "customApiKey": "API kaliti",
     "customCapabilities": "Imkoniyatlar",
     "addModel": "Model qo'shing",
@@ -491,6 +515,10 @@
     "addImageModel": "Rasm modelini qo'shing",
     "addAudioModel": "Audio modelini qo'shing",
     "addTranscriptionModel": "Add transcription model",
+    "addSearchEngine": "Add search engine",
+    "addDecisionModel": "Add decision model",
+    "customSearchHint": "Search endpoints must accept POST <base URL>/search in Tavily's request format and return a results list.",
+    "customDecisionHint": "Decision endpoints must accept POST <base URL>/decide and answer with one of the question's choices.",
     "addingCustom": "Qo‘shilmoqda…",
     "discoverModels": "Modellarni olish",
     "probeNow": "Endpointni sinab ko‘rish",
@@ -937,6 +965,8 @@
     "dictationStop": "Yozib olishni to‘xtatish",
     "dictationTranscribing": "Matnga o‘girilmoqda…",
     "dictationUnavailable": "Diktovkadan foydalanish uchun audio modellar provayderlarini qo‘shing.",
+    "dictationMacShortcut": "Mikrofon tugmasini bosing yoki klaviatura sozlamalarida belgilangan diktovka yorlig‘idan foydalaning.",
+    "dictationWindowsShortcut": "Ovoz bilan yozishni boshlash uchun Win + H tugmalarini bosing.",
     "dictationModel": "Diktovka modeli",
     "dictationFailed": "Matnga o‘girish amalga oshmadi: {reason}",
     "artifactOpen": "Ko‘rishni ochish",
@@ -986,7 +1016,8 @@
     "tokMax": "{tokens} tok maks",
     "emptyTitle": "Hozircha oʻrnatish modellari yoʻq",
     "emptyDesc": "Oʻrnatishlarni qoʻllab-quvvatlaydigan provayder kalitini qoʻshganingizdan soʻng, oʻrnatish oilalari shu yerda paydo boʻladi.",
-    "dragToReorder": "Provayderni qayta tartiblash uchun torting"
+    "dragToReorder": "Provayderni qayta tartiblash uchun torting",
+    "inputTypeTitle": "Asymmetric embedding model: this side of the vector space is sent as input_type."
   },
   "fusion": {
     "title": "Fusion",
@@ -1140,6 +1171,8 @@
     "step1Title": "Provayder kalitini qo'shing",
     "step1Desc": "Kamida bitta provayder hisobini ulang. Bepul kalitlar ishlaydi.",
     "step1Cta": "Kalitlarni qo'shing",
+    "step1KeylessTitle": "Kalitsiz provayderlar yoqilgan",
+    "step1KeylessDesc": "Bepul modellar tayyor, roʻyxatdan oʻtish shart emas. Koʻproq va tezroq modellar uchun oʻz kalitlaringizni qoʻshing.",
     "step2Title": "Sinov so'rovini yuboring",
     "step2Desc": "O'yin maydonchasida istalgan modelni tanlang va salom ayting.",
     "step2Cta": "O'yin maydonchasini oching",
@@ -1180,6 +1213,24 @@
     "manualHint": "Vositaning o'z sozlamalariga kiritish uchun asosiy URL va kalit.",
     "endpoint": "So'nggi nuqta",
     "documentation": "Hujjatlar",
+    "connect": {
+      "button": "FreeLLMAPI’ga ulash",
+      "details": "Sozlash tafsilotlari",
+      "gateway": "Mahalliy shlyuz",
+      "saved": "Sozlamalar saqlandi",
+      "finish": "Sozlashni tugatish",
+      "launch": "Terminalda ishga tushirish",
+      "quit": "Sozlamalar ustiga yozilmasligi uchun saqlashdan oldin ZCode Desktop’ni yoping.",
+      "restart": "Agar {name} ishlayotgan bo‘lsa, uni qayta ishga tushiring.",
+      "send": "{name} dasturini ochib, xabar yuboring.",
+      "files": "Sozlama fayllari",
+      "writeError": "Fayl ruxsatlari va joriy sozlamalarni tekshirib, qayta urinib ko‘ring.",
+      "missing": "CLI’ni o‘rnating yoki PATH’ga qo‘shing.",
+      "intro": "Kodlash vositalarini yaratilgan, zaxira nusxa uchun xavfsiz konfiguratsiya bilan yagona bepul model shlyuziga ulang.",
+      "all": "Agentlar",
+      "find": "Search",
+      "cursor": "The AI-first editor; it calls through Cursor's cloud, so it needs a public URL."
+    },
     "descriptions": {
       "claude": "Anthropic's terminal agent: it plans, edits files, and runs commands in your repo.",
       "codex": "OpenAI's terminal agent, which runs your task in a local sandbox first.",
@@ -1201,7 +1252,8 @@
       "hermes": "Nous Research'ning o'zini takomillashtiradigan agenti; doimiy xotira va ko'nikmalar bilan, terminalda yoki chat ilovalarida.",
       "pi": "O'z kengaytmalaringiz, ko'nikmalaringiz va so'rov shablonlaringiz bilan shakllantiradigan minimal terminal agenti.",
       "reasonix": "DeepSeek uchun yaratilgan terminal kodlash agenti; uzoq sessiyalar arzon qolishi uchun prefiks keshlash asosida qurilgan.",
-      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry."
+      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry.",
+      "zero": "Barqaror sessiyalar, ruxsatlar va har qanday OpenAI-mos provayder bilan ishlaydigan mahalliy terminal kodlash agenti."
     }
   },
   "update": {
@@ -1260,7 +1312,15 @@
     "renameHint": "Ushbu zanjir nomini o'zgartirish",
     "renameConfirm": "\"{oldName}\" zanjir nomini \"{name}\" ga o'zgartirilsinmi? auto:{oldName} ga murojaat qiladigan mijozlar auto:{name} ga o'tishi kerak.",
     "renamePlaceholder": "Yangi zanjir nomi",
-    "renameFailed": "Zanjir nomini o'zgartirib bo'lmadi."
+    "renameFailed": "Zanjir nomini o'zgartirib bo'lmadi.",
+    "strategy": "Routing strategy",
+    "strategyHint": "How this chain ranks its models. Inherit uses the global setting.",
+    "strategyInherit": "Inherit global",
+    "strategyPriority": "Manual order",
+    "strategyBalanced": "Balanced",
+    "strategySmartest": "Smartest",
+    "strategyFastest": "Fastest",
+    "strategyReliable": "Most reliable"
   },
   "updates": {
     "versionAvailable": "{version} versiyasi mavjud",

@@ -60,7 +60,16 @@
     "emailChanged": "E-mail успешно изменён.",
     "passwordReset": "Пароль сброшен. Войдите заново.",
     "resetCodeDockerHint": "Используете Docker? Код находится в логе контейнера: docker logs <container>.",
-    "desktopSessionFailed": "Панель управления не смогла войти на локальный сервер. Закройте FreeLLMAPI и откройте его снова."
+    "desktopSessionFailed": "Панель управления не смогла войти на локальный сервер. Закройте FreeLLMAPI и откройте его снова.",
+    "signInWithSso": "Войти через {provider}",
+    "orContinueWithPassword": "или продолжить по email",
+    "reverifyWithSso": "Подтвердить через {provider}",
+    "oidcReauthHint": "Подтвердите личность через {provider}, чтобы получить доступ к открытым ключам.",
+    "oidcReauthSuccess": "Личность подтверждена на ближайшие 5 минут.",
+    "oidcErrorNotAllowed": "Вашей учётной записи не разрешён вход в эту панель.",
+    "oidcErrorUnverifiedEmail": "Провайдер идентификации должен подтвердить ваш email перед входом.",
+    "oidcErrorNoAccount": "Подходящей учётной записи нет, а автоматическое создание отключено.",
+    "oidcErrorFailed": "Ошибка единого входа. Попробуйте ещё раз."
   },
   "common": {
     "save": "Сохранить",
@@ -109,6 +118,8 @@
     "sectionAdvanced": "Дополнительно",
     "sectionPreview": "Предпросмотр",
     "generalDescription": "Язык и внешний вид этой панели.",
+    "startAtLogin": "Запускать при запуске системы",
+    "startAtLoginHelp": "Автоматически запускать FreeLLMAPI при входе в систему.",
     "advancedDescription": "Пороги и предохранители конвейера сжатия.",
     "compressionTitle": "Сжатие промптов",
     "compressionDescription": "Уменьшает размер запросов перед маршрутизацией, сохраняя код, ошибки, пути, числа и определения инструментов.",
@@ -169,7 +180,12 @@
     "updateNow": "Обновить сейчас",
     "updatingContainer": "Загружается новый образ и выполняется перезапуск. Страница перезагрузится, когда FreeLLMAPI вернётся.",
     "updateNowFailed": "Служба обновления не приняла запрос. Проверьте, что контейнер watchtower запущен.",
-    "updateNowTimeout": "FreeLLMAPI не перезапустился за 5 минут. Проверьте журналы контейнера watchtower."
+    "updateNowTimeout": "FreeLLMAPI не перезапустился за 5 минут. Проверьте журналы контейнера watchtower.",
+    "injectSystemDate": "Системная дата в промпте",
+    "injectSystemDateHelp": "Добавляет текущую дату UTC (YYYY-MM-DD) в начало системного промпта, чтобы модели использовали актуальный год при веб-поиске. Пропускается, если дата уже указана.",
+    "injectSystemDateOff": "Выкл",
+    "injectSystemDateWebSearch": "Веб-поиск",
+    "injectSystemDateAlways": "Всегда"
   },
   "models": {
     "title": "Модели",
@@ -393,6 +409,8 @@
     "pageDescription": "Учетные данные поставщика и единый ключ API, с помощью которого подключаются ваши приложения.",
     "tabProviders": "Провайдеры",
     "checklistSummary": "Настроено {configured} из {total} провайдеров",
+    "keylessAvailable": "Доступны провайдеры без ключа ({count})",
+    "keylessEnableAll": "Включить все",
     "checklistKeyless": "ключ не нужен",
     "checklistNoKeyTip": "Ключ ещё не добавлен. Нажмите, чтобы добавить.",
     "checklistSignupLink": "Откройте {provider}, чтобы создать аккаунт и получить ключ",
@@ -432,6 +450,7 @@
     "familyHaiku": "Хайку",
     "selectPlatform": "Выберите провайдера",
     "addKey": "Добавить ключ",
+    "addAnotherKey": "Добавить ещё один API-ключ",
     "keyAdded": "Ключ добавлен",
     "endpointKeysShareModels": "Ключи одной точки доступа используют одни и те же модели.",
     "export": "Экспорт",
@@ -474,6 +493,8 @@
     "customTypeImage": "Изображение",
     "customTypeAudio": "Аудио",
     "customTypeTranscription": "Transcription",
+    "customTypeSearch": "Web search",
+    "customTypeDecision": "Decision",
     "customBaseUrl": "База URL",
     "customModels": "Модели",
     "customModel": "Модель",
@@ -482,6 +503,9 @@
     "customDisplayNameOptional": "необязательно",
     "customFamily": "Семья",
     "customFamilyPlaceholder": "по умолчанию используется идентификатор модели",
+    "customEmbeddingInputType": "Input type",
+    "customEmbeddingInputTypeUnset": "Not specified",
+    "customEmbeddingInputTypeNone": "None (symmetric)",
     "customApiKey": "Ключ API",
     "customCapabilities": "Возможности",
     "addModel": "Добавить модель",
@@ -491,6 +515,10 @@
     "addImageModel": "Добавить модель изображения",
     "addAudioModel": "Добавить аудиомодель",
     "addTranscriptionModel": "Add transcription model",
+    "addSearchEngine": "Add search engine",
+    "addDecisionModel": "Add decision model",
+    "customSearchHint": "Search endpoints must accept POST <base URL>/search in Tavily's request format and return a results list.",
+    "customDecisionHint": "Decision endpoints must accept POST <base URL>/decide and answer with one of the question's choices.",
     "addingCustom": "Добавление…",
     "discoverModels": "Получить модели",
     "probeNow": "Протестировать конечную точку",
@@ -937,6 +965,8 @@
     "dictationStop": "Остановить запись",
     "dictationTranscribing": "Расшифровка…",
     "dictationUnavailable": "Добавьте провайдеров аудиомоделей, чтобы использовать диктовку.",
+    "dictationMacShortcut": "Нажмите клавишу микрофона или используйте сочетание клавиш для диктовки из настроек клавиатуры.",
+    "dictationWindowsShortcut": "Нажмите Win + H, чтобы начать голосовой ввод.",
     "dictationModel": "Модель диктовки",
     "dictationFailed": "Ошибка расшифровки: {reason}",
     "artifactOpen": "Открыть предпросмотр",
@@ -986,7 +1016,8 @@
     "tokMax": "{tokens} ток макс.",
     "emptyTitle": "Встраиваемых моделей пока нет.",
     "emptyDesc": "Семейства встраивания появляются здесь после добавления ключа поставщика, поддерживающего встраивание.",
-    "dragToReorder": "Перетащите, чтобы изменить порядок поставщиков"
+    "dragToReorder": "Перетащите, чтобы изменить порядок поставщиков",
+    "inputTypeTitle": "Asymmetric embedding model: this side of the vector space is sent as input_type."
   },
   "fusion": {
     "title": "Фьюжн",
@@ -1140,6 +1171,8 @@
     "step1Title": "Добавить ключ провайдера",
     "step1Desc": "Подключите хотя бы одну учетную запись провайдера. Бесплатные ключи работают.",
     "step1Cta": "Добавить ключи",
+    "step1KeylessTitle": "Провайдеры без ключа включены",
+    "step1KeylessDesc": "Бесплатные модели готовы, регистрация не нужна. Добавьте свои ключи, чтобы получить больше быстрых моделей.",
     "step2Title": "Отправить тестовый запрос",
     "step2Desc": "Выберите любую модель на игровой площадке и поздоровайтесь.",
     "step2Cta": "Открытая игровая площадка",
@@ -1180,6 +1213,24 @@
     "manualHint": "Базовый URL и ключ для ввода в настройках самого инструмента.",
     "endpoint": "Эндпоинт",
     "documentation": "Документация",
+    "connect": {
+      "button": "Подключить к FreeLLMAPI",
+      "details": "Сведения о настройке",
+      "gateway": "Локальный шлюз",
+      "saved": "Настройки сохранены",
+      "finish": "Завершить настройку",
+      "launch": "Запустить в терминале",
+      "quit": "Закройте ZCode Desktop перед сохранением, чтобы программа не перезаписала настройки.",
+      "restart": "Перезапустите {name}, если приложение запущено.",
+      "send": "Откройте {name} и отправьте сообщение.",
+      "files": "Файлы конфигурации",
+      "writeError": "Проверьте права доступа к файлам и существующую конфигурацию и повторите попытку.",
+      "missing": "Установите CLI или добавьте его в PATH.",
+      "intro": "Подключайте инструменты программирования к единому шлюзу бесплатных моделей с генерируемой конфигурацией, безопасной для резервных копий.",
+      "all": "Агенты",
+      "find": "Search",
+      "cursor": "Редактор с упором на ИИ; работает через облако Cursor, поэтому нужен публичный URL."
+    },
     "descriptions": {
       "claude": "Терминальный агент Anthropic: планирует, правит файлы и запускает команды в вашем репозитории.",
       "codex": "Терминальный агент OpenAI: сначала выполняет задачу в локальной песочнице.",
@@ -1201,7 +1252,8 @@
       "hermes": "Самосовершенствующийся агент от Nous Research с постоянной памятью и навыками — в терминале или в чат-приложениях.",
       "pi": "Минималистичный терминальный агент, который вы настраиваете своими расширениями, навыками и шаблонами промптов.",
       "reasonix": "Терминальный агент для программирования, созданный под DeepSeek и построенный вокруг кэширования префиксов, чтобы длинные сессии оставались дешёвыми.",
-      "zcode": "Кодовый агент Z.ai для его моделей GLM, подключаемый к любому OpenAI-совместимому эндпоинту через реестр провайдеров."
+      "zcode": "Кодовый агент Z.ai для его моделей GLM, подключаемый к любому OpenAI-совместимому эндпоинту через реестр провайдеров.",
+      "zero": "Локальный терминальный агент для программирования с сохранными сессиями, правами доступа и любым OpenAI-совместимым провайдером."
     }
   },
   "update": {
@@ -1260,7 +1312,15 @@
     "renameHint": "Переименовать эту цепочку",
     "renameConfirm": "Переименовать цепочку \"{oldName}\" в \"{name}\"? Клиенты, обращающиеся к auto:{oldName}, должны перейти на auto:{name}.",
     "renamePlaceholder": "Новое имя цепочки",
-    "renameFailed": "Не удалось переименовать цепочку."
+    "renameFailed": "Не удалось переименовать цепочку.",
+    "strategy": "Routing strategy",
+    "strategyHint": "How this chain ranks its models. Inherit uses the global setting.",
+    "strategyInherit": "Inherit global",
+    "strategyPriority": "Manual order",
+    "strategyBalanced": "Balanced",
+    "strategySmartest": "Smartest",
+    "strategyFastest": "Fastest",
+    "strategyReliable": "Most reliable"
   },
   "updates": {
     "versionAvailable": "Доступна версия {version}",

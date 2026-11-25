@@ -60,7 +60,16 @@
     "emailChanged": "Имейлът е сменен.",
     "passwordReset": "Паролата е нулирана. Влезте отново.",
     "resetCodeDockerHint": "Работите в Docker? Кодът е в лога на контейнера: docker logs <container>.",
-    "desktopSessionFailed": "Таблото не успя да влезе в локалния сървър. Затворете FreeLLMAPI и го отворете отново."
+    "desktopSessionFailed": "Таблото не успя да влезе в локалния сървър. Затворете FreeLLMAPI и го отворете отново.",
+    "signInWithSso": "Sign in with {provider}",
+    "orContinueWithPassword": "or continue with email",
+    "reverifyWithSso": "Re-verify with {provider}",
+    "oidcReauthHint": "Confirm your identity with {provider} to access plaintext keys.",
+    "oidcReauthSuccess": "Identity verified for the next 5 minutes.",
+    "oidcErrorNotAllowed": "Your account is not permitted to sign in to this dashboard.",
+    "oidcErrorUnverifiedEmail": "Your identity provider must verify your email address before signing in.",
+    "oidcErrorNoAccount": "No matching account exists and automatic account creation is disabled.",
+    "oidcErrorFailed": "Single sign-on failed. Please try again."
   },
   "common": {
     "save": "Запази",
@@ -109,6 +118,8 @@
     "sectionAdvanced": "Разширени",
     "sectionPreview": "Преглед",
     "generalDescription": "Език и външен вид на този панел.",
+    "startAtLogin": "Стартиране при стартиране на системата",
+    "startAtLoginHelp": "Автоматично стартирайте FreeLLMAPI при влизане в компютъра си.",
     "advancedDescription": "Прагове и предпазители на веригата за компресия.",
     "compressionTitle": "Компресия на промпта",
     "compressionDescription": "Намалете размера на заявката преди маршрутизиране, като запазите код, грешки, пътища, числа и дефиниции на инструменти.",
@@ -169,7 +180,12 @@
     "updateNow": "Актуализирай сега",
     "updatingContainer": "Изтегля се новият образ и се рестартира. Страницата ще се презареди, когато FreeLLMAPI се върне.",
     "updateNowFailed": "Актуализаторът не прие заявката. Проверете дали контейнерът watchtower работи.",
-    "updateNowTimeout": "FreeLLMAPI не се е рестартирал след 5 минути. Проверете логовете на контейнера watchtower."
+    "updateNowTimeout": "FreeLLMAPI не се е рестартирал след 5 минути. Проверете логовете на контейнера watchtower.",
+    "injectSystemDate": "System date in prompt",
+    "injectSystemDateHelp": "Prepend today’s UTC date (YYYY-MM-DD) to the system prompt so models query web search for current information. Skipped if the caller already includes a date. Off or Web search is recommended to preserve prompt caching.",
+    "injectSystemDateOff": "Off",
+    "injectSystemDateWebSearch": "Web search",
+    "injectSystemDateAlways": "Always"
   },
   "models": {
     "title": "Модели",
@@ -393,6 +409,8 @@
     "pageDescription": "Идентификационните данни на доставчика и унифицираният API ключ, с който се свързват вашите приложения.",
     "tabProviders": "Доставчици",
     "checklistSummary": "Настроени са {configured} от {total} доставчици",
+    "keylessAvailable": "Налични доставчици без ключ ({count})",
+    "keylessEnableAll": "Активирай всички",
     "checklistKeyless": "не е нужен ключ",
     "checklistNoKeyTip": "Все още не е добавен ключ. Щракнете, за да добавите.",
     "checklistSignupLink": "Отворете {provider}, за да създадете акаунт и да получите ключ",
@@ -432,6 +450,7 @@
     "familyHaiku": "Хайку",
     "selectPlatform": "Изберете доставчик",
     "addKey": "Добави ключ",
+    "addAnotherKey": "Добави друг API ключ",
     "keyAdded": "Добавен ключ",
     "endpointKeysShareModels": "Ключовете за една и съща крайна точка споделят нейните модели.",
     "export": "Износ",
@@ -474,6 +493,8 @@
     "customTypeImage": "Изображение",
     "customTypeAudio": "Аудио",
     "customTypeTranscription": "Transcription",
+    "customTypeSearch": "Web search",
+    "customTypeDecision": "Decision",
     "customBaseUrl": "Базова URL",
     "customModels": "Модели",
     "customModel": "Модел",
@@ -482,6 +503,9 @@
     "customDisplayNameOptional": "по избор",
     "customFamily": "Семейство",
     "customFamilyPlaceholder": "По подразбиране към Model ID",
+    "customEmbeddingInputType": "Input type",
+    "customEmbeddingInputTypeUnset": "Not specified",
+    "customEmbeddingInputTypeNone": "None (symmetric)",
     "customApiKey": "API ключ",
     "customCapabilities": "Възможности",
     "addModel": "Добави модел",
@@ -491,6 +515,10 @@
     "addImageModel": "Добави модел на изображението",
     "addAudioModel": "Добави аудио модел",
     "addTranscriptionModel": "Add transcription model",
+    "addSearchEngine": "Add search engine",
+    "addDecisionModel": "Add decision model",
+    "customSearchHint": "Search endpoints must accept POST <base URL>/search in Tavily's request format and return a results list.",
+    "customDecisionHint": "Decision endpoints must accept POST <base URL>/decide and answer with one of the question's choices.",
     "addingCustom": "Добавям...",
     "discoverModels": "Извличане на модели",
     "probeNow": "Тествай крайната точка",
@@ -937,6 +965,8 @@
     "dictationStop": "Спри записа",
     "dictationTranscribing": "Транскрибира се…",
     "dictationUnavailable": "Добавете доставчици на аудио модели, за да използвате диктуване.",
+    "dictationMacShortcut": "Натиснете клавиша за микрофона или използвайте комбинацията за диктовка от настройките на клавиатурата.",
+    "dictationWindowsShortcut": "Натиснете Win + H, за да започнете гласово въвеждане.",
     "dictationModel": "Модел за диктуване",
     "dictationFailed": "Транскрипцията се провали: {reason}",
     "artifactOpen": "Отвори предварителен преглед",
@@ -986,7 +1016,8 @@
     "tokMax": "{tokens} ток макс",
     "emptyTitle": "Все още няма вградени модели",
     "emptyDesc": "Семействата за вграждане се появяват тук, след като добавите доставчик ключ, който поддържа вграждания.",
-    "dragToReorder": "Drag to reorder provider"
+    "dragToReorder": "Drag to reorder provider",
+    "inputTypeTitle": "Asymmetric embedding model: this side of the vector space is sent as input_type."
   },
   "fusion": {
     "title": "Сливане",
@@ -1140,6 +1171,8 @@
     "step1Title": "Добавете ключ за доставчик",
     "step1Desc": "Свържете поне един акаунт на доставчик. Безплатните ключове работят.",
     "step1Cta": "Добави клавиши",
+    "step1KeylessTitle": "Доставчиците без ключ са включени",
+    "step1KeylessDesc": "Безплатните модели са готови, без регистрация. Добавете свои ключове за още и по-бързи модели.",
     "step2Title": "Изпрати заявка за тест",
     "step2Desc": "Избери който и да е модел в Playground и кажи здравей.",
     "step2Cta": "Отворена площадка",
@@ -1180,6 +1213,24 @@
     "manualHint": "Базов URL и ключ за въвеждане в настройките на самия инструмент.",
     "endpoint": "Крайна точка",
     "documentation": "Документация",
+    "connect": {
+      "button": "Свързване с FreeLLMAPI",
+      "details": "Подробности за настройката",
+      "gateway": "Локален шлюз",
+      "saved": "Конфигурацията е запазена",
+      "finish": "Завършване на настройката",
+      "launch": "Стартиране в терминала",
+      "quit": "Затворете ZCode Desktop преди запазване, за да не презапише настройките.",
+      "restart": "Рестартирайте {name}, ако работи.",
+      "send": "Отворете {name} и изпратете съобщение.",
+      "files": "Конфигурационни файлове",
+      "writeError": "Проверете правата на файловете и текущата конфигурация и опитайте отново.",
+      "missing": "Инсталирайте CLI или го добавете към PATH.",
+      "intro": "Свържете инструменти за програмиране към един шлюз за безплатни модели с генерирана конфигурация и безопасно архивиране.",
+      "all": "Агенти",
+      "find": "Search",
+      "cursor": "The AI-first editor; it calls through Cursor's cloud, so it needs a public URL."
+    },
     "descriptions": {
       "claude": "Anthropic's terminal agent: it plans, edits files, and runs commands in your repo.",
       "codex": "OpenAI's terminal agent, which runs your task in a local sandbox first.",
@@ -1201,7 +1252,8 @@
       "hermes": "Самоусъвършенстващият се агент на Nous Research с постоянна памет и умения — в терминала или в чат приложенията.",
       "pi": "Минималистичен агент за терминала, който оформяте със собствени разширения, умения и шаблони за подкани.",
       "reasonix": "Терминален агент за програмиране, създаден за DeepSeek и изграден около кеширането на префикси, така че дългите сесии да остават евтини.",
-      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry."
+      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry.",
+      "zero": "Локален терминален агент за програмиране с устойчиви сесии, разрешения и всеки доставчик, съвместим с OpenAI."
     }
   },
   "update": {
@@ -1260,7 +1312,15 @@
     "renameHint": "Преименувай тази верига",
     "renameConfirm": "Преименуване на верига \"{oldName}\" на \"{name}\"? Клиенти, извикващи auto:{oldName}, трябва да преминат към auto:{name}.",
     "renamePlaceholder": "Ново име на веригата",
-    "renameFailed": "Веригата не можа да бъде преименувана."
+    "renameFailed": "Веригата не можа да бъде преименувана.",
+    "strategy": "Routing strategy",
+    "strategyHint": "How this chain ranks its models. Inherit uses the global setting.",
+    "strategyInherit": "Inherit global",
+    "strategyPriority": "Manual order",
+    "strategyBalanced": "Balanced",
+    "strategySmartest": "Smartest",
+    "strategyFastest": "Fastest",
+    "strategyReliable": "Most reliable"
   },
   "updates": {
     "versionAvailable": "Версия {version} е налична",

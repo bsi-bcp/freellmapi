@@ -60,7 +60,16 @@
     "emailChanged": "E-posten er endret.",
     "passwordReset": "Passordet er tilbakestilt. Logg inn.",
     "resetCodeDockerHint": "Kjører du i Docker? Koden står i containerloggen: docker logs <container>.",
-    "desktopSessionFailed": "Dashbordet kunne ikke logge inn på den lokale serveren. Avslutt FreeLLMAPI og åpne det på nytt."
+    "desktopSessionFailed": "Dashbordet kunne ikke logge inn på den lokale serveren. Avslutt FreeLLMAPI og åpne det på nytt.",
+    "signInWithSso": "Sign in with {provider}",
+    "orContinueWithPassword": "or continue with email",
+    "reverifyWithSso": "Re-verify with {provider}",
+    "oidcReauthHint": "Confirm your identity with {provider} to access plaintext keys.",
+    "oidcReauthSuccess": "Identity verified for the next 5 minutes.",
+    "oidcErrorNotAllowed": "Your account is not permitted to sign in to this dashboard.",
+    "oidcErrorUnverifiedEmail": "Your identity provider must verify your email address before signing in.",
+    "oidcErrorNoAccount": "No matching account exists and automatic account creation is disabled.",
+    "oidcErrorFailed": "Single sign-on failed. Please try again."
   },
   "common": {
     "save": "Lagre",
@@ -109,6 +118,8 @@
     "sectionAdvanced": "Avansert",
     "sectionPreview": "Forhåndsvisning",
     "generalDescription": "Språk og utseende for dette dashbordet.",
+    "startAtLogin": "Start ved systemoppstart",
+    "startAtLoginHelp": "Start FreeLLMAPI automatisk når du logger på datamaskinen.",
     "advancedDescription": "Terskler og sikkerhetsbrytere for komprimeringspipelinen.",
     "compressionTitle": "Promptkomprimering",
     "compressionDescription": "Reduser forespørselsstørrelsen før ruting, samtidig som kode, feil, stier, tall og verktøydefinisjoner bevares.",
@@ -169,7 +180,12 @@
     "updateNow": "Oppdater nå",
     "updatingContainer": "Henter det nye imaget og starter på nytt. Siden lastes inn på nytt når FreeLLMAPI er tilbake.",
     "updateNowFailed": "Oppdateringstjenesten godtok ikke forespørselen. Sjekk at watchtower-containeren kjører.",
-    "updateNowTimeout": "FreeLLMAPI har ikke startet på nytt etter 5 minutter. Sjekk loggene til watchtower-containeren."
+    "updateNowTimeout": "FreeLLMAPI har ikke startet på nytt etter 5 minutter. Sjekk loggene til watchtower-containeren.",
+    "injectSystemDate": "System date in prompt",
+    "injectSystemDateHelp": "Prepend today’s UTC date (YYYY-MM-DD) to the system prompt so models query web search for current information. Skipped if the caller already includes a date. Off or Web search is recommended to preserve prompt caching.",
+    "injectSystemDateOff": "Off",
+    "injectSystemDateWebSearch": "Web search",
+    "injectSystemDateAlways": "Always"
   },
   "models": {
     "title": "Modeller",
@@ -393,6 +409,8 @@
     "pageDescription": "Leverandørlegitimasjon og den samlede API-nøkkelen appene dine kobler seg til.",
     "tabProviders": "Leverandører",
     "checklistSummary": "{configured} av {total} leverandører konfigurert",
+    "keylessAvailable": "Leverandører uten nøkkel tilgjengelig ({count})",
+    "keylessEnableAll": "Slå på alle",
     "checklistKeyless": "ingen nøkkel kreves",
     "checklistNoKeyTip": "Ingen nøkkel er lagt til ennå. Klikk for å legge til en.",
     "checklistSignupLink": "Åpne {provider} for å opprette en konto og få en nøkkel",
@@ -432,6 +450,7 @@
     "familyHaiku": "Haiku",
     "selectPlatform": "Velg en leverandør",
     "addKey": "Legg til nøkkel",
+    "addAnotherKey": "Legg til en annen API-nøkkel",
     "keyAdded": "Nøkkel lagt til",
     "endpointKeysShareModels": "Nøkler for det samme endepunktet deler modellene dets.",
     "export": "Eksport",
@@ -474,6 +493,8 @@
     "customTypeImage": "Bilde",
     "customTypeAudio": "Lyd",
     "customTypeTranscription": "Transcription",
+    "customTypeSearch": "Web search",
+    "customTypeDecision": "Decision",
     "customBaseUrl": "Base URL",
     "customModels": "Modeller",
     "customModel": "Modell",
@@ -482,6 +503,9 @@
     "customDisplayNameOptional": "valgfritt",
     "customFamily": "Familie",
     "customFamilyPlaceholder": "Standardinnstilling til modell-ID",
+    "customEmbeddingInputType": "Input type",
+    "customEmbeddingInputTypeUnset": "Not specified",
+    "customEmbeddingInputTypeNone": "None (symmetric)",
     "customApiKey": "API nøkkel",
     "customCapabilities": "Kapasiteter",
     "addModel": "Legg til modell",
@@ -491,6 +515,10 @@
     "addImageModel": "Legg til bildemodell",
     "addAudioModel": "Legg til lydmodell",
     "addTranscriptionModel": "Add transcription model",
+    "addSearchEngine": "Add search engine",
+    "addDecisionModel": "Add decision model",
+    "customSearchHint": "Search endpoints must accept POST <base URL>/search in Tavily's request format and return a results list.",
+    "customDecisionHint": "Decision endpoints must accept POST <base URL>/decide and answer with one of the question's choices.",
     "addingCustom": "Legger til...",
     "discoverModels": "Hent modeller",
     "probeNow": "Test endepunktet",
@@ -937,6 +965,8 @@
     "dictationStop": "Stopp opptak",
     "dictationTranscribing": "Transkriberer…",
     "dictationUnavailable": "Legg til leverandører av lydmodeller for å kunne diktere.",
+    "dictationMacShortcut": "Trykk på mikrofontasten eller bruk snarveien for diktering fra tastaturinnstillingene.",
+    "dictationWindowsShortcut": "Trykk på Win + H for å begynne å skrive med stemmen.",
     "dictationModel": "Dikteringsmodell",
     "dictationFailed": "Transkripsjon mislyktes: {reason}",
     "artifactOpen": "Åpne forhåndsvisning",
@@ -986,7 +1016,8 @@
     "tokMax": "{tokens} tok max",
     "emptyTitle": "Ingen innbeddingsmodeller ennå",
     "emptyDesc": "Embedding-familier vises her når du legger til en leverandørnøkkel som støtter embeddings.",
-    "dragToReorder": "Dra for å omorganisere leverandøren"
+    "dragToReorder": "Dra for å omorganisere leverandøren",
+    "inputTypeTitle": "Asymmetric embedding model: this side of the vector space is sent as input_type."
   },
   "fusion": {
     "title": "Fusjon",
@@ -1140,6 +1171,8 @@
     "step1Title": "Legg til en leverandørnøkkel",
     "step1Desc": "Koble til minst én leverandørkonto. Gratis nøkler fungerer.",
     "step1Cta": "Legg til nøkler",
+    "step1KeylessTitle": "Leverandører uten nøkkel er slått på",
+    "step1KeylessDesc": "Gratis modeller er klare, ingen registrering nødvendig. Legg til dine egne nøkler for flere og raskere modeller.",
     "step2Title": "Send en testforespørsel",
     "step2Desc": "Velg hvilken som helst modell i lekeplassen og si hei.",
     "step2Cta": "Åpen lekeplassen",
@@ -1180,6 +1213,24 @@
     "manualHint": "Basis-URL og nøkkel til verktøyets egne innstillinger.",
     "endpoint": "Endepunkt",
     "documentation": "Dokumentasjon",
+    "connect": {
+      "button": "Koble til FreeLLMAPI",
+      "details": "Oppsettsdetaljer",
+      "gateway": "Lokal gateway",
+      "saved": "Konfigurasjon lagret",
+      "finish": "Fullfør oppsettet",
+      "launch": "Start i terminalen",
+      "quit": "Avslutt ZCode Desktop før du lagrer slik at innstillingene ikke overskrives.",
+      "restart": "Start {name} på nytt hvis det kjører.",
+      "send": "Åpne {name} og send en melding.",
+      "files": "Konfigurasjonsfiler",
+      "writeError": "Sjekk filrettighetene og gjeldende konfigurasjon, og prøv igjen.",
+      "missing": "Installer CLI-en eller legg den til i PATH.",
+      "intro": "Koble kodeverktøy til én gateway for gratis modeller med generert, sikkerhetskopivennlig konfigurasjon.",
+      "all": "Agenter",
+      "find": "Search",
+      "cursor": "The AI-first editor; it calls through Cursor's cloud, so it needs a public URL."
+    },
     "descriptions": {
       "claude": "Anthropic's terminal agent: it plans, edits files, and runs commands in your repo.",
       "codex": "OpenAI's terminal agent, which runs your task in a local sandbox first.",
@@ -1201,7 +1252,8 @@
       "hermes": "Nous Researchs selvforbedrende agent med varig minne og ferdigheter, i terminalen eller i chat-apper.",
       "pi": "En minimal terminalagent du former med egne utvidelser, ferdigheter og promptmaler.",
       "reasonix": "En terminalbasert kodeagent laget for DeepSeek rundt prefiks-caching, slik at lange økter forblir billige.",
-      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry."
+      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry.",
+      "zero": "En lokal terminalbasert kodeagent med varige økter, tillatelser og støtte for enhver OpenAI-kompatibel leverandør."
     }
   },
   "update": {
@@ -1260,7 +1312,15 @@
     "renameHint": "Gi denne kjeden nytt navn",
     "renameConfirm": "Gi kjeden \"{oldName}\" navnet \"{name}\"? Klienter som kaller auto:{oldName} må bytte til auto:{name}.",
     "renamePlaceholder": "Nytt kjedenavn",
-    "renameFailed": "Kunne ikke gi den kjeden nytt navn."
+    "renameFailed": "Kunne ikke gi den kjeden nytt navn.",
+    "strategy": "Routing strategy",
+    "strategyHint": "How this chain ranks its models. Inherit uses the global setting.",
+    "strategyInherit": "Inherit global",
+    "strategyPriority": "Manual order",
+    "strategyBalanced": "Balanced",
+    "strategySmartest": "Smartest",
+    "strategyFastest": "Fastest",
+    "strategyReliable": "Most reliable"
   },
   "updates": {
     "versionAvailable": "Versjon {version} er tilgjengelig",

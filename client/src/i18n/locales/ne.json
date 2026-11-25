@@ -60,7 +60,16 @@
     "emailChanged": "इमेल सफलतापूर्वक परिवर्तन भयो।",
     "passwordReset": "पासवर्ड रिसेट भयो। कृपया साइन इन गर्नुहोस्।",
     "resetCodeDockerHint": "Docker मा चलाइरहनुभएको छ? कोड कन्टेनर लगमा छ: docker logs <container>।",
-    "desktopSessionFailed": "ड्यासबोर्डले लोकल सर्भरमा साइन इन गर्न सकेन। FreeLLMAPI बन्द गरेर फेरि खोल्नुहोस्।"
+    "desktopSessionFailed": "ड्यासबोर्डले लोकल सर्भरमा साइन इन गर्न सकेन। FreeLLMAPI बन्द गरेर फेरि खोल्नुहोस्।",
+    "signInWithSso": "Sign in with {provider}",
+    "orContinueWithPassword": "or continue with email",
+    "reverifyWithSso": "Re-verify with {provider}",
+    "oidcReauthHint": "Confirm your identity with {provider} to access plaintext keys.",
+    "oidcReauthSuccess": "Identity verified for the next 5 minutes.",
+    "oidcErrorNotAllowed": "Your account is not permitted to sign in to this dashboard.",
+    "oidcErrorUnverifiedEmail": "Your identity provider must verify your email address before signing in.",
+    "oidcErrorNoAccount": "No matching account exists and automatic account creation is disabled.",
+    "oidcErrorFailed": "Single sign-on failed. Please try again."
   },
   "common": {
     "save": "बचत गर्नुहोस्",
@@ -109,6 +118,8 @@
     "sectionAdvanced": "उन्नत",
     "sectionPreview": "पूर्वावलोकन",
     "generalDescription": "यो ड्यासबोर्डको भाषा र देखावट।",
+    "startAtLogin": "प्रणाली सुरु हुँदा सुरु गर्नुहोस्",
+    "startAtLoginHelp": "तपाईंले आफ्नो कम्प्युटरमा साइन इन गर्दा FreeLLMAPI स्वतः सुरु गर्नुहोस्।",
     "advancedDescription": "कम्प्रेसन पाइपलाइनका थ्रेसहोल्ड र सुरक्षा स्विचहरू।",
     "compressionTitle": "प्रम्प्ट कम्प्रेसन",
     "compressionDescription": "कोड, त्रुटिहरू, पथहरू, नम्बरहरू, र उपकरण परिभाषाहरू सुरक्षित राख्दै राउटिङ अघि अनुरोधको आकार घटाउनुहोस्।",
@@ -169,7 +180,12 @@
     "updateNow": "अहिले अपडेट गर्नुहोस्",
     "updatingContainer": "नयाँ इमेज तानिँदै र पुनः सुरु हुँदैछ। FreeLLMAPI फर्केपछि यो पेज पुनः लोड हुन्छ।",
     "updateNowFailed": "अपडेटरले अनुरोध स्वीकार गरेन। watchtower कन्टेनर चलिरहेको छ कि छैन जाँच गर्नुहोस्।",
-    "updateNowTimeout": "५ मिनेटपछि पनि FreeLLMAPI पुनः सुरु भएको छैन। watchtower कन्टेनरका लगहरू हेर्नुहोस्।"
+    "updateNowTimeout": "५ मिनेटपछि पनि FreeLLMAPI पुनः सुरु भएको छैन। watchtower कन्टेनरका लगहरू हेर्नुहोस्।",
+    "injectSystemDate": "System date in prompt",
+    "injectSystemDateHelp": "Prepend today’s UTC date (YYYY-MM-DD) to the system prompt so models query web search for current information. Skipped if the caller already includes a date. Off or Web search is recommended to preserve prompt caching.",
+    "injectSystemDateOff": "Off",
+    "injectSystemDateWebSearch": "Web search",
+    "injectSystemDateAlways": "Always"
   },
   "models": {
     "title": "नमूनाहरू",
@@ -393,6 +409,8 @@
     "pageDescription": "प्रदायक प्रमाणहरू र एकीकृत API कुञ्जी तपाईंको अनुप्रयोगहरूसँग जडान गर्नुहोस्।",
     "tabProviders": "प्रदायकहरू",
     "checklistSummary": "{total} मध्ये {configured} प्रदायकहरू कन्फिगर गरिएको",
+    "keylessAvailable": "कुञ्जी नचाहिने प्रदायकहरू उपलब्ध ({count})",
+    "keylessEnableAll": "सबै सक्षम गर्नुहोस्",
     "checklistKeyless": "कुञ्जी आवश्यक छैन",
     "checklistNoKeyTip": "अहिलेसम्म कुनै कुञ्जी थपिएको छैन। थप्न क्लिक गर्नुहोस्।",
     "checklistSignupLink": "खाता बनाउन र कुञ्जी प्राप्त गर्न {provider} खोल्नुहोस्",
@@ -432,6 +450,7 @@
     "familyHaiku": "हाइकु",
     "selectPlatform": "प्रदायक चयन गर्नुहोस्",
     "addKey": "कुञ्जी थप्नुहोस्",
+    "addAnotherKey": "अर्को API कुञ्जी थप्नुहोस्",
     "keyAdded": "कुञ्जी थपियो",
     "endpointKeysShareModels": "एउटै एन्डपोइन्टका कुञ्जीहरूले त्यसका मोडेलहरू साझा गर्छन्।",
     "export": "निर्यात गर्नुहोस्",
@@ -474,6 +493,8 @@
     "customTypeImage": "छवि",
     "customTypeAudio": "अडियो",
     "customTypeTranscription": "Transcription",
+    "customTypeSearch": "Web search",
+    "customTypeDecision": "Decision",
     "customBaseUrl": "आधार URL",
     "customModels": "नमूनाहरू",
     "customModel": "नमूना[सम्पादन गर्ने]",
@@ -482,6 +503,9 @@
     "customDisplayNameOptional": "वैकल्पिक",
     "customFamily": "परिवार",
     "customFamilyPlaceholder": "नमूना आईडीमा पूर्वनिर्धारितहरू",
+    "customEmbeddingInputType": "Input type",
+    "customEmbeddingInputTypeUnset": "Not specified",
+    "customEmbeddingInputTypeNone": "None (symmetric)",
     "customApiKey": "कुञ्जी API गर्नुहोस्",
     "customCapabilities": "क्षमताहरू",
     "addModel": "नमूना थप्नुहोस्",
@@ -491,6 +515,10 @@
     "addImageModel": "छवि नमूना थप्नुहोस्",
     "addAudioModel": "अडियो नमूना थप्नुहोस्",
     "addTranscriptionModel": "Add transcription model",
+    "addSearchEngine": "Add search engine",
+    "addDecisionModel": "Add decision model",
+    "customSearchHint": "Search endpoints must accept POST <base URL>/search in Tavily's request format and return a results list.",
+    "customDecisionHint": "Decision endpoints must accept POST <base URL>/decide and answer with one of the question's choices.",
     "addingCustom": "थप्दैछ...",
     "discoverModels": "मोडेल ल्याउनुहोस्",
     "probeNow": "एन्डपोइन्ट परीक्षण गर्नुहोस्",
@@ -937,6 +965,8 @@
     "dictationStop": "रेकर्डिङ रोक्नुहोस्",
     "dictationTranscribing": "लेखिँदैछ…",
     "dictationUnavailable": "बोलेर लेख्न अडियो मोडेल प्रदायकहरू थप्नुहोस्।",
+    "dictationMacShortcut": "माइक्रोफोन कुञ्जी थिच्नुहोस् वा किबोर्ड सेटिङमा तोकिएको डिक्टेसन सर्टकट प्रयोग गर्नुहोस्।",
+    "dictationWindowsShortcut": "बोलेर टाइप गर्न Win + H थिच्नुहोस्।",
     "dictationModel": "श्रुतलेखन मोडेल",
     "dictationFailed": "लेख्न असफल: {reason}",
     "artifactOpen": "पूर्वावलोकन खोल्नुहोस्",
@@ -986,7 +1016,8 @@
     "tokMax": "{tokens} अधिकतम",
     "emptyTitle": "अहिले सम्म कुनै सम्मिलित नमुना छैन",
     "emptyDesc": "तपाईँले एम्बेडिङलाई समर्थन गर्ने प्रदायक कुञ्जी थप्नु भएपछि सम्मिलित परिवारहरू यहाँ देखा पर्दछ।",
-    "dragToReorder": "प्रदायक पुन: क्रमबद्ध गर्न तान्नुहोस्"
+    "dragToReorder": "प्रदायक पुन: क्रमबद्ध गर्न तान्नुहोस्",
+    "inputTypeTitle": "Asymmetric embedding model: this side of the vector space is sent as input_type."
   },
   "fusion": {
     "title": "फ्युजन",
@@ -1140,6 +1171,8 @@
     "step1Title": "प्रदायक कुञ्जी थप्नुहोस्",
     "step1Desc": "कम्तिमा एउटा प्रदायक खाता जडान गर्नुहोस् । नि: शुल्क कुञ्जीहरूले काम गर्दछ।",
     "step1Cta": "कुञ्जीहरू थप्नुहोस्",
+    "step1KeylessTitle": "कुञ्जी नचाहिने प्रदायकहरू सक्रिय छन्",
+    "step1KeylessDesc": "निःशुल्क मोडेलहरू तयार छन्, साइन-अप चाहिँदैन। थप र छिटो मोडेलका लागि आफ्नै कुञ्जीहरू थप्नुहोस्।",
     "step2Title": "परीक्षण अनुरोध पठाउनुहोस्",
     "step2Desc": "खेल मैदानमा कुनै पनि मोडेल छान्नुहोस् र नमस्ते भन्नुहोस्।",
     "step2Cta": "खेल मैदान खोल्नुहोस्",
@@ -1180,6 +1213,24 @@
     "manualHint": "उपकरणकै सेटिङमा राख्न बेस URL र कुञ्जी।",
     "endpoint": "एन्डपोइन्ट",
     "documentation": "दस्तावेज",
+    "connect": {
+      "button": "FreeLLMAPI सँग जोड्नुहोस्",
+      "details": "सेटअप विवरण",
+      "gateway": "स्थानीय गेटवे",
+      "saved": "सेटिङहरू सुरक्षित भए",
+      "finish": "सेटअप पूरा गर्नुहोस्",
+      "launch": "टर्मिनलमा चलाउनुहोस्",
+      "quit": "सेटिङहरू नबदलिऊन् भनेर सुरक्षित गर्नुअघि ZCode Desktop बन्द गर्नुहोस्।",
+      "restart": "{name} चलिरहेको छ भने पुनः सुरु गर्नुहोस्।",
+      "send": "{name} खोल्नुहोस् र सन्देश पठाउनुहोस्।",
+      "files": "कन्फिगरेसन फाइलहरू",
+      "writeError": "फाइलका अनुमतिहरू र हालका सेटिङहरू जाँचेर फेरि प्रयास गर्नुहोस्।",
+      "missing": "CLI स्थापना गर्नुहोस् वा PATH मा थप्नुहोस्।",
+      "intro": "कोडिङ उपकरणहरूलाई स्वतः सिर्जना गरिएको, ब्याकअप-सुरक्षित कन्फिगरेसनसहित एउटै नि:शुल्क-मोडेल गेटवेमा जोड्नुहोस्।",
+      "all": "एजेन्टहरू",
+      "find": "Search",
+      "cursor": "The AI-first editor; it calls through Cursor's cloud, so it needs a public URL."
+    },
     "descriptions": {
       "claude": "Anthropic's terminal agent: it plans, edits files, and runs commands in your repo.",
       "codex": "OpenAI's terminal agent, which runs your task in a local sandbox first.",
@@ -1201,7 +1252,8 @@
       "hermes": "Nous Research को आफैं सुधारिने एजेन्ट, स्थायी मेमोरी र सीपहरूसहित, टर्मिनलमा वा च्याट एपहरूमा।",
       "pi": "एक न्यूनतम टर्मिनल एजेन्ट, जसलाई तपाईं आफ्नै एक्सटेन्सन, सीप र प्रम्प्ट टेम्प्लेटले आकार दिनुहुन्छ।",
       "reasonix": "DeepSeek का लागि बनाइएको टर्मिनल कोडिङ एजेन्ट, लामा सत्रहरू सस्तो रहून् भनेर प्रिफिक्स क्यासिङको वरिपरि निर्माण गरिएको।",
-      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry."
+      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry.",
+      "zero": "स्थायी सत्र, अनुमतिहरू र कुनै पनि OpenAI-अनुकूल प्रदायकसँग काम गर्ने स्थानीय टर्मिनल कोडिङ एजेन्ट।"
     }
   },
   "update": {
@@ -1260,7 +1312,15 @@
     "renameHint": "यो चेनको नाम बदल्नुहोस्",
     "renameConfirm": "चेन \"{oldName}\" को नाम \"{name}\" मा बदल्ने? auto:{oldName} बोलाउने क्लाइन्टहरूले auto:{name} मा जानुपर्छ।",
     "renamePlaceholder": "नयाँ चेन नाम",
-    "renameFailed": "चेनको नाम बदल्न सकिएन।"
+    "renameFailed": "चेनको नाम बदल्न सकिएन।",
+    "strategy": "Routing strategy",
+    "strategyHint": "How this chain ranks its models. Inherit uses the global setting.",
+    "strategyInherit": "Inherit global",
+    "strategyPriority": "Manual order",
+    "strategyBalanced": "Balanced",
+    "strategySmartest": "Smartest",
+    "strategyFastest": "Fastest",
+    "strategyReliable": "Most reliable"
   },
   "updates": {
     "versionAvailable": "संस्करण {version} उपलब्ध छ",

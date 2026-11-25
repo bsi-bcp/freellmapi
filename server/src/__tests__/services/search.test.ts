@@ -20,6 +20,10 @@ import { SEARCH_PLATFORMS as SHARED_SEARCH_PLATFORMS } from '../../../../shared/
 import { SEARCH_PLATFORMS } from '../../lib/search-platforms.js';
 import { seedSearchEngines } from '../helpers/search-engines.js';
 import { clearLastHealthyStampState } from '../../services/health.js';
+import { stubPublicDns } from '../helpers/dns.js';
+
+// Fake relay hosts must resolve for the URL guard (#1875).
+beforeEach(() => stubPublicDns());
 
 const realFetch = globalThis.fetch;
 
@@ -223,6 +227,97 @@ describe('search service', () => {
       mockFetch(() => json({ error: { code: 'VALIDATION', detail: 'Unable to validate request parameter(s)', status: 422 } }, 422));
       expect(await brave.validateKey('good')).toBe(true);
       expect(brave.supportsKeyPolling).toBe(false);
+    });
+  });
+
+  describe('TinyFish', () => {
+    beforeEach(() => {
+      getDb().prepare(`
+        INSERT INTO media_models (platform, model_id, display_name, modality, priority, enabled, quota_label, meta_json)
+        VALUES ('tinyfish', 'tinyfish-search', 'TinyFish Search', 'search', -1, 1, '500 searches/hour', '{}')
+      `).run();
+    });
+
+    it('searches with X-API-Key, maps the news vertical and cuts hits to the requested count', async () => {
+      addKey('tinyfish');
+      const fn = mockFetch(() => json({
+        query: 'cats & dogs',
+        results: [
+          { position: 1, site_name: 'a', title: 'A &amp; B', url: 'https://a', snippet: 'alpha' },
+          { position: 2, site_name: 'x', title: 'no url', snippet: 'x' },
+          { position: 3, site_name: 'b', title: '', url: 'https://b', snippet: 'beta' },
+          { position: 4, site_name: 'c', title: 'C', url: 'https://c', snippet: 'gamma' },
+        ],
+      }));
+      const out = await runSearch('cats & dogs', { maxResults: 3, topic: 'news' });
+      const [url, init] = calls(fn)[0];
+      const sent = new URL(url);
+      expect(sent.origin + sent.pathname).toBe('https://api.search.tinyfish.ai/');
+      expect(sent.searchParams.get('query')).toBe('cats & dogs');
+      expect(sent.searchParams.get('domain_type')).toBe('news');
+      expect(init.method).toBe('GET');
+      expect(new Headers(init.headers).get('x-api-key')).toBe('tinyfish-test-key');
+      expect(out).toMatchObject({ provider: 'tinyfish', engine: 'tinyfish-search' });
+      expect(out.results.map(r => r.url)).toEqual(['https://a', 'https://b']);
+      expect(out.results[0]).toMatchObject({ title: 'A & B', content: 'alpha' });
+      expect(out.results[1]).toMatchObject({ title: 'https://b', content: 'beta' });
+    });
+
+    it('runs a general search on the web vertical', async () => {
+      addKey('tinyfish');
+      const fn = mockFetch(() => json({ results: [{ title: 'A', url: 'https://a', snippet: 'alpha' }] }));
+      await runSearch('q', { engine: 'tinyfish-search' });
+      expect(new URL(calls(fn)[0][0]).searchParams.get('domain_type')).toBe('web');
+    });
+
+    it('benches a rejected key', async () => {
+      const key = addKey('tinyfish');
+      mockFetch(() => json({ error: { code: 'INVALID_API_KEY', message: 'Invalid or expired API key' } }, 401));
+      await expect(runSearch('q', { engine: 'tinyfish-search' })).rejects.toBeInstanceOf(SearchError);
+      expect(isOnCooldown('tinyfish', 'tinyfish-search', key)).toBe(true);
+    });
+  });
+
+  describe('Outcrawl', () => {
+    beforeEach(() => {
+      getDb().prepare(`
+        INSERT INTO media_models (platform, model_id, display_name, modality, priority, enabled, quota_label, meta_json)
+        VALUES ('outcrawl', 'outcrawl-search', 'Outcrawl Search', 'search', -1, 1, '1,000 credits/month', '{}')
+      `).run();
+    });
+
+    it('searches with the bearer key and maps hits in rank order', async () => {
+      addKey('outcrawl');
+      const fn = mockFetch(() => json({
+        hits: [
+          { url: 'https://a', title: 'A &amp; B', snippet: 'alpha', rank: 1 },
+          { title: 'no url', snippet: 'x', rank: 2 },
+          { url: 'https://b', title: '', snippet: 'beta', rank: 3 },
+        ],
+        usage: { credits: '1.5' },
+      }));
+      const out = await runSearch('cats & dogs', { maxResults: 3, topic: 'news' });
+      expect(calls(fn)[0][0]).toBe('https://api.outcrawl.ai/v1/search');
+      expect(new Headers(calls(fn)[0][1].headers).get('authorization')).toBe('Bearer outcrawl-test-key');
+      expect(bodyOf(calls(fn)[0])).toEqual({ query: 'cats & dogs', limit: 3 });
+      expect(out).toMatchObject({ provider: 'outcrawl', engine: 'outcrawl-search' });
+      expect(out.results).toEqual([
+        { title: 'A & B', url: 'https://a', content: 'alpha', score: 1 },
+        { title: 'https://b', url: 'https://b', content: 'beta', score: 0.5 },
+      ]);
+    });
+
+    it('benches a rejected key and parks a key that is out of credits', async () => {
+      const key = addKey('outcrawl');
+      mockFetch(() => json({ code: 'unauthorized', message: 'Unauthorized' }, 401));
+      await expect(runSearch('q', { engine: 'outcrawl-search' })).rejects.toBeInstanceOf(SearchError);
+      expect(isOnCooldown('outcrawl', 'outcrawl-search', key)).toBe(true);
+
+      clearAllCooldowns(Number.MAX_SAFE_INTEGER);
+      mockFetch(() => json({ code: 'quota_exceeded', message: 'Out of credits' }, 402));
+      await expect(runSearch('q', { engine: 'outcrawl-search' })).rejects.toBeInstanceOf(SearchError);
+      vi.spyOn(Date, 'now').mockReturnValue(Date.now() + 60 * 60_000);
+      expect(isOnCooldown('outcrawl', 'outcrawl-search', key)).toBe(true);
     });
   });
 

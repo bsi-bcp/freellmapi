@@ -48,6 +48,13 @@ import * as removeAurayProvider from '../migrations/20261019_000001_remove_auray
 import * as keyLastHealthyAt from '../migrations/20261020_000001_key_last_healthy_at.js';
 import * as customMediaEndpointIdentity from '../migrations/20261028_000001_custom_media_endpoint_identity.js';
 import * as cloudflareNeuronUsage from '../migrations/20261104_000001_cloudflare_neuron_usage.js';
+import * as keyVerificationBasis from '../migrations/20261105_000001_key_verification_basis.js';
+import * as modelMonthlyUsage from '../migrations/20261111_000001_model_monthly_usage.js';
+import * as profileRoutingStrategy from '../migrations/20261111_000002_profile_routing_strategy.js';
+import * as embeddingRateLimits from '../migrations/20261117_000001_embedding_rate_limits.js';
+import * as customEmbeddingInputType from '../migrations/20261117_000002_custom_embedding_input_type.js';
+import * as embeddingSourceProvenance from '../migrations/20261118_000001_embedding_source_provenance.js';
+import * as oidcIdentities from '../migrations/20261124_000001_oidc_identities.js';
 
 export interface MigrationModule {
   up(db: Db): void;
@@ -107,6 +114,13 @@ export const REQUEST_FAILURE_ATTRIBUTION_FILENAME = '20261017_233153_request_fai
 export const REMOVE_AURAY_PROVIDER_FILENAME = '20261019_000001_remove_auray_provider.ts';
 export const KEY_LAST_HEALTHY_AT_FILENAME = '20261020_000001_key_last_healthy_at.ts';
 export const CLOUDFLARE_NEURON_USAGE_FILENAME = '20261104_000001_cloudflare_neuron_usage.ts';
+export const KEY_VERIFICATION_BASIS_FILENAME = '20261105_000001_key_verification_basis.ts';
+export const MODEL_MONTHLY_USAGE_FILENAME = '20261111_000001_model_monthly_usage.ts';
+export const PROFILE_ROUTING_STRATEGY_FILENAME = '20261111_000002_profile_routing_strategy.ts';
+export const EMBEDDING_RATE_LIMITS_FILENAME = '20261117_000001_embedding_rate_limits.ts';
+export const CUSTOM_EMBEDDING_INPUT_TYPE_FILENAME = '20261117_000002_custom_embedding_input_type.ts';
+export const EMBEDDING_SOURCE_PROVENANCE_FILENAME = '20261118_000001_embedding_source_provenance.ts';
+export const OIDC_IDENTITIES_FILENAME = '20261124_000001_oidc_identities.ts';
 
 export const DEFAULT_MIGRATIONS: readonly DefaultMigration[] = [
   { filename: LEGACY_BASELINE_FILENAME, module: legacyBaseline },
@@ -158,4 +172,11 @@ export const DEFAULT_MIGRATIONS: readonly DefaultMigration[] = [
   { filename: KEY_LAST_HEALTHY_AT_FILENAME, module: keyLastHealthyAt },
   { filename: '20261028_000001_custom_media_endpoint_identity.ts', module: customMediaEndpointIdentity },
   { filename: CLOUDFLARE_NEURON_USAGE_FILENAME, module: cloudflareNeuronUsage },
+  { filename: KEY_VERIFICATION_BASIS_FILENAME, module: keyVerificationBasis },
+  { filename: MODEL_MONTHLY_USAGE_FILENAME, module: modelMonthlyUsage },
+  { filename: PROFILE_ROUTING_STRATEGY_FILENAME, module: profileRoutingStrategy },
+  { filename: EMBEDDING_RATE_LIMITS_FILENAME, module: embeddingRateLimits },
+  { filename: CUSTOM_EMBEDDING_INPUT_TYPE_FILENAME, module: customEmbeddingInputType },
+  { filename: EMBEDDING_SOURCE_PROVENANCE_FILENAME, module: embeddingSourceProvenance },
+  { filename: OIDC_IDENTITIES_FILENAME, module: oidcIdentities },
 ];

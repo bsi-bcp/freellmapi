@@ -14,13 +14,26 @@ import {
   accountEmail,
   normalizeEmail,
   desktopSessionToken,
+  recordReauthFailure,
+  clearReauthFailures,
+  hashSessionToken,
+  sessionReauthenticatedUntilMs,
 } from '../services/auth.js';
+import {
+  OIDC_TX_COOKIE_NAME,
+  OidcFlowError,
+  completeOidcCallback,
+  consumeOidcExchangeCode,
+  getOidcEndSessionUrl,
+  getPublicOidcStatus,
+  isPasswordLoginDisabled,
+  startOidcAuthorization,
+} from '../services/oidc.js';
 import { setupCodeMatches, clearSetupCode } from '../lib/setup-code.js';
+import { isLoopbackRequest } from '../lib/loopback.js';
 import { generateResetCode, resetCodeMatches, clearResetCode } from '../lib/reset-code.js';
 
 export const authRouter = Router();
-
-const failedPasswordAttempts = new Map<number, number>();
 
 // Dashboard auth (#35). These routes are mounted BEFORE requireAuth, so
 // /status, /setup and /login are reachable without a session (bootstrap);
@@ -101,14 +114,6 @@ function bearer(req: Request): string | undefined {
     ?? (req.headers['x-dashboard-token'] as string | undefined);
 }
 
-function isLoopbackAddress(value: string | undefined): boolean {
-  let addr = (value ?? '').trim();
-  // Node reports IPv4 loopback over a dual-stack socket as "::ffff:127.0.0.1".
-  if (addr.startsWith('::ffff:')) addr = addr.slice(7);
-  if (addr === '::1') return true;
-  return /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(addr);
-}
-
 // Is the caller connecting from the local machine? The socket peer address is
 // the authority, NOT req.ip: forwarded headers are attacker-controlled, so
 // letting one of them ASSERT locality would hand a remote caller the setup
@@ -119,18 +124,9 @@ function isLoopbackAddress(value: string | undefined): boolean {
 // docs/en/troubleshooting/01-common-issues.md on TRUST_PROXY) puts Caddy/nginx/
 // Traefik on the SAME host: every request then arrives from 127.0.0.1 and the
 // socket test is true for the entire internet. So a forwarded hop can never
-// grant locality, but it can withdraw it — exactly the treatment the Ollama
-// open-loopback mode already applies in routes/ollama.ts:25-38.
-function isLoopbackRemote(req: Request): boolean {
-  if (!isLoopbackAddress(req.socket.remoteAddress)) return false;
-  const forwarded = req.headers['x-forwarded-for'];
-  const firstForwarded = (Array.isArray(forwarded) ? forwarded[0] : forwarded)
-    ?.split(',')[0];
-  // A local reverse proxy is itself a loopback socket, but its first forwarded
-  // hop may be remote. Refuse that request rather than silently widening the
-  // no-code first-run path through the proxy.
-  return !firstForwarded || isLoopbackAddress(firstForwarded);
-}
+// grant locality, but it can withdraw it — the nearest proxy's hop, which is
+// the right-most one, because callers control everything to its left.
+const isLoopbackRemote = (req: Request): boolean => isLoopbackRequest(req);
 
 // ── Desktop sign-in (#1399) ───────────────────────────────────────────────
 // The desktop app's account is a hidden machine user with a random password
@@ -184,17 +180,155 @@ export function desktopSignInAllowed(req: Request): boolean {
   return !isCrossSite(req);
 }
 
+function parseCookie(cookieHeader: string | undefined, name: string): string | undefined {
+  if (!cookieHeader) return undefined;
+  for (const part of cookieHeader.split(';')) {
+    const idx = part.indexOf('=');
+    if (idx === -1) continue;
+    const key = part.slice(0, idx).trim();
+    if (key === name) return decodeURIComponent(part.slice(idx + 1).trim());
+  }
+  return undefined;
+}
+
+function requestOrigin(req: Request): string {
+  const proto = req.protocol === 'https' ? 'https' : 'http';
+  const host = req.get('host') || 'localhost:3001';
+  return `${proto}://${host}`;
+}
+
+function formatOidcCookie(value: string, secure: boolean, maxAgeSec: number): string {
+  const parts = [
+    `${OIDC_TX_COOKIE_NAME}=${encodeURIComponent(value)}`,
+    'Path=/api/auth/oidc',
+    'HttpOnly',
+    'SameSite=Lax',
+    `Max-Age=${maxAgeSec}`,
+  ];
+  if (secure) parts.push('Secure');
+  return parts.join('; ');
+}
+
 // Has the dashboard been set up yet, and is this caller authenticated?
 // `desktop` tells the dashboard it can fetch a session instead of showing the
 // sign-in form.
 authRouter.get('/status', (req: Request, res: Response) => {
   const session = validateSession(bearer(req));
+  const oidc = getPublicOidcStatus();
   res.json({
     needsSetup: userCount() === 0,
     authenticated: !!session,
     email: session?.email ?? null,
     desktop: desktopSignInAllowed(req),
+    ...(session ? {
+      authSource: session.authSource,
+      hasLocalPassword: session.hasLocalPassword,
+      reauthenticatedUntilMs: sessionReauthenticatedUntilMs(session),
+    } : {}),
+    ...(oidc ? { oidc } : {}),
   });
+});
+
+// ── OIDC dashboard sign-in (#2008) ────────────────────────────────────────
+authRouter.get('/oidc/login', async (req: Request, res: Response) => {
+  try {
+    const origin = requestOrigin(req);
+    const { authorizeUrl, cookieValue } = await startOidcAuthorization({
+      derivedOrigin: origin,
+      purpose: 'login',
+      returnPath: typeof req.query.returnTo === 'string' ? req.query.returnTo : '/',
+    });
+    res.setHeader('Set-Cookie', formatOidcCookie(cookieValue, req.protocol === 'https', 300));
+    res.redirect(302, authorizeUrl);
+  } catch (err) {
+    const code = err instanceof OidcFlowError ? err.code : 'provider_error';
+    if (code === 'not_configured') {
+      res.status(404).json({ error: { message: 'OIDC is not configured.', type: 'oidc_not_configured' } });
+      return;
+    }
+    console.warn(`[OIDC] Login start failed: ${err instanceof Error ? err.message : err}`);
+    res.redirect(302, `/#oidc_error=${encodeURIComponent(code)}`);
+  }
+});
+
+authRouter.post('/oidc/reauth/start', async (req: Request, res: Response) => {
+  const token = bearer(req);
+  const session = validateSession(token);
+  if (!session || !token) {
+    res.status(401).json({ error: { message: 'Authentication required', type: 'authentication_error' } });
+    return;
+  }
+  if (session.authSource !== 'oidc') {
+    res.status(400).json({ error: { message: 'Current session is not an OIDC session.', type: 'invalid_request' } });
+    return;
+  }
+  try {
+    const origin = requestOrigin(req);
+    const returnPath = typeof req.body?.returnPath === 'string' ? req.body.returnPath : '/keys';
+    const { authorizeUrl, cookieValue } = await startOidcAuthorization({
+      derivedOrigin: origin,
+      purpose: 'reauth',
+      sessionTokenHash: hashSessionToken(token),
+      expectedUserId: session.userId,
+      returnPath,
+    });
+    res.setHeader('Set-Cookie', formatOidcCookie(cookieValue, req.protocol === 'https', 300));
+    res.json({ authorizeUrl });
+  } catch (err) {
+    const status = err instanceof OidcFlowError && err.code === 'not_configured' ? 404 : 502;
+    res.status(status).json({
+      error: {
+        message: err instanceof Error ? err.message : 'Could not start OIDC re-authentication.',
+        type: err instanceof OidcFlowError ? err.code : 'oidc_error',
+      },
+    });
+  }
+});
+
+authRouter.get('/oidc/callback', async (req: Request, res: Response) => {
+  const secure = req.protocol === 'https';
+  res.setHeader('Set-Cookie', formatOidcCookie('', secure, 0));
+
+  if (typeof req.query.error === 'string' && req.query.error) {
+    console.warn(`[OIDC] Provider returned error=${req.query.error}`);
+    res.redirect(302, '/#oidc_error=provider_error');
+    return;
+  }
+
+  try {
+    const callbackUrl = new URL(req.originalUrl, requestOrigin(req));
+    const stateParam = typeof req.query.state === 'string' ? req.query.state : undefined;
+    const cookieValue = parseCookie(req.headers.cookie, OIDC_TX_COOKIE_NAME);
+    const result = await completeOidcCallback({ callbackUrl, stateParam, cookieValue });
+
+    if (result.purpose === 'reauth') {
+      res.redirect(302, `${result.returnPath}#oidc_reauth=ok`);
+      return;
+    }
+    res.redirect(302, `${result.returnPath}#oidc_code=${encodeURIComponent(result.exchangeCode)}`);
+  } catch (err) {
+    const code = err instanceof OidcFlowError ? err.code : 'exchange_failed';
+    console.warn(`[OIDC] Callback failed (${code}): ${err instanceof Error ? err.message : err}`);
+    res.redirect(302, `/#oidc_error=${encodeURIComponent(code)}`);
+  }
+});
+
+const oidcExchangeSchema = z.object({
+  code: z.string().min(1, 'Exchange code is required'),
+});
+
+authRouter.post('/oidc/exchange', (req: Request, res: Response) => {
+  const parsed = oidcExchangeSchema.safeParse(req.body);
+  if (!parsed.success) {
+    res.status(400).json({ error: { message: parsed.error.issues.map(e => e.message).join(', ') } });
+    return;
+  }
+  const grant = consumeOidcExchangeCode(parsed.data.code);
+  if (!grant) {
+    res.status(401).json({ error: { message: 'Invalid or expired OIDC exchange code', type: 'authentication_error' } });
+    return;
+  }
+  res.json({ token: grant.token, email: grant.email });
 });
 
 authRouter.post('/desktop-session', (req: Request, res: Response) => {
@@ -231,7 +365,7 @@ authRouter.post('/setup', (req: Request, res: Response) => {
 
   const parsed = signupSchema.safeParse(req.body);
   if (!parsed.success) {
-    res.status(400).json({ error: { message: parsed.error.errors.map(e => e.message).join(', ') } });
+    res.status(400).json({ error: { message: parsed.error.issues.map(e => e.message).join(', ') } });
     return;
   }
   const user = createUser(parsed.data.email, parsed.data.password);
@@ -241,9 +375,18 @@ authRouter.post('/setup', (req: Request, res: Response) => {
 });
 
 authRouter.post('/login', (req: Request, res: Response) => {
+  if (isPasswordLoginDisabled()) {
+    res.status(403).json({
+      error: {
+        message: 'Password sign-in is disabled; sign in with SSO.',
+        type: 'password_login_disabled',
+      },
+    });
+    return;
+  }
   const parsed = loginSchema.safeParse(req.body);
   if (!parsed.success) {
-    res.status(400).json({ error: { message: parsed.error.errors.map(e => e.message).join(', ') } });
+    res.status(400).json({ error: { message: parsed.error.issues.map(e => e.message).join(', ') } });
     return;
   }
   const { email, password } = parsed.data;
@@ -270,9 +413,12 @@ authRouter.post('/login', (req: Request, res: Response) => {
   res.json({ token, email: user.email });
 });
 
-authRouter.post('/logout', (req: Request, res: Response) => {
-  deleteSession(bearer(req));
-  res.json({ success: true });
+authRouter.post('/logout', async (req: Request, res: Response) => {
+  const token = bearer(req);
+  const session = validateSession(token);
+  deleteSession(token);
+  const endSessionUrl = session?.authSource === 'oidc' ? await getOidcEndSessionUrl() : null;
+  res.json({ success: true, ...(endSessionUrl ? { endSessionUrl } : {}) });
 });
 
 authRouter.get('/me', (req: Request, res: Response) => {
@@ -281,7 +427,12 @@ authRouter.get('/me', (req: Request, res: Response) => {
     res.status(401).json({ error: { message: 'Authentication required', type: 'authentication_error' } });
     return;
   }
-  res.json({ email: session.email });
+  res.json({
+    email: session.email,
+    authSource: session.authSource,
+    hasLocalPassword: session.hasLocalPassword,
+    reauthenticatedUntilMs: sessionReauthenticatedUntilMs(session),
+  });
 });
 
 // Change email (requires active session + current password)
@@ -296,26 +447,26 @@ authRouter.post('/change-email', (req: Request, res: Response) => {
     res.status(401).json({ error: { message: 'Authentication required', type: 'authentication_error' } });
     return;
   }
+  if (!session.hasLocalPassword) {
+    res.status(403).json({ error: { message: 'This account signs in with SSO and has no local password.', type: 'oidc_account_no_password' } });
+    return;
+  }
   const parsed = changeEmailSchema.safeParse(req.body);
   if (!parsed.success) {
-    res.status(400).json({ error: { message: parsed.error.errors.map(e => e.message).join(', ') } });
+    res.status(400).json({ error: { message: parsed.error.issues.map(e => e.message).join(', ') } });
     return;
   }
   try {
     const ok = updateEmail(session.userId, parsed.data.currentPassword, parsed.data.newEmail);
     if (!ok) {
-      const attempts = (failedPasswordAttempts.get(session.userId) || 0) + 1;
-      if (attempts >= 3) {
-        deleteSession(bearer(req));
-        failedPasswordAttempts.delete(session.userId);
+      if (recordReauthFailure(session.userId, bearer(req))) {
         res.status(401).json({ error: { message: 'Too many incorrect attempts. You have been signed out.', type: 'authentication_error' } });
         return;
       }
-      failedPasswordAttempts.set(session.userId, attempts);
       res.status(403).json({ error: { message: 'Current password is incorrect', type: 'invalid_password' } });
       return;
     }
-    failedPasswordAttempts.delete(session.userId);
+    clearReauthFailures(session.userId);
     res.json({ success: true, email: parsed.data.newEmail.trim().toLowerCase() });
   } catch (err: any) {
     if (err.code === 'email_taken') {
@@ -338,25 +489,25 @@ authRouter.post('/change-password', (req: Request, res: Response) => {
     res.status(401).json({ error: { message: 'Authentication required', type: 'authentication_error' } });
     return;
   }
+  if (!session.hasLocalPassword) {
+    res.status(403).json({ error: { message: 'This account signs in with SSO and has no local password.', type: 'oidc_account_no_password' } });
+    return;
+  }
   const parsed = changePasswordSchema.safeParse(req.body);
   if (!parsed.success) {
-    res.status(400).json({ error: { message: parsed.error.errors.map(e => e.message).join(', ') } });
+    res.status(400).json({ error: { message: parsed.error.issues.map(e => e.message).join(', ') } });
     return;
   }
   const ok = updatePassword(session.userId, parsed.data.currentPassword, parsed.data.newPassword);
   if (!ok) {
-    const attempts = (failedPasswordAttempts.get(session.userId) || 0) + 1;
-    if (attempts >= 3) {
-      deleteSession(bearer(req));
-      failedPasswordAttempts.delete(session.userId);
+    if (recordReauthFailure(session.userId, bearer(req))) {
       res.status(401).json({ error: { message: 'Too many incorrect attempts. You have been signed out.', type: 'authentication_error' } });
       return;
     }
-    failedPasswordAttempts.set(session.userId, attempts);
     res.status(403).json({ error: { message: 'Current password is incorrect', type: 'invalid_password' } });
     return;
   }
-  failedPasswordAttempts.delete(session.userId);
+  clearReauthFailures(session.userId);
   res.json({ success: true });
 });
 
@@ -389,7 +540,7 @@ const resetPasswordSchema = z.object({
 authRouter.post('/reset-password', (req: Request, res: Response) => {
   const parsed = resetPasswordSchema.safeParse(req.body);
   if (!parsed.success) {
-    res.status(400).json({ error: { message: parsed.error.errors.map(e => e.message).join(', ') } });
+    res.status(400).json({ error: { message: parsed.error.issues.map(e => e.message).join(', ') } });
     return;
   }
   if (!resetCodeMatches(parsed.data.resetCode)) {

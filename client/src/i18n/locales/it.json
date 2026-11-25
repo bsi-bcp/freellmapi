@@ -60,7 +60,16 @@
     "emailChanged": "Email modificata con successo.",
     "passwordReset": "Password reimpostata con successo. Accedi di nuovo.",
     "resetCodeDockerHint": "Usi Docker? Il codice è nel log del container: docker logs <container>.",
-    "desktopSessionFailed": "La dashboard non è riuscita ad accedere al server locale. Chiudi FreeLLMAPI e riaprilo."
+    "desktopSessionFailed": "La dashboard non è riuscita ad accedere al server locale. Chiudi FreeLLMAPI e riaprilo.",
+    "signInWithSso": "Accedi con {provider}",
+    "orContinueWithPassword": "oppure continua con l'email",
+    "reverifyWithSso": "Verifica di nuovo con {provider}",
+    "oidcReauthHint": "Conferma la tua identità con {provider} per accedere alle chiavi in chiaro.",
+    "oidcReauthSuccess": "Identità verificata per i prossimi 5 minuti.",
+    "oidcErrorNotAllowed": "Il tuo account non è autorizzato ad accedere a questa dashboard.",
+    "oidcErrorUnverifiedEmail": "Il provider di identità deve verificare il tuo indirizzo email prima dell'accesso.",
+    "oidcErrorNoAccount": "Non esiste alcun account corrispondente e la creazione automatica è disattivata.",
+    "oidcErrorFailed": "Accesso SSO non riuscito. Riprova."
   },
   "common": {
     "save": "Salva",
@@ -109,6 +118,8 @@
     "sectionAdvanced": "Avanzate",
     "sectionPreview": "Anteprima",
     "generalDescription": "Lingua e aspetto di questa dashboard.",
+    "startAtLogin": "Avvia all'avvio del sistema",
+    "startAtLoginHelp": "Avvia FreeLLMAPI automaticamente quando accedi al computer.",
     "advancedDescription": "Soglie e interruttori di sicurezza della pipeline di compressione.",
     "compressionTitle": "Compressione dei prompt",
     "compressionDescription": "Riduci la dimensione delle richieste prima del routing preservando codice, errori, percorsi, numeri e definizioni degli strumenti.",
@@ -169,7 +180,12 @@
     "updateNow": "Aggiorna ora",
     "updatingContainer": "Download della nuova immagine e riavvio in corso. La pagina si ricarica quando FreeLLMAPI torna disponibile.",
     "updateNowFailed": "Il servizio di aggiornamento non ha accettato la richiesta. Verifica che il container watchtower sia in esecuzione.",
-    "updateNowTimeout": "FreeLLMAPI non si è riavviato dopo 5 minuti. Controlla i log del container watchtower."
+    "updateNowTimeout": "FreeLLMAPI non si è riavviato dopo 5 minuti. Controlla i log del container watchtower.",
+    "injectSystemDate": "System date in prompt",
+    "injectSystemDateHelp": "Prepend today’s UTC date (YYYY-MM-DD) to the system prompt so models query web search for current information. Skipped if the caller already includes a date. Off or Web search is recommended to preserve prompt caching.",
+    "injectSystemDateOff": "Off",
+    "injectSystemDateWebSearch": "Web search",
+    "injectSystemDateAlways": "Always"
   },
   "models": {
     "title": "Modelli",
@@ -393,6 +409,8 @@
     "pageDescription": "Credenziali dei fornitori e la chiave API unificata con cui si connettono le tue app.",
     "tabProviders": "Fornitori",
     "checklistSummary": "{configured} fornitori su {total} configurati",
+    "keylessAvailable": "Provider senza chiave disponibili ({count})",
+    "keylessEnableAll": "Attiva tutti",
     "checklistKeyless": "nessuna chiave richiesta",
     "checklistNoKeyTip": "Nessuna chiave aggiunta. Clicca per aggiungerne una.",
     "checklistSignupLink": "Apri {provider} per creare un account e ottenere una chiave",
@@ -432,6 +450,7 @@
     "familyHaiku": "Haiku",
     "selectPlatform": "Seleziona un fornitore",
     "addKey": "Aggiungi chiave",
+    "addAnotherKey": "Aggiungi un’altra chiave API",
     "keyAdded": "Chiave aggiunta",
     "endpointKeysShareModels": "Le chiavi dello stesso endpoint condividono i suoi modelli.",
     "export": "Esportazione",
@@ -474,6 +493,8 @@
     "customTypeImage": "Immagine",
     "customTypeAudio": "Audio",
     "customTypeTranscription": "Transcription",
+    "customTypeSearch": "Web search",
+    "customTypeDecision": "Decision",
     "customBaseUrl": "URL di base",
     "customModels": "Modelli",
     "customModel": "Modello",
@@ -482,6 +503,9 @@
     "customDisplayNameOptional": "opzionale",
     "customFamily": "Famiglia",
     "customFamilyPlaceholder": "predefinito: id del modello",
+    "customEmbeddingInputType": "Input type",
+    "customEmbeddingInputTypeUnset": "Not specified",
+    "customEmbeddingInputTypeNone": "None (symmetric)",
     "customApiKey": "Chiave API",
     "customCapabilities": "Funzionalità",
     "addModel": "Aggiungi modello",
@@ -491,6 +515,10 @@
     "addImageModel": "Aggiungi modello immagine",
     "addAudioModel": "Aggiungi modello audio",
     "addTranscriptionModel": "Add transcription model",
+    "addSearchEngine": "Add search engine",
+    "addDecisionModel": "Add decision model",
+    "customSearchHint": "Search endpoints must accept POST <base URL>/search in Tavily's request format and return a results list.",
+    "customDecisionHint": "Decision endpoints must accept POST <base URL>/decide and answer with one of the question's choices.",
     "addingCustom": "Aggiunta…",
     "discoverModels": "Recupera modelli",
     "probeNow": "Testa l'endpoint",
@@ -937,6 +965,8 @@
     "dictationStop": "Interrompi registrazione",
     "dictationTranscribing": "Trascrizione…",
     "dictationUnavailable": "Aggiungi provider di modelli audio per usare la dettatura.",
+    "dictationMacShortcut": "Premi il tasto del microfono o usa l’abbreviazione per la dettatura impostata nelle preferenze della tastiera.",
+    "dictationWindowsShortcut": "Premi Win + H per avviare la digitazione vocale.",
     "dictationModel": "Modello di dettatura",
     "dictationFailed": "Trascrizione non riuscita: {reason}",
     "artifactOpen": "Apri anteprima",
@@ -986,7 +1016,8 @@
     "tokMax": "{tokens} tok max",
     "emptyTitle": "Ancora nessun modello di embedding",
     "emptyDesc": "Le famiglie di embedding compaiono qui quando aggiungi una chiave provider che supporta gli embedding.",
-    "dragToReorder": "Trascina per riordinare il provider"
+    "dragToReorder": "Trascina per riordinare il provider",
+    "inputTypeTitle": "Asymmetric embedding model: this side of the vector space is sent as input_type."
   },
   "fusion": {
     "title": "Fusion",
@@ -1140,6 +1171,8 @@
     "step1Title": "Aggiungi una chiave provider",
     "step1Desc": "Collega almeno un account provider. Le chiavi gratuite funzionano.",
     "step1Cta": "Aggiungi chiavi",
+    "step1KeylessTitle": "I provider senza chiave sono attivi",
+    "step1KeylessDesc": "I modelli gratuiti sono pronti, senza registrazione. Aggiungi le tue chiavi per più modelli e più veloci.",
     "step2Title": "Invia una richiesta di prova",
     "step2Desc": "Scegli un modello nel Playground e saluta.",
     "step2Cta": "Apri Playground",
@@ -1180,6 +1213,24 @@
     "manualHint": "URL di base e chiave da inserire nelle impostazioni dello strumento.",
     "endpoint": "Endpoint",
     "documentation": "Documentazione",
+    "connect": {
+      "button": "Connetti a FreeLLMAPI",
+      "details": "Dettagli di configurazione",
+      "gateway": "Gateway locale",
+      "saved": "Configurazione salvata",
+      "finish": "Completa configurazione",
+      "launch": "Avvia nel terminale",
+      "quit": "Chiudi ZCode Desktop prima di salvare per evitare che sovrascriva le impostazioni.",
+      "restart": "Riavvia {name} se è in esecuzione.",
+      "send": "Apri {name} e invia un messaggio.",
+      "files": "File di configurazione",
+      "writeError": "Controlla i permessi dei file e la configurazione esistente, poi riprova.",
+      "missing": "Installa la CLI o aggiungila al PATH e riprova.",
+      "intro": "Collega gli strumenti di coding a un unico gateway di modelli gratuiti con configurazione generata e sicura per il backup.",
+      "all": "Agenti",
+      "find": "Search",
+      "cursor": "L'editor pensato per l'IA; passa dal cloud di Cursor, quindi serve un URL pubblico."
+    },
     "descriptions": {
       "claude": "L'agente da terminale di Anthropic: pianifica, modifica file ed esegue comandi nel tuo repository.",
       "codex": "L'agente da terminale di OpenAI, che prima esegue il compito in una sandbox locale.",
@@ -1201,7 +1252,8 @@
       "hermes": "L'agente auto-migliorante di Nous Research, con memoria persistente e skill, nel terminale o nelle app di chat.",
       "pi": "Un agente da terminale minimale che modelli con le tue estensioni, skill e modelli di prompt.",
       "reasonix": "Un agente di programmazione da terminale nativo per DeepSeek, costruito attorno alla cache dei prefissi perché le sessioni lunghe restino economiche.",
-      "zcode": "L'agente di codice di Z.ai per i suoi modelli GLM, compatibile con qualsiasi endpoint OpenAI tramite un registro dei fornitori."
+      "zcode": "L'agente di codice di Z.ai per i suoi modelli GLM, compatibile con qualsiasi endpoint OpenAI tramite un registro dei fornitori.",
+      "zero": "Un agente di programmazione locale da terminale con sessioni persistenti, permessi e qualsiasi provider compatibile con OpenAI."
     }
   },
   "update": {
@@ -1260,7 +1312,15 @@
     "renameHint": "Rinomina questa catena",
     "renameConfirm": "Rinominare la catena \"{oldName}\" in \"{name}\"? I client che chiamano auto:{oldName} devono passare a auto:{name}.",
     "renamePlaceholder": "Nuovo nome della catena",
-    "renameFailed": "Impossibile rinominare la catena."
+    "renameFailed": "Impossibile rinominare la catena.",
+    "strategy": "Routing strategy",
+    "strategyHint": "How this chain ranks its models. Inherit uses the global setting.",
+    "strategyInherit": "Inherit global",
+    "strategyPriority": "Manual order",
+    "strategyBalanced": "Balanced",
+    "strategySmartest": "Smartest",
+    "strategyFastest": "Fastest",
+    "strategyReliable": "Most reliable"
   },
   "updates": {
     "versionAvailable": "È disponibile la versione {version}",

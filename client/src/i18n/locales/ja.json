@@ -60,7 +60,16 @@
     "emailChanged": "メールアドレスを変更しました。",
     "passwordReset": "パスワードをリセットしました。ログインしてください。",
     "resetCodeDockerHint": "Docker で実行中ですか？コードはコンテナのログにあります: docker logs <container>",
-    "desktopSessionFailed": "ダッシュボードがローカルサーバーにサインインできませんでした。FreeLLMAPI を終了して開き直してください。"
+    "desktopSessionFailed": "ダッシュボードがローカルサーバーにサインインできませんでした。FreeLLMAPI を終了して開き直してください。",
+    "signInWithSso": "{provider} でサインイン",
+    "orContinueWithPassword": "またはメールで続行",
+    "reverifyWithSso": "{provider} で再確認",
+    "oidcReauthHint": "平文キーにアクセスするには {provider} で本人確認を行ってください。",
+    "oidcReauthSuccess": "本人確認が完了しました（5分間有効）。",
+    "oidcErrorNotAllowed": "このアカウントはダッシュボードへのサインインが許可されていません。",
+    "oidcErrorUnverifiedEmail": "サインイン前に ID プロバイダーでメールアドレスを確認する必要があります。",
+    "oidcErrorNoAccount": "一致するアカウントがなく、自動アカウント作成も無効になっています。",
+    "oidcErrorFailed": "シングルサインオンに失敗しました。もう一度お試しください。"
   },
   "common": {
     "save": "保存",
@@ -109,6 +118,8 @@
     "sectionAdvanced": "詳細設定",
     "sectionPreview": "プレビュー",
     "generalDescription": "このダッシュボードの言語と外観。",
+    "startAtLogin": "システム起動時に開始",
+    "startAtLoginHelp": "コンピューターにサインインすると FreeLLMAPI を自動的に起動します。",
     "advancedDescription": "圧縮パイプラインのしきい値と安全スイッチ。",
     "compressionTitle": "プロンプト圧縮",
     "compressionDescription": "コード、エラー、パス、数値、ツール定義を保持したまま、ルーティング前にリクエストサイズを削減します。",
@@ -169,7 +180,12 @@
     "updateNow": "今すぐアップデート",
     "updatingContainer": "新しいイメージを取得して再起動しています。FreeLLMAPI が戻るとこのページは再読み込みされます。",
     "updateNowFailed": "アップデーターがリクエストを受け付けませんでした。watchtower コンテナが動いているか確認してください。",
-    "updateNowTimeout": "5 分経っても FreeLLMAPI が再起動していません。watchtower コンテナのログを確認してください。"
+    "updateNowTimeout": "5 分経っても FreeLLMAPI が再起動していません。watchtower コンテナのログを確認してください。",
+    "injectSystemDate": "プロンプトにシステム日付を挿入",
+    "injectSystemDateHelp": "システムプロンプトの先頭に本日の UTC 日付（YYYY-MM-DD）を追加し、Web 検索で最新情報を取得しやすくします。既に日付が含まれている場合はスキップされます。",
+    "injectSystemDateOff": "オフ",
+    "injectSystemDateWebSearch": "Web検索時",
+    "injectSystemDateAlways": "常に"
   },
   "models": {
     "title": "モデル",
@@ -393,6 +409,8 @@
     "pageDescription": "プロバイダーの資格情報と、アプリが接続する統合 API キー。",
     "tabProviders": "プロバイダー",
     "checklistSummary": "{total}件中{configured}件のプロバイダーを設定済み",
+    "keylessAvailable": "キー不要のプロバイダーがあります（{count}）",
+    "keylessEnableAll": "すべて有効にする",
     "checklistKeyless": "キー不要",
     "checklistNoKeyTip": "キーがまだ追加されていません。クリックして追加します。",
     "checklistSignupLink": "アカウントを作成してキーを取得するには {provider} を開きます",
@@ -432,6 +450,7 @@
     "familyHaiku": "俳句",
     "selectPlatform": "プロバイダーを選択してください",
     "addKey": "キーを追加",
+    "addAnotherKey": "別のAPIキーを追加",
     "keyAdded": "キーが追加されました",
     "endpointKeysShareModels": "同じエンドポイントのキーはそのモデルを共有します。",
     "export": "エクスポート",
@@ -474,6 +493,8 @@
     "customTypeImage": "画像",
     "customTypeAudio": "オーディオ",
     "customTypeTranscription": "Transcription",
+    "customTypeSearch": "Web search",
+    "customTypeDecision": "Decision",
     "customBaseUrl": "ベース URL",
     "customModels": "モデル",
     "customModel": "モデル",
@@ -482,6 +503,9 @@
     "customDisplayNameOptional": "オプション",
     "customFamily": "家族",
     "customFamilyPlaceholder": "デフォルトはモデルID",
+    "customEmbeddingInputType": "Input type",
+    "customEmbeddingInputTypeUnset": "Not specified",
+    "customEmbeddingInputTypeNone": "None (symmetric)",
     "customApiKey": "APIキー",
     "customCapabilities": "能力",
     "addModel": "モデルの追加",
@@ -491,6 +515,10 @@
     "addImageModel": "画像モデルを追加",
     "addAudioModel": "オーディオモデルの追加",
     "addTranscriptionModel": "Add transcription model",
+    "addSearchEngine": "Add search engine",
+    "addDecisionModel": "Add decision model",
+    "customSearchHint": "Search endpoints must accept POST <base URL>/search in Tavily's request format and return a results list.",
+    "customDecisionHint": "Decision endpoints must accept POST <base URL>/decide and answer with one of the question's choices.",
     "addingCustom": "追加中…",
     "discoverModels": "モデルを取得",
     "probeNow": "エンドポイントをテスト",
@@ -937,6 +965,8 @@
     "dictationStop": "録音を停止",
     "dictationTranscribing": "文字起こし中…",
     "dictationUnavailable": "音声入力を使うには、音声モデルのプロバイダーを追加してください。",
+    "dictationMacShortcut": "マイクキーを押すか、キーボード設定で指定した音声入力のショートカットを使ってください。",
+    "dictationWindowsShortcut": "Win + H を押すと音声入力が始まります。",
     "dictationModel": "音声入力モデル",
     "dictationFailed": "文字起こしに失敗しました: {reason}",
     "artifactOpen": "プレビューを開く",
@@ -986,7 +1016,8 @@
     "tokMax": "{tokens} トクマックス",
     "emptyTitle": "埋め込みモデルはまだありません",
     "emptyDesc": "埋め込みをサポートするプロバイダー キーを追加すると、埋め込みファミリーがここに表示されます。",
-    "dragToReorder": "ドラッグしてプロバイダーを並べ替えます"
+    "dragToReorder": "ドラッグしてプロバイダーを並べ替えます",
+    "inputTypeTitle": "Asymmetric embedding model: this side of the vector space is sent as input_type."
   },
   "fusion": {
     "title": "フュージョン",
@@ -1140,6 +1171,8 @@
     "step1Title": "プロバイダーキーを追加する",
     "step1Desc": "少なくとも 1 つのプロバイダー アカウントを接続します。フリーキーは機能します。",
     "step1Cta": "キーを追加する",
+    "step1KeylessTitle": "キー不要のプロバイダーが有効です",
+    "step1KeylessDesc": "無料モデルをすぐに使えます。登録は不要です。より多く高速なモデルを使うには自分のキーを追加してください。",
     "step2Title": "テストリクエストを送信する",
     "step2Desc": "プレイグラウンドで任意のモデルを選択して、挨拶してください。",
     "step2Cta": "オープンプレイグラウンド",
@@ -1180,6 +1213,24 @@
     "manualHint": "ツール自身の設定に入力するベース URL とキーです。",
     "endpoint": "エンドポイント",
     "documentation": "ドキュメント",
+    "connect": {
+      "button": "FreeLLMAPI に接続",
+      "details": "設定の詳細",
+      "gateway": "ローカルゲートウェイ",
+      "saved": "設定を保存しました",
+      "finish": "設定を完了",
+      "launch": "ターミナルで起動",
+      "quit": "設定の上書きを防ぐため、保存前に ZCode Desktop を終了してください。",
+      "restart": "{name} が起動中の場合は再起動してください。",
+      "send": "{name} を開いてメッセージを送信してください。",
+      "files": "設定ファイル",
+      "writeError": "ファイルの権限と現在の設定を確認してから再試行してください。",
+      "missing": "CLI をインストールするか PATH に追加してください。",
+      "intro": "コーディングツールを 1 つの無料モデルゲートウェイに接続します。設定は自動生成され、バックアップも安全です。",
+      "all": "エージェント",
+      "find": "Search",
+      "cursor": "AI 前提のエディター。Cursor のクラウド経由なので公開 URL が必要です。"
+    },
     "descriptions": {
       "claude": "Anthropic のターミナルエージェント。計画を立て、ファイルを編集し、リポジトリでコマンドを実行します。",
       "codex": "OpenAI のターミナルエージェント。まずローカルのサンドボックスでタスクを実行します。",
@@ -1201,7 +1252,8 @@
       "hermes": "Nous Research の自己改善型エージェント。永続的なメモリとスキルを備え、ターミナルでもチャットアプリでも使えます。",
       "pi": "自分の拡張機能、スキル、プロンプトテンプレートで形づくる、ミニマルなターミナルエージェント。",
       "reasonix": "DeepSeek ネイティブのターミナル向けコーディングエージェント。プレフィックスキャッシュを軸に設計され、長いセッションでも安く済みます。",
-      "zcode": "Z.ai が GLM モデル向けに作ったコーディングエージェント。プロバイダ登録経由で OpenAI 互換エンドポイントに接続できます。"
+      "zcode": "Z.ai が GLM モデル向けに作ったコーディングエージェント。プロバイダ登録経由で OpenAI 互換エンドポイントに接続できます。",
+      "zero": "永続セッションや権限管理を備え、あらゆる OpenAI 互換プロバイダーに対応するローカル端末向けコーディングエージェント。"
     }
   },
   "update": {
@@ -1260,7 +1312,15 @@
     "renameHint": "このチェーンの名前を変更",
     "renameConfirm": "チェーン「{oldName}」を「{name}」に名前を変更しますか？ auto:{oldName} を呼び出しているクライアントは auto:{name} に切り替える必要があります。",
     "renamePlaceholder": "新しいチェーン名",
-    "renameFailed": "チェーンの名前を変更できませんでした。"
+    "renameFailed": "チェーンの名前を変更できませんでした。",
+    "strategy": "Routing strategy",
+    "strategyHint": "How this chain ranks its models. Inherit uses the global setting.",
+    "strategyInherit": "Inherit global",
+    "strategyPriority": "Manual order",
+    "strategyBalanced": "Balanced",
+    "strategySmartest": "Smartest",
+    "strategyFastest": "Fastest",
+    "strategyReliable": "Most reliable"
   },
   "updates": {
     "versionAvailable": "バージョン {version} が利用可能です",

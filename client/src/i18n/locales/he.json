@@ -60,7 +60,16 @@
     "emailChanged": "הדוא\"ל שונה בהצלחה.",
     "passwordReset": "הסיסמה אופסה. יש להתחבר.",
     "resetCodeDockerHint": "מריצים ב-Docker? הקוד מופיע ביומן הקונטיינר: docker logs <container>.",
-    "desktopSessionFailed": "לוח הבקרה לא הצליח להתחבר לשרת המקומי. סגור את FreeLLMAPI ופתח אותו מחדש."
+    "desktopSessionFailed": "לוח הבקרה לא הצליח להתחבר לשרת המקומי. סגור את FreeLLMAPI ופתח אותו מחדש.",
+    "signInWithSso": "Sign in with {provider}",
+    "orContinueWithPassword": "or continue with email",
+    "reverifyWithSso": "Re-verify with {provider}",
+    "oidcReauthHint": "Confirm your identity with {provider} to access plaintext keys.",
+    "oidcReauthSuccess": "Identity verified for the next 5 minutes.",
+    "oidcErrorNotAllowed": "Your account is not permitted to sign in to this dashboard.",
+    "oidcErrorUnverifiedEmail": "Your identity provider must verify your email address before signing in.",
+    "oidcErrorNoAccount": "No matching account exists and automatic account creation is disabled.",
+    "oidcErrorFailed": "Single sign-on failed. Please try again."
   },
   "common": {
     "save": "שמור",
@@ -109,6 +118,8 @@
     "sectionAdvanced": "מתקדם",
     "sectionPreview": "תצוגה מקדימה",
     "generalDescription": "שפה ומראה של לוח הבקרה הזה.",
+    "startAtLogin": "הפעלה עם הפעלת המערכת",
+    "startAtLoginHelp": "השק את FreeLLMAPI אוטומטית בכניסה למחשב.",
     "advancedDescription": "ספים ומתגי בטיחות עבור צינור הדחיסה.",
     "compressionTitle": "דחיסת פרומפטים",
     "compressionDescription": "הקטנת גודל הבקשה לפני הניתוב תוך שמירה על קוד, שגיאות, נתיבים, מספרים והגדרות כלים.",
@@ -169,7 +180,12 @@
     "updateNow": "עדכן עכשיו",
     "updatingContainer": "מושך את האימג׳ החדש ומפעיל מחדש. הדף ייטען מחדש כש-FreeLLMAPI יחזור.",
     "updateNowFailed": "המעדכן לא קיבל את הבקשה. ודאו שמכולת watchtower פועלת.",
-    "updateNowTimeout": "FreeLLMAPI לא הופעל מחדש אחרי 5 דקות. בדקו את היומנים של מכולת watchtower."
+    "updateNowTimeout": "FreeLLMAPI לא הופעל מחדש אחרי 5 דקות. בדקו את היומנים של מכולת watchtower.",
+    "injectSystemDate": "System date in prompt",
+    "injectSystemDateHelp": "Prepend today’s UTC date (YYYY-MM-DD) to the system prompt so models query web search for current information. Skipped if the caller already includes a date. Off or Web search is recommended to preserve prompt caching.",
+    "injectSystemDateOff": "Off",
+    "injectSystemDateWebSearch": "Web search",
+    "injectSystemDateAlways": "Always"
   },
   "models": {
     "title": "דגמים",
@@ -393,6 +409,8 @@
     "pageDescription": "פרטי הספקים ומפתח API המאוחד שאליו האפליקציות שלך מתחברות.",
     "tabProviders": "ספקים",
     "checklistSummary": "{configured} מתוך {total} ספקים הוגדרו",
+    "keylessAvailable": "ספקים ללא מפתח זמינים ({count})",
+    "keylessEnableAll": "הפעל הכול",
     "checklistKeyless": "אין צורך במפתח",
     "checklistNoKeyTip": "עדיין לא נוסף מפתח. לחץ כדי להוסיף.",
     "checklistSignupLink": "פתח את {provider} ליצירת חשבון וקבלת מפתח",
@@ -432,6 +450,7 @@
     "familyHaiku": "הייקו",
     "selectPlatform": "בחר ספק",
     "addKey": "הוספת מפתח",
+    "addAnotherKey": "הוסף מפתח API נוסף",
     "keyAdded": "מפתח נוסף",
     "endpointKeysShareModels": "מפתחות של אותה נקודת קצה משתפים את המודלים שלה.",
     "export": "יצוא",
@@ -474,6 +493,8 @@
     "customTypeImage": "תמונה",
     "customTypeAudio": "אודיו",
     "customTypeTranscription": "Transcription",
+    "customTypeSearch": "Web search",
+    "customTypeDecision": "Decision",
     "customBaseUrl": "בסיס URL",
     "customModels": "דגמים",
     "customModel": "מודל",
@@ -482,6 +503,9 @@
     "customDisplayNameOptional": "אופציונלי",
     "customFamily": "משפחה",
     "customFamilyPlaceholder": "ברירת מחדל למזהה מודל",
+    "customEmbeddingInputType": "Input type",
+    "customEmbeddingInputTypeUnset": "Not specified",
+    "customEmbeddingInputTypeNone": "None (symmetric)",
     "customApiKey": "מפתח API",
     "customCapabilities": "יכולות",
     "addModel": "מודל הוספה",
@@ -491,6 +515,10 @@
     "addImageModel": "מודל התמונה הוסף",
     "addAudioModel": "הוסף מודל אודיו",
     "addTranscriptionModel": "Add transcription model",
+    "addSearchEngine": "Add search engine",
+    "addDecisionModel": "Add decision model",
+    "customSearchHint": "Search endpoints must accept POST <base URL>/search in Tavily's request format and return a results list.",
+    "customDecisionHint": "Decision endpoints must accept POST <base URL>/decide and answer with one of the question's choices.",
     "addingCustom": "מוסיף...",
     "discoverModels": "משיכת מודלים",
     "probeNow": "בדיקת נקודת הקצה",
@@ -937,6 +965,8 @@
     "dictationStop": "עצירת ההקלטה",
     "dictationTranscribing": "מתמלל…",
     "dictationUnavailable": "הוסיפו ספקים למודלי שמע כדי להשתמש בהכתבה.",
+    "dictationMacShortcut": "יש ללחוץ על מקש המיקרופון או להשתמש בקיצור ההכתבה שהוגדר בהגדרות המקלדת.",
+    "dictationWindowsShortcut": "כדי להתחיל בהקלדה קולית, יש ללחוץ על Win + H.",
     "dictationModel": "מודל הכתבה",
     "dictationFailed": "התמלול נכשל: {reason}",
     "artifactOpen": "פתיחת תצוגה מקדימה",
@@ -986,7 +1016,8 @@
     "tokMax": "{tokens} טוק מקסימום",
     "emptyTitle": "עדיין אין דגמי הטמעה",
     "emptyDesc": "משפחות הטמעה מופיעות כאן ברגע שמוסיפים מפתח ספק שתומך בהטמעות.",
-    "dragToReorder": "גרור לספק הזמנה מחדש"
+    "dragToReorder": "גרור לספק הזמנה מחדש",
+    "inputTypeTitle": "Asymmetric embedding model: this side of the vector space is sent as input_type."
   },
   "fusion": {
     "title": "היתוך",
@@ -1140,6 +1171,8 @@
     "step1Title": "הוספת מפתח ספק",
     "step1Desc": "חבר לפחות חשבון ספק אחד. מפתחות חינמיים עובדים.",
     "step1Cta": "הוספת מפתחות",
+    "step1KeylessTitle": "ספקים ללא מפתח פעילים",
+    "step1KeylessDesc": "מודלים חינמיים מוכנים, בלי הרשמה. הוסיפו מפתחות משלכם לעוד מודלים מהירים יותר.",
     "step2Title": "שלח בקשת בדיקה",
     "step2Desc": "בחרו כל דגם במגרש המשחקים ואמרו שלום.",
     "step2Cta": "מגרש משחקים פתוח",
@@ -1180,6 +1213,24 @@
     "manualHint": "כתובת URL בסיסית ומפתח להזנה בהגדרות של הכלי עצמו.",
     "endpoint": "נקודת קצה",
     "documentation": "תיעוד",
+    "connect": {
+      "button": "חיבור אל FreeLLMAPI",
+      "details": "פרטי ההגדרה",
+      "gateway": "שער מקומי",
+      "saved": "ההגדרות נשמרו",
+      "finish": "השלמת ההגדרה",
+      "launch": "הפעלה במסוף",
+      "quit": "יש לסגור את ZCode Desktop לפני השמירה כדי למנוע דריסה של ההגדרות.",
+      "restart": "אם {name} פועל, יש להפעיל אותו מחדש.",
+      "send": "יש לפתוח את {name} ולשלוח הודעה.",
+      "files": "קובצי הגדרות",
+      "writeError": "יש לבדוק את הרשאות הקבצים ואת ההגדרות הקיימות ולנסות שוב.",
+      "missing": "יש להתקין את כלי ה־CLI או להוסיף אותו ל־PATH.",
+      "intro": "חבר כלי תכנות לשער אחד של מודלים חינמיים עם תצורה שנוצרת אוטומטית ובטוחה לגיבוי.",
+      "all": "סוכנים",
+      "find": "Search",
+      "cursor": "The AI-first editor; it calls through Cursor's cloud, so it needs a public URL."
+    },
     "descriptions": {
       "claude": "Anthropic's terminal agent: it plans, edits files, and runs commands in your repo.",
       "codex": "OpenAI's terminal agent, which runs your task in a local sandbox first.",
@@ -1201,7 +1252,8 @@
       "hermes": "הסוכן המשתפר-מעצמו של Nous Research עם זיכרון מתמשך וכישורים, בטרמינל או באפליקציות צ'אט.",
       "pi": "סוכן טרמינל מינימלי שאתם מעצבים בעזרת הרחבות, כישורים ותבניות פרומפט משלכם.",
       "reasonix": "סוכן קוד לטרמינל שנבנה במיוחד עבור DeepSeek, סביב מטמון קידומות כדי שסשנים ארוכים יישארו זולים.",
-      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry."
+      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry.",
+      "zero": "סוכן קוד מקומי לטרמינל עם סשנים מתמשכים, הרשאות ותמיכה בכל ספק תואם OpenAI."
     }
   },
   "update": {
@@ -1260,7 +1312,15 @@
     "renameHint": "שנה שם של שרשרת זו",
     "renameConfirm": "לשנות שם השרשרת \"{oldName}\" ל‑\"{name}\"? לקוחות שקוראים ל‑auto:{oldName} יצטרכו לעבור ל‑auto:{name}.",
     "renamePlaceholder": "שם שרשרת חדש",
-    "renameFailed": "לא ניתן לשנות את שם השרשרת."
+    "renameFailed": "לא ניתן לשנות את שם השרשרת.",
+    "strategy": "Routing strategy",
+    "strategyHint": "How this chain ranks its models. Inherit uses the global setting.",
+    "strategyInherit": "Inherit global",
+    "strategyPriority": "Manual order",
+    "strategyBalanced": "Balanced",
+    "strategySmartest": "Smartest",
+    "strategyFastest": "Fastest",
+    "strategyReliable": "Most reliable"
   },
   "updates": {
     "versionAvailable": "גרסה {version} זמינה",

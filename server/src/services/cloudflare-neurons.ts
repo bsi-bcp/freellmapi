@@ -30,7 +30,6 @@ import { cloudflareAccountId, benchCloudflareAccountId } from './cloudflare-dail
 // allowance minus a margin for estimate drift and calls in flight). 0 turns the
 // meter's gate off, for an operator who WANTS to pay for Workers AI.
 
-export const CLOUDFLARE_FREE_NEURONS_PER_DAY = 10_000;
 export const DEFAULT_CLOUDFLARE_DAILY_NEURON_CAP = 9_000;
 
 /** Workers AI bills $0.011 per 1,000 neurons, so one USD buys this many. */
@@ -71,6 +70,7 @@ export const CLOUDFLARE_PRICES: Record<string, CloudflarePrice> = {
   '@cf/deepseek-ai/deepseek-v4-pro-0813': { inputPerM: 1.32, outputPerM: 3.96 },
   '@cf/deepseek-ai/deepseek-v4.1-flash-1017': { inputPerM: 0.3, outputPerM: 1.2 },
   '@cf/google/gemma-4-26b-a4b-it': { inputPerM: 0.1, outputPerM: 0.3 },
+  '@cf/google/embeddinggemma-2': { inputPerM: 0.0017 },
   '@cf/huggingface/distilbert-sst-2-int8': { inputPerM: 0.0263 },
   '@cf/leonardo/lucid-origin': { perTile: 0.007, perStep: 0.000132 },
   '@cf/leonardo/phoenix-1.0': { perTile: 0.00583, perStep: 0.00011 },
@@ -243,24 +243,6 @@ function pruneOldRows(now: number): void {
 }
 
 // ── Gate ────────────────────────────────────────────────────────────────────
-
-export interface CloudflareNeuronStatus {
-  used: number;
-  cap: number | null;
-  remote: number | null;
-  resetsAt: string;
-}
-
-export function cloudflareNeuronStatus(apiKey: string, now = Date.now()): CloudflareNeuronStatus | null {
-  const account = cloudflareAccountId(apiKey);
-  if (!account) return null;
-  return {
-    used: Math.round(cloudflareNeuronsUsedToday(account, now)),
-    cap: getCloudflareDailyNeuronCap(),
-    remote: remoteNeuronsToday(account, now),
-    resetsAt: new Date(now + msUntilUtcMidnight(now)).toISOString(),
-  };
-}
 
 /** False once the key's account has reached today's neuron cap. */
 export function cloudflareNeuronsAvailable(apiKey: string, now = Date.now()): boolean {

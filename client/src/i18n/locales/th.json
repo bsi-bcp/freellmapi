@@ -60,7 +60,16 @@
     "emailChanged": "เปลี่ยนอีเมลเรียบร้อยแล้ว",
     "passwordReset": "รีเซ็ตรหัสผ่านแล้ว กรุณาเข้าสู่ระบบ",
     "resetCodeDockerHint": "ใช้งานใน Docker อยู่ใช่ไหม รหัสอยู่ในบันทึกของคอนเทนเนอร์: docker logs <container>",
-    "desktopSessionFailed": "แดชบอร์ดไม่สามารถลงชื่อเข้าใช้เซิร์ฟเวอร์ในเครื่องได้ ปิด FreeLLMAPI แล้วเปิดใหม่อีกครั้ง"
+    "desktopSessionFailed": "แดชบอร์ดไม่สามารถลงชื่อเข้าใช้เซิร์ฟเวอร์ในเครื่องได้ ปิด FreeLLMAPI แล้วเปิดใหม่อีกครั้ง",
+    "signInWithSso": "Sign in with {provider}",
+    "orContinueWithPassword": "or continue with email",
+    "reverifyWithSso": "Re-verify with {provider}",
+    "oidcReauthHint": "Confirm your identity with {provider} to access plaintext keys.",
+    "oidcReauthSuccess": "Identity verified for the next 5 minutes.",
+    "oidcErrorNotAllowed": "Your account is not permitted to sign in to this dashboard.",
+    "oidcErrorUnverifiedEmail": "Your identity provider must verify your email address before signing in.",
+    "oidcErrorNoAccount": "No matching account exists and automatic account creation is disabled.",
+    "oidcErrorFailed": "Single sign-on failed. Please try again."
   },
   "common": {
     "save": "บันทึก",
@@ -109,6 +118,8 @@
     "sectionAdvanced": "ขั้นสูง",
     "sectionPreview": "ดูตัวอย่าง",
     "generalDescription": "ภาษาและรูปลักษณ์ของแดชบอร์ดนี้",
+    "startAtLogin": "เริ่มต้นเมื่อระบบเริ่มทำงาน",
+    "startAtLoginHelp": "เปิดใช้ FreeLLMAPI โดยอัตโนมัติเมื่อคุณลงชื่อเข้าใช้คอมพิวเตอร์ของคุณ",
     "advancedDescription": "ค่าเกณฑ์และสวิตช์ความปลอดภัยสำหรับไปป์ไลน์การบีบอัด",
     "compressionTitle": "การบีบอัดพร้อมท์",
     "compressionDescription": "ลดขนาดคำขอก่อนการกำหนดเส้นทาง โดยยังคงรักษาโค้ด ข้อผิดพลาด พาธ ตัวเลข และคำจำกัดความของเครื่องมือ",
@@ -169,7 +180,12 @@
     "updateNow": "อัปเดตตอนนี้",
     "updatingContainer": "กำลังดึงอิมเมจใหม่และรีสตาร์ต หน้านี้จะโหลดใหม่เมื่อ FreeLLMAPI กลับมา",
     "updateNowFailed": "ตัวอัปเดตไม่รับคำขอ ตรวจสอบว่าคอนเทนเนอร์ watchtower กำลังทำงาน",
-    "updateNowTimeout": "FreeLLMAPI ยังไม่รีสตาร์ตหลังผ่านไป 5 นาที ตรวจสอบบันทึกของคอนเทนเนอร์ watchtower"
+    "updateNowTimeout": "FreeLLMAPI ยังไม่รีสตาร์ตหลังผ่านไป 5 นาที ตรวจสอบบันทึกของคอนเทนเนอร์ watchtower",
+    "injectSystemDate": "System date in prompt",
+    "injectSystemDateHelp": "Prepend today’s UTC date (YYYY-MM-DD) to the system prompt so models query web search for current information. Skipped if the caller already includes a date. Off or Web search is recommended to preserve prompt caching.",
+    "injectSystemDateOff": "Off",
+    "injectSystemDateWebSearch": "Web search",
+    "injectSystemDateAlways": "Always"
   },
   "models": {
     "title": "โมเดล",
@@ -393,6 +409,8 @@
     "pageDescription": "ข้อมูลประจำตัวของผู้ให้บริการและคีย์ API แบบรวมที่แอปของคุณเชื่อมต่อด้วย",
     "tabProviders": "ผู้ให้บริการ",
     "checklistSummary": "กำหนดค่าผู้ให้บริการแล้ว {configured} จาก {total} ราย",
+    "keylessAvailable": "มีผู้ให้บริการที่ไม่ต้องใช้คีย์ ({count})",
+    "keylessEnableAll": "เปิดทั้งหมด",
     "checklistKeyless": "ไม่ต้องใช้คีย์",
     "checklistNoKeyTip": "ยังไม่ได้เพิ่มคีย์ คลิกเพื่อเพิ่ม",
     "checklistSignupLink": "เปิด {provider} เพื่อสร้างบัญชีและรับคีย์",
@@ -432,6 +450,7 @@
     "familyHaiku": "ไฮกุ",
     "selectPlatform": "เลือกผู้ให้บริการ",
     "addKey": "เพิ่มรหัส",
+    "addAnotherKey": "เพิ่มคีย์ API อื่น",
     "keyAdded": "เพิ่มคีย์แล้ว",
     "endpointKeysShareModels": "คีย์ของเอนด์พอยต์เดียวกันใช้โมเดลร่วมกัน",
     "export": "ส่งออก",
@@ -474,6 +493,8 @@
     "customTypeImage": "รูปภาพ",
     "customTypeAudio": "เสียง",
     "customTypeTranscription": "Transcription",
+    "customTypeSearch": "Web search",
+    "customTypeDecision": "Decision",
     "customBaseUrl": "ฐาน URL",
     "customModels": "โมเดล",
     "customModel": "รุ่น",
@@ -482,6 +503,9 @@
     "customDisplayNameOptional": "ไม่จำเป็น",
     "customFamily": "ครอบครัว",
     "customFamilyPlaceholder": "ค่าเริ่มต้นเป็นรหัสรุ่น",
+    "customEmbeddingInputType": "Input type",
+    "customEmbeddingInputTypeUnset": "Not specified",
+    "customEmbeddingInputTypeNone": "None (symmetric)",
     "customApiKey": "คีย์ API",
     "customCapabilities": "ความสามารถ",
     "addModel": "เพิ่มรุ่น",
@@ -491,6 +515,10 @@
     "addImageModel": "เพิ่มรูปแบบรูปภาพ",
     "addAudioModel": "เพิ่มโมเดลเสียง",
     "addTranscriptionModel": "Add transcription model",
+    "addSearchEngine": "Add search engine",
+    "addDecisionModel": "Add decision model",
+    "customSearchHint": "Search endpoints must accept POST <base URL>/search in Tavily's request format and return a results list.",
+    "customDecisionHint": "Decision endpoints must accept POST <base URL>/decide and answer with one of the question's choices.",
     "addingCustom": "กำลังเพิ่ม...",
     "discoverModels": "ดึงรายการโมเดล",
     "probeNow": "ทดสอบเอนด์พอยต์",
@@ -937,6 +965,8 @@
     "dictationStop": "หยุดบันทึก",
     "dictationTranscribing": "กำลังถอดเสียง…",
     "dictationUnavailable": "เพิ่มผู้ให้บริการโมเดลเสียงเพื่อใช้การพูดเพื่อพิมพ์",
+    "dictationMacShortcut": "กดปุ่มไมโครโฟนหรือใช้ปุ่มลัดการป้อนตามคำบอกที่ตั้งไว้ในการตั้งค่าแป้นพิมพ์",
+    "dictationWindowsShortcut": "กด Win + H เพื่อเริ่มพิมพ์ด้วยเสียง",
     "dictationModel": "โมเดลพูดเพื่อพิมพ์",
     "dictationFailed": "ถอดเสียงไม่สำเร็จ: {reason}",
     "artifactOpen": "เปิดตัวอย่าง",
@@ -986,7 +1016,8 @@
     "tokMax": "{tokens} โทเค็นสูงสุด",
     "emptyTitle": "ยังไม่มีการฝังโมเดล",
     "emptyDesc": "กลุ่มการฝังจะปรากฏที่นี่เมื่อคุณเพิ่มรหัสผู้ให้บริการที่รองรับการฝัง",
-    "dragToReorder": "ลากเพื่อจัดลำดับผู้ให้บริการใหม่"
+    "dragToReorder": "ลากเพื่อจัดลำดับผู้ให้บริการใหม่",
+    "inputTypeTitle": "Asymmetric embedding model: this side of the vector space is sent as input_type."
   },
   "fusion": {
     "title": "ฟิวชั่น",
@@ -1140,6 +1171,8 @@
     "step1Title": "เพิ่มรหัสผู้ให้บริการ",
     "step1Desc": "เชื่อมต่อบัญชีผู้ให้บริการอย่างน้อยหนึ่งบัญชี กุญแจฟรีใช้งานได้",
     "step1Cta": "เพิ่มคีย์",
+    "step1KeylessTitle": "ผู้ให้บริการที่ไม่ต้องใช้คีย์เปิดอยู่",
+    "step1KeylessDesc": "โมเดลฟรีพร้อมใช้ ไม่ต้องสมัคร เพิ่มคีย์ของคุณเองเพื่อใช้โมเดลที่มากขึ้นและเร็วขึ้น",
     "step2Title": "ส่งคำขอทดสอบ",
     "step2Desc": "เลือกโมเดลใดก็ได้ใน Playground แล้วทักทาย",
     "step2Cta": "เปิดสนามเด็กเล่น",
@@ -1180,6 +1213,24 @@
     "manualHint": "Base URL และคีย์สำหรับกรอกในการตั้งค่าของเครื่องมือเอง",
     "endpoint": "เอนด์พอยต์",
     "documentation": "เอกสารประกอบ",
+    "connect": {
+      "button": "เชื่อมต่อกับ FreeLLMAPI",
+      "details": "รายละเอียดการตั้งค่า",
+      "gateway": "เกตเวย์ภายในเครื่อง",
+      "saved": "บันทึกการตั้งค่าแล้ว",
+      "finish": "ตั้งค่าให้เสร็จ",
+      "launch": "เปิดในเทอร์มินัล",
+      "quit": "ปิด ZCode Desktop ก่อนบันทึกเพื่อป้องกันการเขียนทับการตั้งค่า",
+      "restart": "หาก {name} ทำงานอยู่ ให้เริ่มใหม่",
+      "send": "เปิด {name} แล้วส่งข้อความ",
+      "files": "ไฟล์การตั้งค่า",
+      "writeError": "ตรวจสอบสิทธิ์ของไฟล์และการตั้งค่าปัจจุบัน แล้วลองอีกครั้ง",
+      "missing": "ติดตั้ง CLI หรือเพิ่มลงใน PATH",
+      "intro": "เชื่อมต่อเครื่องมือเขียนโค้ดกับเกตเวย์โมเดลฟรีเดียวด้วยการกำหนดค่าที่สร้างให้และปลอดภัยต่อการสำรองข้อมูล",
+      "all": "เอเจนต์",
+      "find": "Search",
+      "cursor": "The AI-first editor; it calls through Cursor's cloud, so it needs a public URL."
+    },
     "descriptions": {
       "claude": "Anthropic's terminal agent: it plans, edits files, and runs commands in your repo.",
       "codex": "OpenAI's terminal agent, which runs your task in a local sandbox first.",
@@ -1201,7 +1252,8 @@
       "hermes": "เอเจนต์ที่พัฒนาตัวเองได้ของ Nous Research พร้อมหน่วยความจำถาวรและทักษะ ใช้ได้ทั้งในเทอร์มินัลและบนแอปแชต",
       "pi": "เอเจนต์เทอร์มินัลแบบมินิมอลที่คุณปรับแต่งได้ด้วยส่วนขยาย ทักษะ และเทมเพลตพรอมต์ของคุณเอง",
       "reasonix": "เอเจนต์เขียนโค้ดบนเทอร์มินัลที่สร้างมาเพื่อ DeepSeek โดยออกแบบรอบ prefix caching ให้เซสชันยาว ๆ ยังคงประหยัด",
-      "zcode": "เอเจนต์เขียนโค้ดของ Z.ai สำหรับโมเดล GLM เชื่อมต่อกับ endpoint ที่เข้ากันได้กับ OpenAI ผ่านทะเบียนผู้ให้บริการ"
+      "zcode": "เอเจนต์เขียนโค้ดของ Z.ai สำหรับโมเดล GLM เชื่อมต่อกับ endpoint ที่เข้ากันได้กับ OpenAI ผ่านทะเบียนผู้ให้บริการ",
+      "zero": "เอเจนต์เขียนโค้ดบนเทอร์มินัลในเครื่องที่มีเซสชันถาวร การจัดการสิทธิ์ และรองรับผู้ให้บริการที่เข้ากันได้กับ OpenAI ทุกราย"
     }
   },
   "update": {
@@ -1260,7 +1312,15 @@
     "renameHint": "เปลี่ยนชื่อเชนนี้",
     "renameConfirm": "เปลี่ยนชื่อเชน \"{oldName}\" เป็น \"{name}\"? ไคลเอนต์ที่เรียก auto:{oldName} ต้องเปลี่ยนไปใช้ auto:{name} แทน",
     "renamePlaceholder": "ชื่อเชนใหม่",
-    "renameFailed": "ไม่สามารถเปลี่ยนชื่อเชนได้"
+    "renameFailed": "ไม่สามารถเปลี่ยนชื่อเชนได้",
+    "strategy": "Routing strategy",
+    "strategyHint": "How this chain ranks its models. Inherit uses the global setting.",
+    "strategyInherit": "Inherit global",
+    "strategyPriority": "Manual order",
+    "strategyBalanced": "Balanced",
+    "strategySmartest": "Smartest",
+    "strategyFastest": "Fastest",
+    "strategyReliable": "Most reliable"
   },
   "updates": {
     "versionAvailable": "มีเวอร์ชัน {version} แล้ว",

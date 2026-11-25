@@ -60,7 +60,16 @@
     "emailChanged": "Barua pepe imebadilishwa.",
     "passwordReset": "Nenosiri limewekwa upya. Tafadhali ingia.",
     "resetCodeDockerHint": "Unatumia Docker? Msimbo uko kwenye kumbukumbu ya kontena: docker logs <container>.",
-    "desktopSessionFailed": "Dashibodi haikuweza kuingia kwenye seva ya ndani. Funga FreeLLMAPI kisha uifungue tena."
+    "desktopSessionFailed": "Dashibodi haikuweza kuingia kwenye seva ya ndani. Funga FreeLLMAPI kisha uifungue tena.",
+    "signInWithSso": "Sign in with {provider}",
+    "orContinueWithPassword": "or continue with email",
+    "reverifyWithSso": "Re-verify with {provider}",
+    "oidcReauthHint": "Confirm your identity with {provider} to access plaintext keys.",
+    "oidcReauthSuccess": "Identity verified for the next 5 minutes.",
+    "oidcErrorNotAllowed": "Your account is not permitted to sign in to this dashboard.",
+    "oidcErrorUnverifiedEmail": "Your identity provider must verify your email address before signing in.",
+    "oidcErrorNoAccount": "No matching account exists and automatic account creation is disabled.",
+    "oidcErrorFailed": "Single sign-on failed. Please try again."
   },
   "common": {
     "save": "Hifadhi",
@@ -109,6 +118,8 @@
     "sectionAdvanced": "Kina",
     "sectionPreview": "Hakikisho",
     "generalDescription": "Lugha na mwonekano wa dashibodi hii.",
+    "startAtLogin": "Anza wakati mfumo unapoanza",
+    "startAtLoginHelp": "Zindua FreeLLMAPI kiotomatiki unapoingia kwenye kompyuta yako.",
     "advancedDescription": "Vizingiti na swichi za usalama za mfumo wa ubanaji.",
     "compressionTitle": "Ubanaji wa agizo",
     "compressionDescription": "Punguza ukubwa wa ombi kabla ya uelekezaji huku ukihifadhi msimbo, hitilafu, njia, nambari, na ufafanuzi wa zana.",
@@ -169,7 +180,12 @@
     "updateNow": "Sasisha sasa",
     "updatingContainer": "Inavuta picha mpya na kuanza upya. Ukurasa huu utapakia upya FreeLLMAPI itakaporudi.",
     "updateNowFailed": "Kisasishaji hakikukubali ombi. Hakikisha kontena la watchtower linafanya kazi.",
-    "updateNowTimeout": "FreeLLMAPI haijaanza upya baada ya dakika 5. Angalia kumbukumbu za kontena la watchtower."
+    "updateNowTimeout": "FreeLLMAPI haijaanza upya baada ya dakika 5. Angalia kumbukumbu za kontena la watchtower.",
+    "injectSystemDate": "System date in prompt",
+    "injectSystemDateHelp": "Prepend today’s UTC date (YYYY-MM-DD) to the system prompt so models query web search for current information. Skipped if the caller already includes a date. Off or Web search is recommended to preserve prompt caching.",
+    "injectSystemDateOff": "Off",
+    "injectSystemDateWebSearch": "Web search",
+    "injectSystemDateAlways": "Always"
   },
   "models": {
     "title": "Mifano",
@@ -393,6 +409,8 @@
     "pageDescription": "Vitambulisho vya mtoa huduma na ufunguo uliounganishwa wa API ambao programu zako huunganisha nazo.",
     "tabProviders": "Watoa huduma",
     "checklistSummary": "Watoa huduma {configured} kati ya {total} wamesanidiwa",
+    "keylessAvailable": "Watoa huduma wasiohitaji ufunguo wanapatikana ({count})",
+    "keylessEnableAll": "Washa wote",
     "checklistKeyless": "hakuna ufunguo unaohitajika",
     "checklistNoKeyTip": "Bado hakuna ufunguo ulioongezwa. Bofya ili kuongeza.",
     "checklistSignupLink": "Fungua {provider} kuunda akaunti na upate ufunguo",
@@ -432,6 +450,7 @@
     "familyHaiku": "Haiku",
     "selectPlatform": "Chagua mtoaji",
     "addKey": "Ongeza ufunguo",
+    "addAnotherKey": "Ongeza ufunguo mwingine wa API",
     "keyAdded": "Ufunguo umeongezwa",
     "endpointKeysShareModels": "Vitufe vya mwisho huo huo hushiriki modeli zake.",
     "export": "Hamisha",
@@ -474,6 +493,8 @@
     "customTypeImage": "Picha",
     "customTypeAudio": "Sauti",
     "customTypeTranscription": "Transcription",
+    "customTypeSearch": "Web search",
+    "customTypeDecision": "Decision",
     "customBaseUrl": "Msingi wa URL",
     "customModels": "Mifano",
     "customModel": "Mfano",
@@ -482,6 +503,9 @@
     "customDisplayNameOptional": "hiari",
     "customFamily": "Familia",
     "customFamilyPlaceholder": "chaguo-msingi kwa kitambulisho cha mfano",
+    "customEmbeddingInputType": "Input type",
+    "customEmbeddingInputTypeUnset": "Not specified",
+    "customEmbeddingInputTypeNone": "None (symmetric)",
     "customApiKey": "Kitufe cha API",
     "customCapabilities": "Uwezo",
     "addModel": "Ongeza mfano",
@@ -491,6 +515,10 @@
     "addImageModel": "Ongeza muundo wa picha",
     "addAudioModel": "Ongeza muundo wa sauti",
     "addTranscriptionModel": "Add transcription model",
+    "addSearchEngine": "Add search engine",
+    "addDecisionModel": "Add decision model",
+    "customSearchHint": "Search endpoints must accept POST <base URL>/search in Tavily's request format and return a results list.",
+    "customDecisionHint": "Decision endpoints must accept POST <base URL>/decide and answer with one of the question's choices.",
     "addingCustom": "Inaongeza...",
     "discoverModels": "Leta modeli",
     "probeNow": "Jaribu mwisho huu",
@@ -937,6 +965,8 @@
     "dictationStop": "Simamisha kurekodi",
     "dictationTranscribing": "Inanukuu…",
     "dictationUnavailable": "Ongeza watoa huduma wa miundo ya sauti ili kutumia kusema uandikishe.",
+    "dictationMacShortcut": "Bonyeza kitufe cha maikrofoni au utumie njia ya mkato ya imla iliyowekwa katika mipangilio ya kibodi.",
+    "dictationWindowsShortcut": "Bonyeza Win + H ili uanze kuandika kwa sauti.",
     "dictationModel": "Muundo wa kusema uandikishe",
     "dictationFailed": "Unukuzi umeshindwa: {reason}",
     "artifactOpen": "Fungua onyesho la kukagua",
@@ -986,7 +1016,8 @@
     "tokMax": "{tokens} tok max",
     "emptyTitle": "Bado hakuna miundo ya kupachika",
     "emptyDesc": "Familia zinazopachika huonekana hapa pindi tu unapoongeza ufunguo wa mtoa huduma unaoauni upachikaji.",
-    "dragToReorder": "Buruta ili upange upya mtoa huduma"
+    "dragToReorder": "Buruta ili upange upya mtoa huduma",
+    "inputTypeTitle": "Asymmetric embedding model: this side of the vector space is sent as input_type."
   },
   "fusion": {
     "title": "Fusion",
@@ -1140,6 +1171,8 @@
     "step1Title": "Ongeza ufunguo wa mtoa huduma",
     "step1Desc": "Unganisha angalau akaunti moja ya mtoa huduma. Vifunguo vya bure hufanya kazi.",
     "step1Cta": "Ongeza funguo",
+    "step1KeylessTitle": "Watoa huduma wasiohitaji ufunguo wamewashwa",
+    "step1KeylessDesc": "Miundo ya bure iko tayari, hakuna kujisajili. Ongeza funguo zako mwenyewe kwa miundo zaidi na ya haraka zaidi.",
     "step2Title": "Tuma ombi la jaribio",
     "step2Desc": "Chagua muundo wowote kwenye Uwanja wa Michezo na useme hujambo.",
     "step2Cta": "Fungua Uwanja wa Michezo",
@@ -1180,6 +1213,24 @@
     "manualHint": "URL msingi na ufunguo wa kuweka katika mipangilio ya zana yenyewe.",
     "endpoint": "Kituo cha mwisho",
     "documentation": "Nyaraka",
+    "connect": {
+      "button": "Unganisha na FreeLLMAPI",
+      "details": "Maelezo ya usanidi",
+      "gateway": "Lango la ndani",
+      "saved": "Mipangilio imehifadhiwa",
+      "finish": "Kamilisha usanidi",
+      "launch": "Fungua kwenye terminali",
+      "quit": "Funga ZCode Desktop kabla ya kuhifadhi ili isibadilishe mipangilio.",
+      "restart": "Anzisha upya {name} ikiwa inaendelea kufanya kazi.",
+      "send": "Fungua {name} na utume ujumbe.",
+      "files": "Faili za usanidi",
+      "writeError": "Kagua ruhusa za faili na mipangilio iliyopo, kisha ujaribu tena.",
+      "missing": "Sakinisha CLI au uiongeze kwenye PATH.",
+      "intro": "Unganisha zana za usimbaji na lango moja la miundo ya bure kwa usanidi ulioundwa na ulio salama kwa hifadhi rudufu.",
+      "all": "Mawakala",
+      "find": "Search",
+      "cursor": "The AI-first editor; it calls through Cursor's cloud, so it needs a public URL."
+    },
     "descriptions": {
       "claude": "Anthropic's terminal agent: it plans, edits files, and runs commands in your repo.",
       "codex": "OpenAI's terminal agent, which runs your task in a local sandbox first.",
@@ -1201,7 +1252,8 @@
       "hermes": "Wakala wa Nous Research anayejiboresha mwenyewe, mwenye kumbukumbu ya kudumu na ujuzi, kwenye terminal au kwenye programu za gumzo.",
       "pi": "Wakala mdogo wa terminal unaomuunda kwa viendelezi, ujuzi na violezo vya maagizo vyako mwenyewe.",
       "reasonix": "Wakala wa kuandika msimbo kwenye terminal aliyejengwa kwa ajili ya DeepSeek, kwa msingi wa prefix caching ili vipindi virefu vibaki nafuu.",
-      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry."
+      "zcode": "Z.ai's coding agent for its GLM models, speaking any OpenAI-compatible endpoint through a provider registry.",
+      "zero": "Wakala wa uandishi wa msimbo kwenye terminal ya ndani yenye vipindi endelevu, ruhusa, na mtoa huduma yeyote anayelingana na OpenAI."
     }
   },
   "update": {
@@ -1260,7 +1312,15 @@
     "renameHint": "Badilisha jina la mnyororo huu",
     "renameConfirm": "Badilisha jina la mnyororo \"{oldName}\" kuwa \"{name}\"? Wateja wanaoitia auto:{oldName} lazima wabadilike kwa auto:{name}.",
     "renamePlaceholder": "Jina jipya la mnyororo",
-    "renameFailed": "Imeshindwa kubadilisha jina la mnyororo."
+    "renameFailed": "Imeshindwa kubadilisha jina la mnyororo.",
+    "strategy": "Routing strategy",
+    "strategyHint": "How this chain ranks its models. Inherit uses the global setting.",
+    "strategyInherit": "Inherit global",
+    "strategyPriority": "Manual order",
+    "strategyBalanced": "Balanced",
+    "strategySmartest": "Smartest",
+    "strategyFastest": "Fastest",
+    "strategyReliable": "Most reliable"
   },
   "updates": {
     "versionAvailable": "Toleo {version} linapatikana",

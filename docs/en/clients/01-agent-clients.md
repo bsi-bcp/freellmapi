@@ -5,6 +5,7 @@
 [← Back to README](../README.md) · [Documentation index](../README.md) · [All supported agents](02-supported-agents.md)
 
 - [OpenAI-compatible clients](#openai-compatible-clients)
+- [Claude Desktop (third-party gateway)](#claude-desktop-third-party-gateway)
 - [Coding agents](#coding-agents)
 - [QwenPaw](#qwenpaw)
 - [Native Gemini clients](#native-gemini-clients)
@@ -23,7 +24,47 @@ Any client that can target an OpenAI-compatible base URL can use FreeLLMAPI:
 - **Local GPU boxes**: add custom OpenAI-compatible endpoints for Ollama,
   llama.cpp, LM Studio, vLLM, or an internal gateway.
 
+## Claude Desktop (third-party gateway)
+
+Claude Desktop can use FreeLLMAPI as a third-party inference gateway. It speaks
+the Anthropic Messages API, so the base URL is the **bare origin, without
+`/v1`**. Claude Desktop appends `/v1/models` and `/v1/messages` itself.
+
+1. In Claude Desktop, open **Setup** and choose **Gateway**.
+2. Set the **Gateway base URL** to `http://127.0.0.1:31415` for the desktop app,
+   or `http://localhost:3001` for a server install.
+   - In the desktop app, the tray panel's **Copy Claude URL** button copies this.
+   - On the dashboard it is the **Claude base URL** on the Keys page's **Anthropic** tab.
+3. Use the unified key from the dashboard as the API key (`x-api-key`).
+4. Click **Check again**. Model discovery lists `claude-opus-*`, `claude-sonnet-*`
+   and `claude-haiku-*` ids, which route to your free models according to the
+   Claude model mapping on the Keys page.
+
+If you paste the OpenAI-style URL (`.../v1`) by mistake, Claude Desktop calls
+`/v1/v1/models`. FreeLLMAPI now collapses the duplicate `/v1`, so this works
+anyway, but older builds answer 404 with "Gateway /v1/models returned HTTP 404".
+
 ## Coding agents
+
+Install the agent itself first: FreeLLMAPI does not bundle it. For Claude Code, see
+[the Claude Code setup guide](https://docs.claude.com/en/docs/claude-code/setup), then check
+that `claude --version` works in a new terminal. The desktop app listens on
+`http://127.0.0.1:31415`, so use that in place of `http://localhost:3001` below.
+
+On Windows (PowerShell), with the unified key from the dashboard:
+
+```powershell
+$env:ANTHROPIC_BASE_URL = "http://127.0.0.1:31415"
+$env:ANTHROPIC_AUTH_TOKEN = "<unified-key>"
+$env:CLAUDE_CODE_AUTO_MODE_SERVER = "0"
+claude
+```
+
+`CLAUDE_CODE_AUTO_MODE_SERVER=0` keeps Claude Code's auto mode working behind
+FreeLLMAPI: Anthropic's server-side action review cannot run on non-Anthropic
+models, so Claude Code checks actions with its own classifier requests through
+the gateway and does not show the "isn't eligible" notice. `setup-claude` and
+`launch` set it for you. See the [REST API notes](../api/01-rest-api.md).
 
 Use the generator instead of hand-editing a client configuration:
 
@@ -60,6 +101,7 @@ context windows.
 | **Pi** | `setup-pi` | `http://localhost:3001/v1` | OpenAI Chat (`api: openai-completions`) |
 | **Reasonix** | `setup-reasonix` | `http://localhost:3001/v1` | OpenAI Chat (`kind = "openai"`) |
 | **ZCode** | `setup-zcode` | `http://localhost:3001/v1` | OpenAI Chat (`openai-chat-completions`) |
+| **Zero** | `setup-zero` | `http://localhost:3001/v1` | OpenAI Chat (`openai-compatible`) |
 | **QwenPaw** | Manual setup | `http://localhost:3001/v1` | OpenAI Chat (`chat.completions`) |
 | **Cursor** | `setup-cursor` prints the guide | public `https://…/v1` | OpenAI Chat |
 | **Anything else** | `setup-generic` prints a ready block | `http://localhost:3001/v1` | OpenAI Chat |
@@ -67,8 +109,22 @@ context windows.
 The root-vs-`/v1` distinction matters: Claude Code expects the server root
 because it appends the Anthropic Messages path. OpenAI-compatible clients in
 this table—including Cline, Aider, Goose, Codex, Continue, OpenCode, Qwen,
-Roo, Kilo, Crush, MiMo Code, AtomCode, OpenClaw, Hermes Agent, Pi, Reasonix, ZCode, QwenPaw, and DeepSeek Harness—expect their configured
+Roo, Kilo, Crush, MiMo Code, AtomCode, OpenClaw, Hermes Agent, Pi, Reasonix, ZCode, Zero, QwenPaw, and DeepSeek Harness—expect their configured
 base URL to include `/v1`.
+
+Codex prints "Model metadata for `auto` not found" on every run because it
+does not know the gateway's model ids. To give it real metadata (context
+window, image support), point the provider's `model_catalog_url` at
+`/v1/codex/models` in `~/.codex/config.toml`:
+
+```toml
+[model_providers.freellmapi]
+# ...existing base_url, env_key and wire_api...
+model_catalog_url = "http://localhost:3001/v1/codex/models"
+```
+
+The catalog keeps Codex's own default system prompt and tool settings, so
+only the warning and the context window change.
 
 ### DeepSeek Harness (`dsh`)
 
@@ -294,6 +350,29 @@ registry over the file. Pick another `freellmapi/<model>` in the model picker
 Agents page's "seen recently" badge keys on. The older `~/.zcode/v2/config.json`
 and `~/.zcode/cli/config.json` files are only read once, for migration, so
 editing them has no effect.
+
+### Zero (`zero`)
+
+[Zero](https://github.com/Twigpine/zero) is a local terminal coding agent
+written in Go with durable sessions and permission controls. It reads
+`~/.config/zero/config.json` (`$XDG_CONFIG_HOME/zero/config.json` on
+macOS/Linux, `%APPDATA%\zero\config.json` on Windows). `setup-zero` adds a
+`freellmapi` entry under `providers` (`provider: "openai-compatible"`, the
+gateway's `/v1` as `baseURL`, and the chosen model) and sets `activeProvider`
+to `"freellmapi"`. Other providers are kept, and rerunning replaces only the
+`freellmapi` entry. The key is written with `0600` permissions and Zero moves
+inline keys into its credential store on startup.
+
+```bash
+npx freellmapi setup-zero --url http://localhost:3001 --api-key <unified-key>
+npm install -g @twigpine/zero
+zero exec "Say hello"
+```
+
+`--profile <name>` adds a second `freellmapi-<name>` provider without changing
+`activeProvider`; switch to it with `/provider` in Zero. Zero sends
+`User-Agent: zero/<version>` on every model request, which is what the Agents
+page's "seen recently" badge keys on.
 
 ### QwenPaw
 
